@@ -1,0 +1,12 @@
+.bg {
+  background-size: cover;
+  background-position: top;
+}
+
+.bgLogin {
+  background-image: url("https://images.unsplash.com/photo-1701432925081-9ccb2455c44c?q=80&w=1374&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D");
+}
+
+.bgSignup {
+  background-image: url("https://images.unsplash.com/photo-1696236083933-6f605792dc8f?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1yZWxhdGVkfDE4fHx8ZW58MHx8fHx8");
+}
