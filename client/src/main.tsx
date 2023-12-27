@@ -17,6 +17,12 @@ import { PersistGate } from "redux-persist/integration/react";
 import { NavigateHome, Protect } from "./components/auth";
 import { LayoutProvider } from "./components/layout";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import TimeAgo from "javascript-time-ago";
+import en from "javascript-time-ago/locale/en.json";
+import ru from "javascript-time-ago/locale/ru.json";
+
+TimeAgo.addDefaultLocale(en);
+TimeAgo.addLocale(ru);
 
 const queryClient = new QueryClient({
   defaultOptions: {

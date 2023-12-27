@@ -33,7 +33,7 @@ class ApiFeatures {
       let sortStr = sort.replace(/,/g, " ");
       this.query.sortStr(sortStr);
     } else {
-      this.query.sort("createdAt");
+      this.query.sort("-createdAt");
     }
     return this;
   }

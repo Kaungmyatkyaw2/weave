@@ -1,16 +1,16 @@
 import axiosClient from "@/lib/axios";
 import { Post } from "@/types/post.types";
 import { Response } from "@/types/response.types";
-import { useInfiniteQuery } from "@tanstack/react-query";
+import { useInfiniteQuery, useMutation } from "@tanstack/react-query";
 
-export const useGetContacts = () =>
+export const useGetPosts = () =>
   useInfiniteQuery(
     //@ts-ignore
     {
       queryKey: ["posts"],
       queryFn: ({ pageParam = 1 }) =>
         axiosClient()
-          .get(`/posts?page=${pageParam}&limit=2`)
+          .get(`/posts?page=${pageParam}`)
           .then((res) => res.data),
       getNextPageParam: (lastPage: Response<Post[]>, allPages: any) => {
         if (lastPage.result < 2) {
@@ -21,3 +21,9 @@ export const useGetContacts = () =>
       },
     }
   );
+
+export const useCreatePost = () => {
+  return useMutation({
+    mutationFn: (values) => axiosClient().post("/posts", values),
+  });
+};

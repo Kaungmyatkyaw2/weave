@@ -35,7 +35,8 @@ const upload = multer({
 exports.uploadImage = upload.single("image");
 exports.uploadToCloudinary = catchAsync(async (req, res, next) => {
   if (!req.file) {
-    return next();
+    next();
+    return null;
   }
 
   let confObj = {

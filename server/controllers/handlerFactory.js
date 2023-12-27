@@ -43,7 +43,7 @@ exports.getOne = (Model) =>
 
 exports.createOne = (Model) =>
   catchAsync(async (req, res, next) => {
-    const data = await Model.create(req.body);
+    const data = await Model.create({ ...req.body, createdAt: Date.now() });
 
     res.status(201).json({
       status: "success",

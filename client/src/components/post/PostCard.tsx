@@ -2,6 +2,7 @@ import { Share2 } from "lucide-react";
 import { ButtonHTMLAttributes, DetailedHTMLProps } from "react";
 import { Avatar, AvatarFallback } from "../ui/avatar";
 import { Post } from "@/types/post.types";
+import ReactTimeAgo from "react-time-ago";
 
 const ShareBtn = ({
   ...props
@@ -48,6 +49,9 @@ export const PostCard = ({ post }: { post: Post }) => {
             <h1 className="text-md font-bold">{post.user.displayName}</h1>
             <p className="text-sm text-smoke">@{post.user.userName}</p>
           </div>
+          <p className="text-[13px] text-smoke pb-[10px]">
+            <ReactTimeAgo date={post.createdAt} locale="en-US" />
+          </p>
           <p className="pt-[5px] text-smoke text-sm">{post.title}</p>
           <ImageVideoPlayer src={post.image} />
         </div>
