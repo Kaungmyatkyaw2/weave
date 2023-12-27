@@ -21,7 +21,7 @@ const ImageVideoPlayer = ({ src }: { src?: string | undefined }) => {
   }
 
   return (
-    <div className=" pt-[10px] max-w-full">
+    <div className=" pt-[10px] max-w-full">z
       {src?.includes("video") ? (
         <video src={src} height={400} width={400} controls />
       ) : (
