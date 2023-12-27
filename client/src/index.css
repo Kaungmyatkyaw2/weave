@@ -76,11 +76,6 @@
   }
 }
 
-.bg-img {
-  background-image: url("/bg.svg");
-}
-
-
 .styled-scroll::-webkit-scrollbar {
   width: 3px; /* Set the width of the scrollbar */
   height: 1px;

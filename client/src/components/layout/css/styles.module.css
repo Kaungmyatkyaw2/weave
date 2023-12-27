@@ -10,3 +10,7 @@
 .bgSignup {
   background-image: url("https://images.unsplash.com/photo-1696236083933-6f605792dc8f?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1yZWxhdGVkfDE4fHx8ZW58MHx8fHx8");
 }
+
+.bgImg {
+  background-image: url("../../../../public/bg.svg");
+}

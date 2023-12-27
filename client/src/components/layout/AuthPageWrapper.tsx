@@ -7,7 +7,7 @@ export const AuthPageWrapper = ({
   ...props
 }: { bg?: string } & React.HTMLProps<HTMLDivElement>) => {
   return (
-    <div className="flex items-center">
+    <div className={ `flex items-center h-screen`}>
       <div
         className={`lg:w-[55%] w-[50%] h-screen sm:block hidden ${
           props.className
