@@ -69,7 +69,7 @@ exports.updateImage = catchAsync(async (req, res, next) => {
   next();
 });
 
-exports.createPost = handlerFactory.createOne(Post);
+exports.createPost = handlerFactory.createOne(Post, { path: "user" });
 exports.getAllPosts = handlerFactory.getAll(Post, { path: "user" });
 exports.getPostById = handlerFactory.getOne(Post);
 exports.updatePost = handlerFactory.updateOne(Post);

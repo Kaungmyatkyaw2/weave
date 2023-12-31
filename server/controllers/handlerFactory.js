@@ -41,9 +41,13 @@ exports.getOne = (Model) =>
     });
   });
 
-exports.createOne = (Model) =>
+exports.createOne = (Model, popuOpt) =>
   catchAsync(async (req, res, next) => {
-    const data = await Model.create({ ...req.body, createdAt: Date.now() });
+    let query = (
+      await Model.create({ ...req.body, createdAt: Date.now() })
+    ).populate(popuOpt);
+
+    const data = await query;
 
     res.status(201).json({
       status: "success",
