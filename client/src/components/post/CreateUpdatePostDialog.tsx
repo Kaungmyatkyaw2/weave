@@ -1,47 +1,67 @@
 import { Dialog, DialogContent, DialogFooter } from "../ui/dialog";
 import { DialogProps } from "@radix-ui/react-dialog";
-import { ChangeEvent, useRef, useState } from "react";
+import { ChangeEvent, useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import { Label } from "@radix-ui/react-label";
 import { RootState } from "@/store/store";
 import { Avatar, AvatarFallback } from "../ui/avatar";
 import LoadingButton from "@/shared/others/LoadingButton";
-import { useCreatePost } from "@/hooks/post.hooks";
+import { useCreatePost, useUpdatePost } from "@/hooks/post.hooks";
 import { Input } from "../ui/input";
+import { Post } from "@/types/post.types";
 
 interface Prop extends DialogProps {
   isUpdateDialog?: boolean;
+  orgPost?: Post;
 }
 
-export const CreateUpdatePostDialog = ({ onOpenChange, ...props }: Prop) => {
+export const CreateUpdatePostDialog = ({
+  onOpenChange,
+  isUpdateDialog,
+  orgPost,
+  ...props
+}: Prop) => {
   const currentUser = useSelector((state: RootState) => state.user.currentUser);
-  const [title, setTitle] = useState("");
-  const [previewImg, setPreviewImg] = useState("");
+  const [title, setTitle] = useState<string | undefined>("");
+  const [previewImg, setPreviewImg] = useState<string | undefined>("");
   const [isImage, setIsImage] = useState<boolean>();
   const [file, setFile] = useState<File | null>(null);
   const fileRef = useRef<HTMLInputElement>(null);
 
-  const mutation = useCreatePost();
+  const createMutation = useCreatePost();
+  const updateMutation = useUpdatePost();
+
+  useEffect(() => {
+    if (isUpdateDialog) {
+      setPreviewImg(orgPost?.image);
+      setIsImage(orgPost?.image?.includes("image"));
+      setTitle(orgPost?.title);
+    }
+  }, [isUpdateDialog, orgPost]);
 
   const onCloseDialog = () => {
-    setTitle("");
+    setTitle(isUpdateDialog ? orgPost?.title : "");
     setFile(null);
-    setPreviewImg("");
+    setPreviewImg(isUpdateDialog ? orgPost?.image : "");
     if (fileRef.current) {
       fileRef.current.files = null;
     }
   };
 
-  const onCreate = async () => {
+  const onCreateOrUpdate = async () => {
     const formData = new FormData();
 
-    formData.append("title", title);
+    formData.append("title", title || "");
     if (file) {
       formData.append("image", file);
     }
 
-    //@ts-ignore
-    await mutation.mutateAsync(formData, {
+    const mutation = isUpdateDialog ? updateMutation : createMutation;
+    const payload = isUpdateDialog
+      ? { id: orgPost?._id, values: formData }
+      : formData;
+
+    await mutation.mutateAsync(payload, {
       onError(error) {
         console.log(error);
       },
@@ -71,7 +91,7 @@ export const CreateUpdatePostDialog = ({ onOpenChange, ...props }: Prop) => {
   return (
     <Dialog
       onOpenChange={
-        mutation.isLoading
+        createMutation.isLoading || updateMutation.isLoading
           ? () => {}
           : () => {
               onCloseDialog();
@@ -96,6 +116,7 @@ export const CreateUpdatePostDialog = ({ onOpenChange, ...props }: Prop) => {
         </div>
         <textarea
           onChange={(e) => setTitle(e.target.value)}
+          value={title}
           onInput={handleTextareaResize}
           placeholder="Title...."
           className="outline-none text-sm placeholder:text-lg h-[50px] styled-scroll resize-none max-h-[170px] py-[10px]"
@@ -122,8 +143,8 @@ export const CreateUpdatePostDialog = ({ onOpenChange, ...props }: Prop) => {
         </div>
         <DialogFooter>
           <LoadingButton
-            loading={mutation.isLoading}
-            onClick={onCreate}
+            loading={createMutation.isLoading || updateMutation.isLoading}
+            onClick={onCreateOrUpdate}
             className="py-[25px]"
           >
             Submit

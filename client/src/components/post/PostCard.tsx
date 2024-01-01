@@ -1,9 +1,10 @@
 import { Share2 } from "lucide-react";
-import { ButtonHTMLAttributes, DetailedHTMLProps } from "react";
+import { ButtonHTMLAttributes, DetailedHTMLProps, useState } from "react";
 import { Avatar, AvatarFallback } from "../ui/avatar";
 import { Post } from "@/types/post.types";
 import ReactTimeAgo from "react-time-ago";
 import { Skeleton } from "../ui/skeleton";
+import { CreateUpdatePostDialog } from ".";
 
 const ShareBtn = ({
   ...props
@@ -48,9 +49,9 @@ export const SkeletonPostCard = () => {
             <Skeleton className="h-4 w-[50%] " />
             <Skeleton className="h-4 w-[20%] " />
           </div>
-          <p className="text-[13px] text-smoke pb-[10px] pt-[5px]">
+          <div className="text-[13px] text-smoke pb-[10px] pt-[5px]">
             <Skeleton className="h-2 w-12 " />
-          </p>
+          </div>
           <Skeleton className="h-[100px] w-[70%] " />
         </div>
       </div>
@@ -59,9 +60,16 @@ export const SkeletonPostCard = () => {
 };
 
 export const PostCard = ({ post }: { post: Post }) => {
+  const [open, setOpen] = useState(false);
   return (
     <div className="w-full border px-[20px] py-[20px] rounded-md space-y-[20px]">
-      <ShareBtn />
+      <CreateUpdatePostDialog
+        isUpdateDialog={true}
+        orgPost={post}
+        onOpenChange={setOpen}
+        open={open}
+      />
+      <ShareBtn onClick={() => setOpen(true)} />
       <div className="flex space-x-[10px]">
         <Avatar className=" w-[50px] h-[50px]">
           <AvatarFallback className="bg-green-500">

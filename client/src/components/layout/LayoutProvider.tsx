@@ -19,7 +19,7 @@ export const LayoutProvider = ({
       <Sidebar />
       <Navbar />
       <div className="lg:w-[80%] sm:w-[65%] w-full lg:ml-[20%] sm:ml-[35%] ml-0 mt-[50px] flex items-center justify-center">
-        <div className="lg:w-[60%] sm:w-[80%] pt-[30px] sm:pb-[30px] pb-[80px]">{children}</div>
+        <div className="lg:w-[60%] sm:w-[80%] w-full pt-[30px] sm:pb-[30px] pb-[80px]">{children}</div>
       </div>
     </section>
   );

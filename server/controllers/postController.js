@@ -6,15 +6,7 @@ const handlerFactory = require("./handlerFactory");
 const multer = require("multer");
 const uuid = require("uuid").v4;
 
-const multerStorage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, `public/postImages`);
-  },
-  filename: (req, file, cb) => {
-    const ext = file.mimetype.split("/")[1];
-    cb(null, `${uuid()}_${Date.now()}_postImage.${ext}`);
-  },
-});
+const streamifier = require("streamifier");
 
 const multerFileFilter = (req, file, cb) => {
   if (
@@ -28,26 +20,48 @@ const multerFileFilter = (req, file, cb) => {
 };
 
 const upload = multer({
-  storage: multerStorage,
+  storage: multer.memoryStorage(),
   fileFilter: multerFileFilter,
 });
 
+const uploadFromBuffer = (file, imgPublicId) => {
+  let confObj = {
+    resource_type: file.mimetype.substr(0, 5),
+  };
+
+  if (imgPublicId) {
+    confObj.public_id = imgPublicId;
+  }
+
+  return new Promise((resolve, reject) => {
+    const cld_upload_stream = cloudinary.uploader.upload_stream(
+      {
+        folder: "thread",
+        ...confObj,
+      },
+      (err, result) => {
+        if (err) {
+          reject(err);
+          return;
+        } else {
+          resolve(result);
+        }
+      }
+    );
+
+    streamifier.createReadStream(file.buffer).pipe(cld_upload_stream);
+  });
+};
+
 exports.uploadImage = upload.single("image");
+
 exports.uploadToCloudinary = catchAsync(async (req, res, next) => {
   if (!req.file) {
     next();
     return null;
   }
 
-  let confObj = {
-    resource_type: req.file.mimetype.substr(0, 5),
-  };
-
-  if (req.imgPublicId) {
-    confObj.public_id = req.imgPublicId;
-  }
-
-  const image = await cloudinary.uploader.upload(req.file.path, confObj);
+  const image = await uploadFromBuffer(req.file, req.imgPublicId);
 
   req.body.image = image.secure_url;
   next();
@@ -70,7 +84,7 @@ exports.updateImage = catchAsync(async (req, res, next) => {
 exports.createPost = handlerFactory.createOne(Post, { path: "user" });
 exports.getAllPosts = handlerFactory.getAll(Post, { path: "user" });
 exports.getPostById = handlerFactory.getOne(Post);
-exports.updatePost = handlerFactory.updateOne(Post);
+exports.updatePost = handlerFactory.updateOne(Post, { path: "user" });
 exports.deletePost = handlerFactory.deleteOne(Post);
 
 // exports.uploadImages = upload.array("images", 3);

@@ -57,7 +57,7 @@ exports.createOne = (Model, popuOpt) =>
     });
   });
 
-exports.updateOne = (Model) =>
+exports.updateOne = (Model, popuOpt) =>
   catchAsync(async (req, res, next) => {
     const id = req.params.id;
 
@@ -70,7 +70,7 @@ exports.updateOne = (Model) =>
     const updatedDocument = await Model.findByIdAndUpdate(id, req.body, {
       new: true,
       runValidators: true,
-    });
+    }).populate(popuOpt);
 
     res.status(200).json({
       status: "success",
