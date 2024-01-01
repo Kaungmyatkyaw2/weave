@@ -3,6 +3,7 @@ const cors = require("cors");
 const UserRouter = require("./routes/userRoutes");
 const PostRouter = require("./routes/postRoutes");
 const handleGlobalError = require("./controllers/errorController");
+const AppError = require("./utils/appError");
 
 const app = express();
 
@@ -13,6 +14,10 @@ app.options("*", cors());
 
 app.use("/users", UserRouter);
 app.use("/posts", PostRouter);
+
+app.use("*", (req, res, next) => {
+  next(new AppError(`Can't find ${req.originalUrl} on this server.`, 404));
+});
 
 app.use(handleGlobalError);
 

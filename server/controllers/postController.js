@@ -61,8 +61,6 @@ exports.updateImage = catchAsync(async (req, res, next) => {
   const post = await Post.findById(req.params.id);
 
   if (post.image) {
-    console.log(`${post.image}`.substr(62, 20));
-
     req.imgPublicId = `${post.image}`.substr(62, 20);
   }
 
