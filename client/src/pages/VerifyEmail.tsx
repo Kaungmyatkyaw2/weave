@@ -2,26 +2,33 @@ import LoadingButton from "@/shared/others/LoadingButton";
 import { useState } from "react";
 import axiosClient from "@/lib/axios";
 import { useToast } from "@/components/ui/use-toast";
-import { useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { AuthPageWrapper } from "@/components/layout";
+import { useDispatch } from "react-redux";
+import { login } from "@/store/slice/auth.slice";
 
 export const VerifyEmail = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
 
   const [searchParam] = useSearchParams();
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const { toast } = useToast();
 
   const onVerifyEmail = async () => {
     try {
       setIsLoading(true);
-      await axiosClient().post(`users/verifyEmail/${searchParam.get("token")}`);
+      const res = await axiosClient().post(
+        `users/verifyEmail/${searchParam.get("token")}`
+      );
       toast({
         title: "Succesfully verify your email",
       });
       setIsLoading(false);
       setIsSuccess(true);
+      dispatch(login(res.data.token));
     } catch (error: any) {
       toast({
         title: "Failed to sign up.",
@@ -55,7 +62,13 @@ export const VerifyEmail = () => {
             <p className="py-[15px] text-sm text-smoke">
               You can use our app now.
             </p>
-            <LoadingButton>Start now</LoadingButton>
+            <LoadingButton
+              onClick={() => {
+                navigate("/");
+              }}
+            >
+              Start now
+            </LoadingButton>
           </>
         )}
       </div>

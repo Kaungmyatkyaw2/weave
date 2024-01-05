@@ -31,10 +31,12 @@ export const useCreatePost = () => {
     mutationFn: (values) => axiosClient().post("/posts", values),
     onSuccess: (res) => {
       const createdPost = res.data.data.data;
-      const prevCachedPosts: InfiniteQueryResponse<Post> | undefined =
+      const cachedPosts: InfiniteQueryResponse<Post> | undefined =
         queryClient.getQueryData(["posts"], {
           exact: true,
         });
+
+      const prevCachedPosts = JSON.parse(JSON.stringify(cachedPosts));
 
       if (prevCachedPosts) {
         prevCachedPosts.pages[0].data.data.unshift(createdPost);
