@@ -15,6 +15,8 @@ const App = () => {
   const query = useGetPosts();
   const Posts = splitPagesData<Post>(query.data);
 
+  console.log(query.data);
+
   const [open, setOpen] = useState(false);
 
   useInfiniteScroll(query);

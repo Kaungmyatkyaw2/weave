@@ -1,10 +1,19 @@
-import { Share2 } from "lucide-react";
+import { MoreHorizontal, Pen, Share2, Trash } from "lucide-react";
 import { ButtonHTMLAttributes, DetailedHTMLProps, useState } from "react";
 import { Avatar, AvatarFallback } from "../ui/avatar";
 import { Post } from "@/types/post.types";
 import ReactTimeAgo from "react-time-ago";
 import { Skeleton } from "../ui/skeleton";
-import { CreateUpdatePostDialog } from ".";
+import { CreateUpdatePostDialog, CreateUpdateSharePostDialog } from ".";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store/store";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import PostSharedCard from "./PostSharedCard";
 
 const ShareBtn = ({
   ...props
@@ -16,6 +25,35 @@ const ShareBtn = ({
     <Share2 size={20} /> <span>Share</span>
   </button>
 );
+
+function MoreOptions({
+  setEditOpen,
+}: {
+  setEditOpen: React.Dispatch<React.SetStateAction<boolean>>;
+}) {
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <MoreHorizontal size={20} />
+      </DropdownMenuTrigger>
+      <DropdownMenuContent className="w-24">
+        <DropdownMenuItem
+          onClick={() => {
+            setEditOpen(true);
+          }}
+          className="cursor-pointer space-x-[10px] flex items-center py-[8px]"
+        >
+          <Pen size={15} />
+          <span>Edit</span>
+        </DropdownMenuItem>
+        <DropdownMenuItem className="cursor-pointer space-x-[10px] flex items-center py-[8px]">
+          <Trash size={15} />
+          <span>Delete</span>
+        </DropdownMenuItem>{" "}
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
+}
 
 const ImageVideoPlayer = ({ src }: { src?: string | undefined }) => {
   if (!src) {
@@ -59,27 +97,61 @@ export const SkeletonPostCard = () => {
   );
 };
 
-export const PostCard = ({ post }: { post: Post }) => {
+export const PostCard = ({
+  post,
+  isPreview,
+}: {
+  post: Post;
+  isPreview?: boolean;
+}) => {
   const [open, setOpen] = useState(false);
+  const [openShare, setOpenShare] = useState(false);
+  const [openShareEdit, setOpenShareEdit] = useState(false);
+  const currentUser = useSelector((state: RootState) => state.user.currentUser);
+
   return (
     <div className="w-full border px-[20px] py-[20px] rounded-md space-y-[20px]">
+      <CreateUpdateSharePostDialog
+        toShare={post.sharedPost || post}
+        onOpenChange={setOpenShare}
+        open={openShare}
+      />
+
+      <CreateUpdateSharePostDialog
+        isUpdateDialog={true}
+        toShare={post.sharedPost || post}
+        toUpdateSharedPost={post}
+        onOpenChange={setOpenShareEdit}
+        open={openShareEdit}
+      />
+
       <CreateUpdatePostDialog
         isUpdateDialog={true}
         orgPost={post}
         onOpenChange={setOpen}
         open={open}
       />
-      <ShareBtn onClick={() => setOpen(true)} />
+
+      {!isPreview && (
+        <div className="flex justify-between items-center">
+          <ShareBtn onClick={() => setOpenShare(true)} />
+          {post.user._id == currentUser?._id && (
+            <MoreOptions
+              setEditOpen={post.isSharedPost ? setOpenShareEdit : setOpen}
+            />
+          )}
+        </div>
+      )}
       <div className="flex space-x-[10px]">
         <Avatar className=" w-[50px] h-[50px]">
           <AvatarFallback className="bg-green-500">
-            {post.user.displayName.substring(0, 2)}
+            {post.user?.displayName.substring(0, 2)}
           </AvatarFallback>
         </Avatar>
-        <div className="py-[1px]">
+        <div className="py-[1px] w-full">
           <div className="flex space-x-[10px] items-center">
-            <h1 className="text-md font-bold">{post.user.displayName}</h1>
-            <p className="text-sm text-smoke">@{post.user.userName}</p>
+            <h1 className="text-md font-bold">{post.user?.displayName}</h1>
+            <p className="text-sm text-smoke">@{post.user?.userName}</p>
           </div>
           <p className="text-[13px] text-smoke pb-[10px]">
             <ReactTimeAgo
@@ -89,6 +161,11 @@ export const PostCard = ({ post }: { post: Post }) => {
           </p>
           <p className="pt-[5px] text-smoke text-sm">{post.title}</p>
           <ImageVideoPlayer src={post.image} />
+          {post.isSharedPost && (
+            <div className="min-w-full pt-[20px]">
+              <PostSharedCard post={post.sharedPost} />{" "}
+            </div>
+          )}
         </div>
       </div>
     </div>

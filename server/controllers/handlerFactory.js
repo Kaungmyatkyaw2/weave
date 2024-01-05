@@ -4,7 +4,17 @@ const AppError = require("../utils/appError");
 
 exports.getAll = (Model, popuOpt) =>
   catchAsync(async (req, res, next) => {
-    const query = new ApiFeatures(Model.find().populate(popuOpt), req.query)
+    let orgQuery = Model.find();
+
+    if (popuOpt instanceof Array) {
+      popuOpt.forEach((opt) => {
+        orgQuery = orgQuery.populate(opt);
+      });
+    } else {
+      orgQuery = orgQuery.populate(popuOpt);
+    }
+
+    const query = new ApiFeatures(orgQuery, req.query)
       .filter()
       .select()
       .sort()

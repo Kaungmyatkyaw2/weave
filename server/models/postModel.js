@@ -15,7 +15,7 @@ const PostSchema = new mongoose.Schema({
   },
   sharedPost: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "Post",
+    ref: "post",
   },
   isSharedPost: {
     type: Boolean,

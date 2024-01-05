@@ -12,6 +12,7 @@ Router.route("/")
     postController.uploadImage,
     postController.uploadToCloudinary,
     userController.setUserId("body"),
+    postController.sharePost,
     postController.createPost
   );
 

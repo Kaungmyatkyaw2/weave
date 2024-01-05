@@ -81,10 +81,29 @@ exports.updateImage = catchAsync(async (req, res, next) => {
   next();
 });
 
-exports.createPost = handlerFactory.createOne(Post, { path: "user" });
-exports.getAllPosts = handlerFactory.getAll(Post, { path: "user" });
+exports.sharePost = (req, res, next) => {
+  if (req.body.sharedPost) {
+    req.body.isSharedPost = true;
+  }
+
+  next();
+};
+
+const popuOpt = [
+  { path: "user" },
+  {
+    path: "sharedPost",
+    populate: {
+      path: "user",
+      model: "user",
+    },
+  },
+];
+
+exports.createPost = handlerFactory.createOne(Post, popuOpt);
+exports.getAllPosts = handlerFactory.getAll(Post, popuOpt);
 exports.getPostById = handlerFactory.getOne(Post);
-exports.updatePost = handlerFactory.updateOne(Post, { path: "user" });
+exports.updatePost = handlerFactory.updateOne(Post, popuOpt);
 exports.deletePost = handlerFactory.deleteOne(Post);
 
 // exports.uploadImages = upload.array("images", 3);

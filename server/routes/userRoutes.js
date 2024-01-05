@@ -28,5 +28,6 @@ Router.patch(
   userController.updateUser
 );
 Router.get("/me", userController.setUserId("params"), userController.getUser);
+// Router.get("/test", userController.setUserId("params"), userController.test);
 
 module.exports = Router;

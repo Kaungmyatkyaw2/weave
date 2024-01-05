@@ -48,6 +48,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
               }
             >
               <Route path="" element={<App />} />
+              <Route path="/user/:id" element={<App />} />
             </Route>
             <Route path="/" element={<NavigateHome />}>
               <Route path="/login" element={<Login />} />

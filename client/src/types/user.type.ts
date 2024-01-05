@@ -6,4 +6,6 @@ export interface User {
   active: boolean;
   createdAt: Date;
   _id: string;
+  following : number;
+  follower : number;
 }

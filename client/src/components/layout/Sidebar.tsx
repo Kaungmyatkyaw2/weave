@@ -73,8 +73,8 @@ export const Sidebar = () => {
             </p>
           </div>
           <div className="flex flex-wrap space-x-[20px]">
-            <p className="text-sm">14 Following</p>
-            <p className="text-sm">14 Followers</p>
+            <p className="text-sm">{currentUser?.following} Following</p>
+            <p className="text-sm">{currentUser?.follower} Followers</p>
           </div>
         </div>
         <div className="py-[30px] px-[20px] space-y-[30px] border-b">
