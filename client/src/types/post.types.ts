@@ -1,15 +1,12 @@
 import { User } from "./user.type";
 
-interface ExtPost {
+export interface Post {
   createdAt: Date;
   image?: string;
   privacy: "PRIVATE" | "PUBLIC";
   title?: string;
   user: User;
   _id: string;
-}
-
-export interface Post extends ExtPost {
-  isSharedPost: boolean;
-  sharedPost: ExtPost;
+  isSharedPost?: boolean;
+  sharedPost?: Post;
 }

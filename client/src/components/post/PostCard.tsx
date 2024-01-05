@@ -161,7 +161,7 @@ export const PostCard = ({
           </p>
           <p className="pt-[5px] text-smoke text-sm">{post.title}</p>
           <ImageVideoPlayer src={post.image} />
-          {post.isSharedPost && (
+          {post.sharedPost && (
             <div className="min-w-full pt-[20px]">
               <PostSharedCard post={post.sharedPost} />{" "}
             </div>
