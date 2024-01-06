@@ -1,8 +1,6 @@
 import { MoreHorizontal, Pen, Share2, Trash } from "lucide-react";
 import { ButtonHTMLAttributes, DetailedHTMLProps, useState } from "react";
-import { Avatar, AvatarFallback } from "../ui/avatar";
 import { Post } from "@/types/post.types";
-import ReactTimeAgo from "react-time-ago";
 import { Skeleton } from "../ui/skeleton";
 import { CreateUpdatePostDialog, CreateUpdateSharePostDialog } from ".";
 import { useSelector } from "react-redux";
@@ -13,8 +11,8 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import PostSharedCard from "./PostSharedCard";
 import DeletePostDialog from "./DeletePostDialog";
+import PostBodyCard from "./PostBodyCard";
 
 const ShareBtn = ({
   ...props
@@ -63,25 +61,6 @@ function MoreOptions({
   );
 }
 
-const ImageVideoPlayer = ({ src }: { src?: string | undefined }) => {
-  if (!src) {
-    return <></>;
-  }
-
-  return (
-    <div className=" pt-[10px] max-w-full">
-      {src?.includes("video") ? (
-        <video src={src} height={400} width={400} controls />
-      ) : (
-        <img
-          className="max-w-[100%] h-[300px] min-h-[200px] object-cover rounded-[10px]"
-          src={src}
-        />
-      )}
-    </div>
-  );
-};
-
 export const SkeletonPostCard = () => {
   return (
     <div className="w-full border px-[20px] py-[20px] rounded-md space-y-[20px]">
@@ -105,13 +84,7 @@ export const SkeletonPostCard = () => {
   );
 };
 
-export const PostCard = ({
-  post,
-  isPreview,
-}: {
-  post: Post;
-  isPreview?: boolean;
-}) => {
+export const PostCard = ({ post }: { post: Post }) => {
   const [openEdit, setOpenEdit] = useState(false);
   const [openDelete, setOpenDelete] = useState(false);
   const [openShare, setOpenShare] = useState(false);
@@ -120,9 +93,7 @@ export const PostCard = ({
 
   return (
     <div
-      className={`"w-full border rounded-md space-y-[20px] ${
-        isPreview ? "px-[10px] py-[10px] bg-gray-50" : "px-[20px] py-[20px]"
-      }`}
+      className={"w-full border rounded-md space-y-[20px] px-[20px] py-[20px] "}
     >
       <CreateUpdateSharePostDialog
         toShare={post.sharedPost || post}
@@ -151,43 +122,17 @@ export const PostCard = ({
         open={openDelete}
       />
 
-      {!isPreview && (
-        <div className="flex justify-between items-center">
-          <ShareBtn onClick={() => setOpenShare(true)} />
-          {post.user._id == currentUser?._id && (
-            <MoreOptions
-              setEditOpen={post.isSharedPost ? setOpenShareEdit : setOpenEdit}
-              setDeleteOpen={setOpenDelete}
-            />
-          )}
-        </div>
-      )}
-      <div className="flex space-x-[10px]">
-        <Avatar className=" w-[50px] h-[50px]">
-          <AvatarFallback className="bg-green-500">
-            {post.user?.displayName.substring(0, 2)}
-          </AvatarFallback>
-        </Avatar>
-        <div className="py-[1px] w-full">
-          <div className="flex space-x-[10px] items-center">
-            <h1 className="text-md font-bold">{post.user?.displayName}</h1>
-            <p className="text-sm text-smoke">@{post.user?.userName}</p>
-          </div>
-          <p className="text-[13px] text-smoke pb-[13px]">
-            <ReactTimeAgo
-              date={new Date(post.createdAt).getTime()}
-              locale="en-US"
-            />
-          </p>
-          <p className="text-smoke text-sm">{post.title}</p>
-          <ImageVideoPlayer src={post.image} />
-          {post.sharedPost && (
-            <div className="min-w-full pt-[10px]">
-              <PostSharedCard post={post.sharedPost} />{" "}
-            </div>
-          )}
-        </div>
+      <div className="flex justify-between items-center">
+        <ShareBtn onClick={() => setOpenShare(true)} />
+        {post.user._id == currentUser?._id && (
+          <MoreOptions
+            setEditOpen={post.isSharedPost ? setOpenShareEdit : setOpenEdit}
+            setDeleteOpen={setOpenDelete}
+          />
+        )}
       </div>
+
+      <PostBodyCard post={post} toShowSharedPost />
     </div>
   );
 };

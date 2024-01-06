@@ -7,7 +7,7 @@ import { Avatar, AvatarFallback } from "../ui/avatar";
 import LoadingButton from "@/shared/others/LoadingButton";
 import { useCreatePost, useUpdatePost } from "@/hooks/post.hooks";
 import { Post } from "@/types/post.types";
-import PostSharedCard from "./PostSharedCard";
+import SharedPostPreviewCard from "./SharedPostPreviewCard";
 
 interface Prop extends DialogProps {
   isUpdateDialog?: boolean;
@@ -104,7 +104,7 @@ export const CreateUpdateSharePostDialog = ({
           className="outline-none text-sm placeholder:text-lg h-[50px] styled-scroll resize-none max-h-[170px] py-[10px]"
         />
 
-        <PostSharedCard post={toShare} />
+        <SharedPostPreviewCard post={toShare} />
 
         <DialogFooter>
           <LoadingButton
