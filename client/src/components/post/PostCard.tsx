@@ -14,6 +14,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import PostSharedCard from "./PostSharedCard";
+import DeletePostDialog from "./DeletePostDialog";
 
 const ShareBtn = ({
   ...props
@@ -28,8 +29,10 @@ const ShareBtn = ({
 
 function MoreOptions({
   setEditOpen,
+  setDeleteOpen,
 }: {
   setEditOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  setDeleteOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
   return (
     <DropdownMenu>
@@ -46,7 +49,12 @@ function MoreOptions({
           <Pen size={15} />
           <span>Edit</span>
         </DropdownMenuItem>
-        <DropdownMenuItem className="cursor-pointer space-x-[10px] flex items-center py-[8px]">
+        <DropdownMenuItem
+          onClick={() => {
+            setDeleteOpen(true);
+          }}
+          className="cursor-pointer space-x-[10px] flex items-center py-[8px]"
+        >
           <Trash size={15} />
           <span>Delete</span>
         </DropdownMenuItem>{" "}
@@ -104,13 +112,18 @@ export const PostCard = ({
   post: Post;
   isPreview?: boolean;
 }) => {
-  const [open, setOpen] = useState(false);
+  const [openEdit, setOpenEdit] = useState(false);
+  const [openDelete, setOpenDelete] = useState(false);
   const [openShare, setOpenShare] = useState(false);
   const [openShareEdit, setOpenShareEdit] = useState(false);
   const currentUser = useSelector((state: RootState) => state.user.currentUser);
 
   return (
-    <div className="w-full border px-[20px] py-[20px] rounded-md space-y-[20px]">
+    <div
+      className={`"w-full border rounded-md space-y-[20px] ${
+        isPreview ? "px-[10px] py-[10px] bg-gray-50" : "px-[20px] py-[20px]"
+      }`}
+    >
       <CreateUpdateSharePostDialog
         toShare={post.sharedPost || post}
         onOpenChange={setOpenShare}
@@ -128,8 +141,14 @@ export const PostCard = ({
       <CreateUpdatePostDialog
         isUpdateDialog={true}
         orgPost={post}
-        onOpenChange={setOpen}
-        open={open}
+        onOpenChange={setOpenEdit}
+        open={openEdit}
+      />
+
+      <DeletePostDialog
+        post={post}
+        onOpenChange={setOpenDelete}
+        open={openDelete}
       />
 
       {!isPreview && (
@@ -137,7 +156,8 @@ export const PostCard = ({
           <ShareBtn onClick={() => setOpenShare(true)} />
           {post.user._id == currentUser?._id && (
             <MoreOptions
-              setEditOpen={post.isSharedPost ? setOpenShareEdit : setOpen}
+              setEditOpen={post.isSharedPost ? setOpenShareEdit : setOpenEdit}
+              setDeleteOpen={setOpenDelete}
             />
           )}
         </div>
@@ -153,16 +173,16 @@ export const PostCard = ({
             <h1 className="text-md font-bold">{post.user?.displayName}</h1>
             <p className="text-sm text-smoke">@{post.user?.userName}</p>
           </div>
-          <p className="text-[13px] text-smoke pb-[10px]">
+          <p className="text-[13px] text-smoke pb-[13px]">
             <ReactTimeAgo
               date={new Date(post.createdAt).getTime()}
               locale="en-US"
             />
           </p>
-          <p className="pt-[5px] text-smoke text-sm">{post.title}</p>
+          <p className="text-smoke text-sm">{post.title}</p>
           <ImageVideoPlayer src={post.image} />
           {post.sharedPost && (
-            <div className="min-w-full pt-[20px]">
+            <div className="min-w-full pt-[10px]">
               <PostSharedCard post={post.sharedPost} />{" "}
             </div>
           )}

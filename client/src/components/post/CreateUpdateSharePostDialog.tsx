@@ -39,7 +39,7 @@ export const CreateUpdateSharePostDialog = ({
     setTitle(isUpdateDialog ? toUpdateSharedPost?.title : "");
   };
 
-  const onCreateOrUpdate = async () => {
+  const onCreateOrUpdate = () => {
     const formData = new FormData();
 
     formData.append("title", title || "");
@@ -53,7 +53,7 @@ export const CreateUpdateSharePostDialog = ({
       ? { id: toUpdateSharedPost?._id, values: formData }
       : formData;
 
-    await mutation.mutateAsync(payload, {
+    mutation.mutateAsync(payload, {
       onError(error) {
         console.log(error);
       },

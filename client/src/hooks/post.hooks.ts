@@ -6,7 +6,10 @@ import {
   useMutation,
   useQueryClient,
 } from "@tanstack/react-query";
-import { updateInfiniteQueryPages } from "./helper";
+import {
+  updateInfiniteQueryPages,
+  updateInfiniteQueryPagesOnDelete,
+} from "./helper";
 
 export const useGetPosts = () =>
   useInfiniteQuery({
@@ -64,6 +67,29 @@ export const useUpdatePost = () => {
         prevCachedPosts = updateInfiniteQueryPages<Post>(
           prevCachedPosts,
           updatedPost
+        );
+      }
+
+      queryClient.setQueryData(["posts"], prevCachedPosts);
+    },
+  });
+};
+
+export const useDeletePost = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (payload: any) => axiosClient().delete(`/posts/${payload._id}`),
+    onSuccess: (_, post: Post) => {
+      let prevCachedPosts: InfiniteQueryResponse<Post> | undefined =
+        queryClient.getQueryData(["posts"], {
+          exact: true,
+        });
+
+      if (prevCachedPosts) {
+        prevCachedPosts = updateInfiniteQueryPagesOnDelete(
+          prevCachedPosts,
+          post._id
         );
       }
 

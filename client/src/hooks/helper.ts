@@ -21,3 +21,24 @@ export const updateInfiniteQueryPages = <T extends Post>(
 
   return prevData;
 };
+
+export const updateInfiniteQueryPagesOnDelete = <T extends Post>(
+  prevData: InfiniteQueryResponse<T>,
+  id: string
+) => {
+  let pages = prevData.pages;
+
+  pages = pages.map((el) => ({
+    ...el,
+    data: {
+      data: el.data.data.filter((de) => de._id != id),
+    },
+  }));
+
+  prevData = {
+    ...prevData,
+    pages,
+  };
+
+  return prevData;
+};

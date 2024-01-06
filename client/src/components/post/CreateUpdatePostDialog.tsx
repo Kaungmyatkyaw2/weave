@@ -49,7 +49,7 @@ export const CreateUpdatePostDialog = ({
     }
   };
 
-  const onCreateOrUpdate = async () => {
+  const onCreateOrUpdate = () => {
     const formData = new FormData();
 
     formData.append("title", title || "");
@@ -62,7 +62,7 @@ export const CreateUpdatePostDialog = ({
       ? { id: orgPost?._id, values: formData }
       : formData;
 
-    await mutation.mutateAsync(payload, {
+    mutation.mutateAsync(payload, {
       onError(error) {
         console.log(error);
       },
