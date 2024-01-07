@@ -4,7 +4,6 @@ import {
   AlertDialog,
   AlertDialogContent,
   AlertDialogDescription,
-  AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
@@ -44,7 +43,7 @@ const DeletePostDialog = ({ post, onOpenChange, ...props }: Prop) => {
             account and remove your data from our servers.
           </AlertDialogDescription>
         </AlertDialogHeader>
-        <AlertDialogFooter>
+        <div className="flex sm:justify-end justify-center space-x-[10px]">
           <LoadingButton
             disabled={delMutation.isLoading}
             variant={"outline"}
@@ -60,7 +59,7 @@ const DeletePostDialog = ({ post, onOpenChange, ...props }: Prop) => {
           >
             Continue
           </LoadingButton>
-        </AlertDialogFooter>
+        </div>
       </AlertDialogContent>
     </AlertDialog>
   );
