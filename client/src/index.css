@@ -89,3 +89,7 @@
 .styled-scroll::-webkit-scrollbar-thumb:hover {
   background-color: #555; /* Set the color of the scrollbar thumb on hover */
 }
+
+.hidden-scroll::-webkit-scrollbar {
+  display: none;
+}

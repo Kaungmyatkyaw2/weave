@@ -1,11 +1,11 @@
-const ImageVideoPlayer = ({ src }: { src?: string | undefined }) => {
+const ImageVideoPlayer = ({ src,isVideo }: { src?: string | undefined,isVideo? : boolean }) => {
   if (!src) {
     return <></>;
   }
 
   return (
     <div className=" pt-[10px] max-w-full">
-      {src?.includes("video") ? (
+      {src?.includes("video") || isVideo ? (
         <video src={src} height={400} width={400} controls />
       ) : (
         <img

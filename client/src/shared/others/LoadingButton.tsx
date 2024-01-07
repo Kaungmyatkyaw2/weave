@@ -17,7 +17,7 @@ const LoadingButton = ({ children, className, loading, ...props }: Props) => {
           <Loader className="animate-spin" />
         </div>
       )}
-      <span className={`${loading ? "opacity-0" : "opacity-1"} text-base`}>
+      <span className={`${loading ? "opacity-0" : "opacity-1"}`}>
         {children}
       </span>
     </Button>

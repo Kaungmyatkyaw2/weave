@@ -1,14 +1,15 @@
-import { Dialog, DialogContent, DialogFooter } from "../ui/dialog";
+import { Dialog, DialogContent } from "../ui/dialog";
 import { DialogProps } from "@radix-ui/react-dialog";
 import { ChangeEvent, useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
-import { Label } from "@radix-ui/react-label";
 import { RootState } from "@/store/store";
 import { Avatar, AvatarFallback } from "../ui/avatar";
 import LoadingButton from "@/shared/others/LoadingButton";
 import { useCreatePost, useUpdatePost } from "@/hooks/post.hooks";
 import { Input } from "../ui/input";
 import { Post } from "@/types/post.types";
+import { Image } from "lucide-react";
+import ImageVideoPlayer from "./ImageVideoPlayer";
 
 interface Prop extends DialogProps {
   isUpdateDialog?: boolean;
@@ -101,56 +102,56 @@ export const CreateUpdatePostDialog = ({
       }
       {...props}
     >
-      <DialogContent className="">
-        <div className="w-full flex items-center">
-          <Avatar className=" w-[50px] h-[50px]">
-            <AvatarFallback className="bg-green-500">
-              {currentUser?.displayName.substring(0, 2)}
-            </AvatarFallback>
-          </Avatar>
-          <div className="pl-[10px]">
-            <div className="space-y-[3px]">
-              <h1 className="text-md font-bold">{currentUser?.displayName}</h1>
-              <p className="text-sm text-smoke">@{currentUser?.userName}</p>
+      <DialogContent className="sm:min-w-[50%] min-w-full px-0">
+        <div className="sm:h-[80vh] h-[90vh] w-full px-[30px]">
+          <div className="w-full h-[20%] flex items-center">
+            <Avatar className=" w-[50px] h-[50px]">
+              <AvatarFallback className="bg-green-500">
+                {currentUser?.displayName.substring(0, 2)}
+              </AvatarFallback>
+            </Avatar>
+            <div className="pl-[10px]">
+              <div className="space-y-[3px]">
+                <h1 className="text-md font-bold">
+                  {currentUser?.displayName}
+                </h1>
+                <p className="text-sm text-smoke">@{currentUser?.userName}</p>
+              </div>
             </div>
           </div>
+          <div className="w-full h-[65%] overflow-y-scroll styled-scroll py-[10px]">
+            <textarea
+              onChange={(e) => setTitle(e.target.value)}
+              value={title}
+              onInput={handleTextareaResize}
+              placeholder="Title...."
+              className="outline-none text-sm placeholder:text-lg resize-none w-full"
+            />
+            {previewImg && (
+              <ImageVideoPlayer src={previewImg} isVideo={!isImage} />
+            )}
+          </div>
+          <div className="w-full h-[15%] flex items-center justify-between">
+            <Image
+              className="cursor-pointer"
+              onClick={() => fileRef.current?.click()}
+            />
+            <Input
+              ref={fileRef}
+              onChange={onFileChange}
+              id="picture"
+              type="file"
+              className="hidden"
+            />
+            <LoadingButton
+              loading={createMutation.isLoading || updateMutation.isLoading}
+              onClick={onCreateOrUpdate}
+              className="py-[25px] px-[20px] w-fit text-[14px] rounded-full"
+            >
+              Submit
+            </LoadingButton>
+          </div>
         </div>
-        <textarea
-          onChange={(e) => setTitle(e.target.value)}
-          value={title}
-          onInput={handleTextareaResize}
-          placeholder="Title...."
-          className="outline-none text-sm placeholder:text-lg h-[50px] styled-scroll resize-none max-h-[170px] py-[10px]"
-        />
-        <div className="w-full space-y-[4px]">
-          {previewImg &&
-            (isImage ? (
-              <img
-                src={previewImg}
-                className="w-full h-auto max-h-[200px] object-cover"
-              />
-            ) : (
-              <video src={previewImg} height={200} width={300} controls />
-            ))}
-          <Label className="text-sm">Upload pic or video.</Label>
-          <Input
-            ref={fileRef}
-            onChange={onFileChange}
-            id="picture"
-            type="file"
-            // accept="image/*"
-            className="text-sm cursor-pointer w-full"
-          />
-        </div>
-        <DialogFooter>
-          <LoadingButton
-            loading={createMutation.isLoading || updateMutation.isLoading}
-            onClick={onCreateOrUpdate}
-            className="py-[25px]"
-          >
-            Submit
-          </LoadingButton>
-        </DialogFooter>
       </DialogContent>
     </Dialog>
   );
