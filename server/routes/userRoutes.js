@@ -2,6 +2,8 @@ const express = require("express");
 const authController = require("../controllers/authController");
 const userController = require("../controllers/userController");
 
+const postRouter = require("./postRoutes");
+
 const Router = express.Router();
 
 Router.post("/signup", authController.signup);
@@ -28,6 +30,15 @@ Router.patch(
   userController.updateUser
 );
 Router.get("/me", userController.setUserId("params"), userController.getUser);
-// Router.get("/test", userController.setUserId("params"), userController.test);
+Router.get("/:id", userController.getUser);
+
+Router.use(
+  "/:id/posts",
+  (req, res, next) => {
+    req.query.user = req.params.id;
+    next();
+  },
+  postRouter
+);
 
 module.exports = Router;

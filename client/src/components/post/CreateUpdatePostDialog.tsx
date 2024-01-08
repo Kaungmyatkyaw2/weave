@@ -8,8 +8,9 @@ import LoadingButton from "@/shared/others/LoadingButton";
 import { useCreatePost, useUpdatePost } from "@/hooks/post.hooks";
 import { Input } from "../ui/input";
 import { Post } from "@/types/post.types";
-import { Image } from "lucide-react";
+import { Image, X } from "lucide-react";
 import ImageVideoPlayer from "./ImageVideoPlayer";
+import { Button } from "../ui/button";
 
 interface Prop extends DialogProps {
   isUpdateDialog?: boolean;
@@ -128,7 +129,19 @@ export const CreateUpdatePostDialog = ({
               className="outline-none text-sm placeholder:text-lg resize-none w-full"
             />
             {previewImg && (
-              <ImageVideoPlayer src={previewImg} isVideo={!isImage} />
+              <div className="w-full relative">
+                <Button
+                  onClick={() => {
+                    setFile(null);
+                    setPreviewImg(undefined);
+                  }}
+                  variant={"outline"}
+                  className="text-[12px] absolute top-0 right-0"
+                >
+                  <X size={16} />
+                </Button>
+                <ImageVideoPlayer src={previewImg} isVideo={!isImage} />
+              </div>
             )}
           </div>
           <div className="w-full h-[15%] flex items-center justify-between">

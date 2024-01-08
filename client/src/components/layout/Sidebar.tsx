@@ -37,7 +37,7 @@ const LogoutBtn = () => {
   );
 };
 
-const NavigationButtons = () => {
+const NavigationButtons = ({ userId }: { userId?: string }) => {
   return (
     <>
       <SideBtn icon={Newspaper} to={"/"}>
@@ -46,7 +46,7 @@ const NavigationButtons = () => {
       <SideBtn to={"/"} icon={Search}>
         Search
       </SideBtn>
-      <SideBtn to={"/"} icon={UserCircle}>
+      <SideBtn to={`/user/${userId}`} icon={UserCircle}>
         Profile
       </SideBtn>
       <LogoutBtn />
@@ -78,13 +78,13 @@ export const Sidebar = () => {
           </div>
         </div>
         <div className="py-[30px] px-[20px] space-y-[30px] border-b">
-          <NavigationButtons />
+          <NavigationButtons userId={currentUser?._id} />
         </div>
       </div>
 
       <div className="w-full sm:hidden flex items-center justify-center fixed bottom-0 right-0 h-[50px]  border-t bg-white z-[9]">
         <div className="w-[80%] h-fit flex gap-16 items-center justify-center">
-          <NavigationButtons />
+          <NavigationButtons userId={currentUser?._id} />
         </div>
       </div>
     </>

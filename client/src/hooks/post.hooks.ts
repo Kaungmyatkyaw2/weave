@@ -27,6 +27,23 @@ export const useGetPosts = () =>
     },
   });
 
+export const useGetPostsByUser = (userId: string | undefined) =>
+  useInfiniteQuery({
+    queryKey: ["posts", userId],
+    queryFn: ({ pageParam = 1 }) =>
+      axiosClient()
+        .get(`/users/${userId}/posts?page=${pageParam}`)
+        .then((res) => res.data),
+    getNextPageParam: (lastPage: Response<Post[]>, allPages: any) => {
+      if (lastPage.result < 2) {
+        return undefined;
+      } else {
+        return allPages.length + 1;
+      }
+    },
+    enabled: !!userId,
+  });
+
 export const useCreatePost = () => {
   const queryClient = useQueryClient();
 
