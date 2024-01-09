@@ -1,4 +1,5 @@
-const Follow = require("../models/followerModel");
+const Follow = require("../models/followModel");
 const handlerFactory = require("./handlerFactory");
 
-exports.creteFollow = handlerFactory.createOne(Follow);
+exports.createFollow = handlerFactory.createOne(Follow);
+exports.deleteFollow = handlerFactory.deleteOne(Follow);

@@ -6,6 +6,14 @@ export interface User {
   active: boolean;
   createdAt: Date;
   _id: string;
-  following : number;
-  follower : number;
+  following: number;
+  follower: number;
+  followId?: string;
+}
+
+export interface Follow {
+  followingUser: string;
+  followerUser: string;
+  _id: string;
+  createdAt: Date;
 }

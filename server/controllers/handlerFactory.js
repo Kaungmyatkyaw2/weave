@@ -53,9 +53,11 @@ exports.getOne = (Model) =>
 
 exports.createOne = (Model, popuOpt) =>
   catchAsync(async (req, res, next) => {
-    let query = (
-      await Model.create({ ...req.body, createdAt: Date.now() })
-    ).populate(popuOpt);
+    let query = await Model.create({ ...req.body, createdAt: Date.now() });
+
+    if (popuOpt) {
+      query = query.populate(popuOpt);
+    }
 
     const data = await query;
 

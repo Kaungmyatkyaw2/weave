@@ -17,8 +17,18 @@ const UserSlice = createSlice({
     removeCurrentUser: (state) => {
       state.currentUser = null;
     },
+    updateFollow: (state, action: { payload: "add" | "remove" }) => {
+      if (state.currentUser) {
+        if (action.payload == "add") {
+          state.currentUser.following += 1;
+        } else {
+          state.currentUser.following -= 1;
+        }
+      }
+    },
   },
 });
 
-export const { removeCurrentUser, setCurrentUser } = UserSlice.actions;
+export const { removeCurrentUser, setCurrentUser, updateFollow } =
+  UserSlice.actions;
 export default UserSlice.reducer;

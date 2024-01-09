@@ -40,7 +40,6 @@ module.exports = class Email {
   }
 
   async sendResetPasswordLink() {
-    console.log("Hello");
     return await this.send(
       "resetPassword",
       "Reset Your Password ! (this link is only alive for 10 minutes)"

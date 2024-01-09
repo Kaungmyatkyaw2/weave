@@ -1,11 +1,9 @@
-const { default: mongoose } = require("mongoose");
+const mongoose = require("mongoose");
 const User = require("../models/userModel");
 const AppError = require("../utils/appError");
 const catchAsync = require("../utils/catchAsync");
 const filterObject = require("../utils/filterObject");
 const handlerFactory = require("./handlerFactory");
-const Follow = require("../models/followModel");
-const ApiFeatures = require("../utils/apiFeatures");
 
 exports.setUserId = (field) => {
   return (req, res, next) => {
@@ -30,39 +28,55 @@ exports.protectUpdateMe = (req, res, next) => {
 };
 
 exports.getAllUsers = handlerFactory.getAll(User);
+// exports.getUser = handlerFactory.getOne(User);
 exports.updateUser = handlerFactory.updateOne(User);
 
 exports.getUser = catchAsync(async (req, res, next) => {
   const id = req.params.id;
 
-  const query = new ApiFeatures(User.findById(id), req.query).select();
+  const result = await User.aggregate([
+    {
+      $match: { _id: new mongoose.Types.ObjectId(id) },
+    },
+    {
+      $lookup: {
+        from: "follow",
+        localField: "_id",
+        foreignField: "followingUser",
+        as: "followingUsers",
+      },
+    },
+    {
+      $lookup: {
+        from: "follow",
+        localField: "_id",
+        foreignField: "followerUser",
+        as: "followerUsers",
+      },
+    },
+    {
+      $addFields: {
+        following: { $size: "$followingUsers" },
+        follower: { $size: "$followerUsers" },
+      },
+    },
+    {
+      $unset: ["password", "active", "isVerifiedEmail"],
+    },
+  ]);
 
-  let document = await query.query;
+  if (result == 0) {
+    return next(new AppError("No user are found with this id.", 400));
+  }
 
-  const follower = await Follow.countDocuments({
-    followingUser: id,
-  });
-
-  const following = await Follow.countDocuments({
-    followerUser: id,
-  });
-
-  const followDoc = await Follow.findOne({
+  const isFollowingThisUser = await Follow.findOne({
     followerUser: new mongoose.Types.ObjectId(req.user._id),
     followingUser: new mongoose.Types.ObjectId(id),
   });
-
-  const updatedDocument = JSON.parse(JSON.stringify(document));
-
   res.status(200).json({
     status: "success",
     data: {
-      data: {
-        ...updatedDocument,
-        following,
-        follower,
-        followId: followDoc ? followDoc._id : undefined,
-      },
+      data: { ...result[0], isFollowingThisUser: !!isFollowingThisUser },
     },
   });
 });
