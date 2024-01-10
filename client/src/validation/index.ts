@@ -7,3 +7,8 @@ export const setRequired = (msg: string) => ({
   value: true,
   message: msg,
 });
+
+export const passwordLength = {
+  value: 6,
+  message: "Password must be 6 length minium.",
+};

@@ -11,6 +11,7 @@ import { Post } from "@/types/post.types";
 import { Image, X } from "lucide-react";
 import ImageVideoPlayer from "./ImageVideoPlayer";
 import { Button } from "../ui/button";
+import { useToast } from "../ui/use-toast";
 
 interface Prop extends DialogProps {
   isUpdateDialog?: boolean;
@@ -33,6 +34,8 @@ export const CreateUpdatePostDialog = ({
 
   const createMutation = useCreatePost();
   const updateMutation = useUpdatePost();
+
+  const { toast } = useToast();
 
   useEffect(() => {
     if (isUpdateDialog) {
@@ -65,8 +68,12 @@ export const CreateUpdatePostDialog = ({
       : formData;
 
     mutation.mutateAsync(payload, {
-      onError(error) {
-        console.log(error);
+      onError(error: any) {
+        toast({
+          title: `Failed to ${isUpdateDialog ? "Update" : "Create"}`,
+          description: error.response.data.message,
+          variant: "destructive",
+        });
       },
       onSuccess() {
         onCloseDialog();

@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { removeToken } from "@/store/slice/auth.slice";
 import { removeCurrentUser } from "@/store/slice/user.slice";
 import { RootState } from "@/store/store";
+import { useQueryClient } from "@tanstack/react-query";
 
 interface SideBtnProps extends NavLinkProps {
   icon: any;
@@ -22,12 +23,14 @@ const SideBtn = ({ className, children, ...props }: SideBtnProps) => {
 
 const LogoutBtn = () => {
   const dispatch = useDispatch();
+  const queryClient = useQueryClient();
 
   return (
     <button
       onClick={() => {
         dispatch(removeToken());
         dispatch(removeCurrentUser());
+        queryClient.clear();
       }}
       className="sm:flex sm:space-x-[10px]"
     >

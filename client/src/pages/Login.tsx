@@ -1,5 +1,5 @@
 import { useForm } from "react-hook-form";
-import { emailPattern, setRequired } from "@/validation";
+import { emailPattern, passwordLength, setRequired } from "@/validation";
 import axiosClient from "@/lib/axios";
 import LoadingButton from "@/shared/others/LoadingButton";
 import { useState } from "react";
@@ -70,6 +70,7 @@ export const Login = () => {
               error={errors.password?.message}
               {...register("password", {
                 required: setRequired("Password is required"),
+                minLength: passwordLength,
               })}
             />
             <NavLink

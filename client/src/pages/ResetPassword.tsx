@@ -1,7 +1,7 @@
 import LoadingButton from "@/shared/others/LoadingButton";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { setRequired } from "@/validation";
+import { passwordLength, setRequired } from "@/validation";
 import axiosClient from "@/lib/axios";
 import { useToast } from "@/components/ui/use-toast";
 import { useSearchParams } from "react-router-dom";
@@ -59,6 +59,7 @@ export const ResetPassword = () => {
             error={errors.password?.message}
             {...register("password", {
               required: setRequired("Password is required"),
+              minLength: passwordLength,
             })}
             label="Password"
           />
@@ -68,6 +69,7 @@ export const ResetPassword = () => {
             error={errors.passwordConfirm?.message}
             {...register("passwordConfirm", {
               required: setRequired("Confirm password is required"),
+              minLength: passwordLength,
             })}
             label="Confirm password"
           />

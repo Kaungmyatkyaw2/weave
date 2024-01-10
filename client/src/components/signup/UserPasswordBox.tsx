@@ -1,6 +1,6 @@
 import { FormValues } from "@/pages";
 import { LabeledInput } from "@/shared/form/LabeledInput";
-import { setRequired } from "@/validation";
+import { passwordLength, setRequired } from "@/validation";
 import { FieldErrors, UseFormRegister } from "react-hook-form";
 
 interface Props {
@@ -19,6 +19,7 @@ export const UserPasswordBox = ({ register, errors }: Props) => {
         error={errors.password?.message}
         {...register("password", {
           required: setRequired("Password is required"),
+          minLength: passwordLength,
         })}
       />
       <LabeledInput
@@ -29,6 +30,7 @@ export const UserPasswordBox = ({ register, errors }: Props) => {
         error={errors.passwordConfirm?.message}
         {...register("passwordConfirm", {
           required: setRequired("Confirm password is required"),
+          minLength: passwordLength,
         })}
       />
     </>

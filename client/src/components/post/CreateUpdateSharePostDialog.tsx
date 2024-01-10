@@ -8,6 +8,7 @@ import LoadingButton from "@/shared/others/LoadingButton";
 import { useCreatePost, useUpdatePost } from "@/hooks/post.hooks";
 import { Post } from "@/types/post.types";
 import SharedPostPreviewCard from "./SharedPostPreviewCard";
+import { useToast } from "../ui/use-toast";
 
 interface Prop extends DialogProps {
   isUpdateDialog?: boolean;
@@ -28,6 +29,8 @@ export const CreateUpdateSharePostDialog = ({
 
   const createMutation = useCreatePost();
   const updateMutation = useUpdatePost();
+
+  const { toast } = useToast();
 
   useEffect(() => {
     if (isUpdateDialog) {
@@ -54,8 +57,12 @@ export const CreateUpdateSharePostDialog = ({
       : formData;
 
     mutation.mutateAsync(payload, {
-      onError(error) {
-        console.log(error);
+      onError(error: any) {
+        toast({
+          title: `Failed to ${isUpdateDialog ? "Update" : "Create"}`,
+          description: error.response.data.message,
+          variant: "destructive",
+        });
       },
       onSuccess() {
         onCloseDialog();
