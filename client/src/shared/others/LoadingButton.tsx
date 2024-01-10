@@ -10,7 +10,7 @@ const LoadingButton = ({ children, className, loading, ...props }: Props) => {
     <Button
       {...props}
       disabled={props.disabled || loading}
-      className={`relative bg-smoke w-full text-[17px] py-[30px] hover:bg-smoke hover:bg-opacity-80 disabled:opacity-30 disabled:cursor-not-allowed ${className}`}
+      className={`relative w-full text-[17px] py-[30px] disabled:opacity-30 disabled:cursor-not-allowed ${className}`}
     >
       {loading && (
         <div className="absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%]">

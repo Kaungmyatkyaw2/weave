@@ -20,6 +20,7 @@ module.exports = {
         sans: "Inter",
       },
       colors: {
+        icon: "#BE1211",
         smoke: "#292C27",
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",

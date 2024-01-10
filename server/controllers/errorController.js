@@ -12,7 +12,7 @@ const handleDuplicateError = (err) => {
   const duplicateFields = Object.keys(err.keyPattern);
 
   const msg = duplicateFields
-    .map((el) => el.charAt(0).toUpperCase() + el.slice(1) + " is already used.")
+    .map((el) => el.charAt(0).toUpperCase() + el.slice(1).toLocaleLowerCase() + " is already used.")
     .join(" ");
 
   return new AppError(msg, 400);

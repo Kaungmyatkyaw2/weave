@@ -5,17 +5,18 @@ import { forwardRef, useState } from "react";
 interface MyInputProps extends InputProps {
   isError?: {} | boolean;
   error?: string | undefined;
+  parentClassName?: string | undefined;
 }
 
 export const MyInput = forwardRef(
   (
-    { required, id, isError, error, ...props }: MyInputProps,
+    { required, id, isError, error, parentClassName, ...props }: MyInputProps,
     ref: React.ForwardedRef<HTMLInputElement>
   ) => {
     const [type, setType] = useState(props.type);
 
     return (
-      <div>
+      <div className={parentClassName}>
         {isError && (
           <span className="text-red-700 text-[13px] pl-[5px]">{error}</span>
         )}

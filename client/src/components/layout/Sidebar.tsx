@@ -14,7 +14,14 @@ interface SideBtnProps extends NavLinkProps {
 
 const SideBtn = ({ className, children, ...props }: SideBtnProps) => {
   return (
-    <NavLink {...props} className={`flex sm:space-x-[10px] ${className}`}>
+    <NavLink
+      {...props}
+      className={({ isActive }) =>
+        `flex sm:space-x-[10px] transition-all duration-200  ${className} ${
+          isActive ? "text-icon sm:border-b-0 border-b-2 border-icon pb-[5px]" : "text-black"
+        }`
+      }
+    >
       <props.icon className="sm:h-5 sm:w-5" />
       <span className="text-sm sm:inline hidden">{children}</span>
     </NavLink>
@@ -46,7 +53,7 @@ const NavigationButtons = ({ userId }: { userId?: string }) => {
       <SideBtn icon={Newspaper} to={"/"}>
         New feed
       </SideBtn>
-      <SideBtn to={"/"} icon={Search}>
+      <SideBtn to={"/search"} icon={Search}>
         Search
       </SideBtn>
       <SideBtn to={`/user/${userId}`} icon={UserCircle}>

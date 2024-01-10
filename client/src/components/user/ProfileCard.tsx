@@ -6,6 +6,8 @@ import { RootState } from "@/store/store";
 import { useCreateFollow, useDeleteFollow } from "@/hooks/follow.hooks";
 import { useToast } from "../ui/use-toast";
 import LoadingButton from "@/shared/others/LoadingButton";
+import { useState } from "react";
+import ProfileUpdateDialog from "./ProfileUpdateDialog";
 
 export const ProfileSkeletonCard = () => {
   return (
@@ -34,6 +36,9 @@ export const ProfileSkeletonCard = () => {
 export const ProfileCard = ({ user }: { user: User }) => {
   const { currentUser } = useSelector((state: RootState) => state.user);
 
+  const [editOpen, setEditOpen] = useState(false);
+
+  const isMe = currentUser?._id == user._id;
   const createMutation = useCreateFollow();
   const deleteMutation = useDeleteFollow();
   const { toast } = useToast();
@@ -71,37 +76,44 @@ export const ProfileCard = ({ user }: { user: User }) => {
   };
 
   return (
-    <div className="w-full bg-gray-50 py-[20px] px-[20px] rounded-[10px]">
-      <div className="flex items-center justify-between">
-        <div className=" w-full">
-          <h1 className="font-bold text-2xl">{user?.displayName}</h1>
-          <p className="text-md">@{user?.userName}</p>
-        </div>
+    <>
+      <ProfileUpdateDialog open={editOpen} onOpenChange={setEditOpen} />
+      <div className="w-full bg-gray-50 py-[20px] px-[20px] rounded-[10px]">
+        <div className="flex items-center justify-between">
+          <div className=" w-full">
+            <h1 className="font-bold text-2xl">{user?.displayName}</h1>
+            <p className="text-md">@{user?.userName}</p>
+          </div>
 
-        <Avatar className="w-[75px] h-[75px]">
-          <AvatarFallback className="bg-green-500 text-2xl">
-            {user?.displayName.substring(0, 2)}
-          </AvatarFallback>
-        </Avatar>
-      </div>
-      <div className="space-y-[5px] mt-[25px]">
-        <h1 className="text-[15px] text-gray-500">No More Boiler Plate</h1>
-        <div className="flex gap-4 items-center text-sm text-gray-500">
-          <p>{user.follower} Followers</p>
-          <p>{user.following} Following</p>
+          <Avatar className="w-[75px] h-[75px]">
+            <AvatarFallback className="bg-green-500 text-2xl">
+              {user?.displayName.substring(0, 2)}
+            </AvatarFallback>
+          </Avatar>
         </div>
+        <div className="space-y-[5px] mt-[25px]">
+          <h1 className="text-[15px] text-gray-500">No More Boiler Plate</h1>
+          <div className="flex gap-4 items-center text-sm text-gray-500">
+            <p>{user.follower} Followers</p>
+            <p>{user.following} Following</p>
+          </div>
+        </div>
+        <LoadingButton
+          loading={createMutation.isLoading || deleteMutation.isLoading}
+          onClick={
+            isMe
+              ? () => {
+                  setEditOpen(true);
+                }
+              : user.followId
+              ? onUnfollow
+              : onFollow
+          }
+          className="w-full mt-[25px] text-[16px] py-[25px]"
+        >
+          {isMe ? "Edit Profile" : user.followId ? "Unfollow" : "Follow"}
+        </LoadingButton>
       </div>
-      <LoadingButton
-        loading={createMutation.isLoading || deleteMutation.isLoading}
-        onClick={user.followId ? onUnfollow : onFollow}
-        className="w-full mt-[25px] text-[16px] py-[25px]"
-      >
-        {currentUser?._id == user._id
-          ? "Edit Profile"
-          : user.followId
-          ? "Unfollow"
-          : "Follow"}
-      </LoadingButton>
-    </div>
+    </>
   );
 };

@@ -22,7 +22,12 @@ exports.protectUpdateMe = (req, res, next) => {
   if (req.body.password || req.body.passwordConfirm) {
     return next(new AppError("This route isn't for updating password.", 400));
   }
-  req.body = filterObject(req.body, "profilePicture", "displayName");
+  req.body = filterObject(
+    req.body,
+    "profilePicture",
+    "displayName",
+    "userName"
+  );
 
   req.params.id = req.user._id;
 

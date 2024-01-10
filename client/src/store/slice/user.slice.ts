@@ -26,9 +26,21 @@ const UserSlice = createSlice({
         }
       }
     },
+    updateUserInfo: (state, action) => {
+      if (state.currentUser) {
+        state.currentUser.displayName =
+          action.payload.displayName || state.currentUser.displayName;
+        state.currentUser.userName =
+          action.payload.userName || state.currentUser.userName;
+      }
+    },
   },
 });
 
-export const { removeCurrentUser, setCurrentUser, updateFollow } =
-  UserSlice.actions;
+export const {
+  removeCurrentUser,
+  setCurrentUser,
+  updateFollow,
+  updateUserInfo,
+} = UserSlice.actions;
 export default UserSlice.reducer;
