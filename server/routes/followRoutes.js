@@ -5,7 +5,9 @@ const authController = require("../controllers/authController");
 const followController = require("../controllers/followController");
 
 Router.use(authController.protect);
-Router.route("/").post(followController.createFollow);
+Router.route("/")
+  .get(followController.getFollows)
+  .post(followController.createFollow);
 Router.route("/:id").delete(followController.deleteFollow);
 
 module.exports = Router;

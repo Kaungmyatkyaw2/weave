@@ -10,6 +10,7 @@ import {
   updateInfiniteQueryPages,
   updateInfiniteQueryPagesOnDelete,
 } from "./helper";
+import { AxiosResponse } from "axios";
 
 export const useGetPosts = () =>
   useInfiniteQuery({
@@ -50,19 +51,30 @@ export const useCreatePost = () => {
   return useMutation({
     mutationFn: (values) => axiosClient().post("/posts", values),
     onSuccess: (res) => {
-      const createdPost = res.data.data.data;
+      const createdPost: Post = res.data.data.data;
       const cachedPosts: InfiniteQueryResponse<Post> | undefined =
         queryClient.getQueryData(["posts"], {
           exact: true,
         });
 
+      const cachedPostUser: InfiniteQueryResponse<Post> | undefined =
+        queryClient.getQueryData(["posts", createdPost.user._id], {
+          exact: true,
+        });
+
       const prevCachedPosts = JSON.parse(JSON.stringify(cachedPosts));
+      const prevCachedPostUser = JSON.parse(JSON.stringify(cachedPostUser));
 
       if (prevCachedPosts) {
         prevCachedPosts.pages[0].data.data.unshift(createdPost);
+        prevCachedPostUser.pages[0].data.data.unshift(createdPost);
       }
 
       queryClient.setQueryData(["posts"], prevCachedPosts);
+      queryClient.setQueryData(
+        ["posts", createdPost.user._id],
+        prevCachedPostUser
+      );
     },
   });
 };
@@ -73,10 +85,15 @@ export const useUpdatePost = () => {
   return useMutation({
     mutationFn: (payload: any) =>
       axiosClient().patch(`/posts/${payload.id}`, payload.values),
-    onSuccess: (res) => {
+    onSuccess: (res: AxiosResponse<Response<Post>>) => {
       const updatedPost = res.data.data.data;
       let prevCachedPosts: InfiniteQueryResponse<Post> | undefined =
         queryClient.getQueryData(["posts"], {
+          exact: true,
+        });
+
+      let prevCachedPostsUser: InfiniteQueryResponse<Post> | undefined =
+        queryClient.getQueryData(["posts", res.data.data.data.user._id], {
           exact: true,
         });
 
@@ -87,7 +104,18 @@ export const useUpdatePost = () => {
         );
       }
 
+      if (prevCachedPostsUser) {
+        prevCachedPostsUser = updateInfiniteQueryPages<Post>(
+          prevCachedPostsUser,
+          updatedPost
+        );
+      }
+
       queryClient.setQueryData(["posts"], prevCachedPosts);
+      queryClient.setQueryData(
+        ["posts", res.data.data.data.user._id],
+        prevCachedPostsUser
+      );
     },
   });
 };

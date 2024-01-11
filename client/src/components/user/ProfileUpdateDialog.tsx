@@ -15,7 +15,7 @@ import { setRequired } from "@/validation";
 import { DialogProps } from "@radix-ui/react-dialog";
 import { useForm } from "react-hook-form";
 import { useSelector } from "react-redux";
-import { useToast } from "../ui/use-toast";
+import useErrorToast from "@/hooks/useErrorToast";
 
 interface FormValues {
   userName: string;
@@ -39,7 +39,7 @@ export default function ProfileUpdateDialog({
   const { formState, handleSubmit, register } = form;
   const { isValid, isDirty, errors } = formState;
 
-  const { toast } = useToast();
+  const errToast = useErrorToast();
 
   const onSubmit = (values: FormValues) => {
     updateMeMutation.mutateAsync(values, {
@@ -47,11 +47,7 @@ export default function ProfileUpdateDialog({
         onOpenChange?.(false);
       },
       onError(error: any) {
-        toast({
-          title: `Failed to update your info`,
-          description: error.response.data.message,
-          variant: "destructive",
-        });
+        errToast(error, `Failed to update your info`);
       },
     });
   };

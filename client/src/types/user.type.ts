@@ -12,8 +12,8 @@ export interface User {
 }
 
 export interface Follow {
-  followingUser: string;
-  followerUser: string;
+  followingUser: User;
+  followerUser: User;
   _id: string;
   createdAt: Date;
 }

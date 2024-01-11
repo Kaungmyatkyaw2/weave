@@ -7,6 +7,7 @@ import { useToast } from "@/components/ui/use-toast";
 import { NavLink } from "react-router-dom";
 import { AuthPageWrapper } from "@/components/layout";
 import { LabeledInput } from "@/shared/form/LabeledInput";
+import useErrorToast from "@/hooks/useErrorToast";
 
 interface FormValues {
   email: string;
@@ -20,6 +21,7 @@ export const ForgotPassword = () => {
   const { isValid, isDirty, errors } = formState;
 
   const { toast } = useToast();
+  const errToast = useErrorToast();
 
   const onSubmit = async (values: FormValues) => {
     try {
@@ -30,11 +32,7 @@ export const ForgotPassword = () => {
       });
       setIsLoading(false);
     } catch (error: any) {
-      toast({
-        title: "Failed to reset your password.",
-        description: error.response.data.message,
-        variant: "destructive",
-      });
+      errToast(error, "Failed to reset your password.");
       setIsLoading(false);
     }
   };

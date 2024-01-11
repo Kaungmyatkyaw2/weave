@@ -4,10 +4,11 @@ import { Skeleton } from "../ui/skeleton";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 import { useCreateFollow, useDeleteFollow } from "@/hooks/follow.hooks";
-import { useToast } from "../ui/use-toast";
 import LoadingButton from "@/shared/others/LoadingButton";
 import { useState } from "react";
 import ProfileUpdateDialog from "./ProfileUpdateDialog";
+import FollowerDialog from "./FollowerDialog";
+import useErrorToast from "@/hooks/useErrorToast";
 
 export const ProfileSkeletonCard = () => {
   return (
@@ -37,11 +38,13 @@ export const ProfileCard = ({ user }: { user: User }) => {
   const { currentUser } = useSelector((state: RootState) => state.user);
 
   const [editOpen, setEditOpen] = useState(false);
+  const [FollowerDialogOpen, setFollowerDialogOpen] = useState(false);
+  const [followingDialogOpen, setFollowingDialogOpen] = useState(false);
 
   const isMe = currentUser?._id == user._id;
   const createMutation = useCreateFollow();
   const deleteMutation = useDeleteFollow();
-  const { toast } = useToast();
+  const errToast = useErrorToast();
 
   const onFollow = () => {
     const payload = {
@@ -50,11 +53,7 @@ export const ProfileCard = ({ user }: { user: User }) => {
     };
     createMutation.mutateAsync(payload, {
       onError(error: any) {
-        toast({
-          title: "Failed to follow.",
-          description: error.response.data.message,
-          variant: "destructive",
-        });
+        errToast(error, "Failed to follow.");
       },
     });
   };
@@ -66,11 +65,7 @@ export const ProfileCard = ({ user }: { user: User }) => {
     };
     deleteMutation.mutateAsync(payload, {
       onError(error: any) {
-        toast({
-          title: "Failed to Unfollow.",
-          description: error.response.data.message,
-          variant: "destructive",
-        });
+        errToast(error,"Failed to Unfollow.");
       },
     });
   };
@@ -78,6 +73,17 @@ export const ProfileCard = ({ user }: { user: User }) => {
   return (
     <>
       <ProfileUpdateDialog open={editOpen} onOpenChange={setEditOpen} />
+      <FollowerDialog
+        isForFollower
+        user={user}
+        open={FollowerDialogOpen}
+        onOpenChange={setFollowerDialogOpen}
+      />
+      <FollowerDialog
+        user={user}
+        open={followingDialogOpen}
+        onOpenChange={setFollowingDialogOpen}
+      />
       <div className="w-full bg-gray-50 py-[20px] px-[20px] rounded-[10px]">
         <div className="flex items-center justify-between">
           <div className=" w-full">
@@ -94,8 +100,20 @@ export const ProfileCard = ({ user }: { user: User }) => {
         <div className="space-y-[5px] mt-[25px]">
           <h1 className="text-[15px] text-gray-500">No More Boiler Plate</h1>
           <div className="flex gap-4 items-center text-sm text-gray-500">
-            <p>{user.follower} Followers</p>
-            <p>{user.following} Following</p>
+            <button
+              onClick={() => {
+                setFollowerDialogOpen(true);
+              }}
+            >
+              {user.follower} Followers
+            </button>
+            <button
+              onClick={() => {
+                setFollowingDialogOpen(true);
+              }}
+            >
+              {user.following} Following
+            </button>
           </div>
         </div>
         <LoadingButton

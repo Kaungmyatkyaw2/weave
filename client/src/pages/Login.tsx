@@ -3,12 +3,12 @@ import { emailPattern, passwordLength, setRequired } from "@/validation";
 import axiosClient from "@/lib/axios";
 import LoadingButton from "@/shared/others/LoadingButton";
 import { useState } from "react";
-import { useToast } from "@/components/ui/use-toast";
 import { LabeledInput } from "@/shared/form/LabeledInput";
 import { NavLink, useNavigate } from "react-router-dom";
 import { AuthPageWrapper } from "@/components/layout";
 import { useDispatch } from "react-redux";
 import { login } from "@/store/slice/auth.slice";
+import useErrorToast from "@/hooks/useErrorToast";
 
 interface FormValues {
   email: string;
@@ -16,10 +16,11 @@ interface FormValues {
 }
 
 export const Login = () => {
-  const { toast } = useToast();
   const form = useForm<FormValues>();
   const { register, handleSubmit, formState } = form;
   const { errors, isValid, isDirty } = formState;
+
+  const errToast = useErrorToast();
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -34,11 +35,7 @@ export const Login = () => {
       navigate("/");
       setIsLoading(false);
     } catch (error: any) {
-      toast({
-        title: "Failed to login.",
-        description: error.response.data.message,
-        variant: "destructive",
-      });
+      errToast(error, "Failed to login.");
       setIsLoading(false);
     }
   };

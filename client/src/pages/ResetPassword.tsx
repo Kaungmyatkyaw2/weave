@@ -7,6 +7,7 @@ import { useToast } from "@/components/ui/use-toast";
 import { useSearchParams } from "react-router-dom";
 import { AuthPageWrapper } from "@/components/layout";
 import { LabeledInput } from "@/shared/form/LabeledInput";
+import useErrorToast from "@/hooks/useErrorToast";
 
 interface FormValues {
   password: string;
@@ -22,6 +23,7 @@ export const ResetPassword = () => {
   const [searchParam] = useSearchParams();
 
   const { toast } = useToast();
+  const errToast = useErrorToast();
 
   const onSubmit = async (values: FormValues) => {
     try {
@@ -35,11 +37,7 @@ export const ResetPassword = () => {
       });
       setIsLoading(false);
     } catch (error: any) {
-      toast({
-        title: "Failed to sign up.",
-        description: error.response.data.message,
-        variant: "destructive",
-      });
+      errToast(error, "Failed to sign up.");
       setIsLoading(false);
     }
   };

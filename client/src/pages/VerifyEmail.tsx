@@ -6,6 +6,7 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import { AuthPageWrapper } from "@/components/layout";
 import { useDispatch } from "react-redux";
 import { login } from "@/store/slice/auth.slice";
+import useErrorToast from "@/hooks/useErrorToast";
 
 export const VerifyEmail = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -16,6 +17,7 @@ export const VerifyEmail = () => {
   const navigate = useNavigate();
 
   const { toast } = useToast();
+  const errToast = useErrorToast();
 
   const onVerifyEmail = async () => {
     try {
@@ -30,11 +32,7 @@ export const VerifyEmail = () => {
       setIsSuccess(true);
       dispatch(login(res.data.token));
     } catch (error: any) {
-      toast({
-        title: "Failed to sign up.",
-        description: error.response.data.message,
-        variant: "destructive",
-      });
+      errToast(error, "Failed to sign up.");
       setIsLoading(false);
     }
   };

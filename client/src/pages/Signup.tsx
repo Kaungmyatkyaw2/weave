@@ -1,6 +1,7 @@
 import { AuthPageWrapper } from "@/components/layout";
 import { UserInfoBox, UserPasswordBox } from "@/components/signup";
 import { useToast } from "@/components/ui/use-toast";
+import useErrorToast from "@/hooks/useErrorToast";
 import axiosClient from "@/lib/axios";
 import LoadingButton from "@/shared/others/LoadingButton";
 import { ChevronLeft } from "lucide-react";
@@ -31,6 +32,8 @@ export const Signup = () => {
 
   const { toast } = useToast();
 
+  const errToast = useErrorToast();
+
   const onSubmit = async (values: FormValues) => {
     try {
       setIsLoading(true);
@@ -41,11 +44,7 @@ export const Signup = () => {
         description: "We have sent the verification link to your email!",
       });
     } catch (error: any) {
-      toast({
-        title: "Failed to register account.",
-        description: error.response.data.message,
-        variant: "destructive",
-      });
+      errToast(error, "Failed to register account.");
       setIsLoading(false);
     }
   };
