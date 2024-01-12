@@ -1,6 +1,6 @@
 import { DialogProps } from "@radix-ui/react-alert-dialog";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "../ui/dialog";
-import { useGetFollowers, useGetFollowings } from "@/hooks/user.hooks";
+import { useGetFollowers, useGetFollowings } from "@/hooks/query/follow.hooks";
 import { User } from "@/types/user.type";
 import { useRef } from "react";
 import useInfiniteScroll from "@/hooks/useInfiniteScroll";
@@ -28,27 +28,39 @@ const FollowerDialog = ({
       <DialogContent ref={dialogRef} className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>
-            {isForFollower ? "Followers" : "Followings"}
+            {user.displayName}'s
+            {isForFollower ? "  Followers" : "  Followings"}
           </DialogTitle>
         </DialogHeader>
         <div className="w-full space-y-[10px]">
-          {!query.isLoading && follows?.length ? (
+          {query.isLoading ? (
+            <></>
+          ) : follows?.length ? (
             follows?.map((follow) => (
               <FollowCard
+                to={""}
+                onClick={() => {
+                  onOpenChange?.(false);
+                }}
+                key={follow._id}
                 user={
                   isForFollower ? follow.followerUser : follow.followingUser
                 }
               />
             ))
           ) : (
-            <div className="flex justify-center pt-[20px]"> No follows</div>
-          )}
-
-          {query.isFetchingNextPage && (
-            <div className="flex items-center py-[10px]">
-              <Loader className="animate-spin" />
+            <div className="flex justify-center pt-[20px]">
+              {" "}
+              No {isForFollower ? "followers" : "followings"}
             </div>
           )}
+
+          {query.isFetchingNextPage ||
+            (query.isLoading && (
+              <div className="flex justify-center py-[10px]">
+                <Loader className="animate-spin" />
+              </div>
+            ))}
         </div>
       </DialogContent>
     </Dialog>

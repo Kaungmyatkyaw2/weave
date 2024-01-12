@@ -1,8 +1,8 @@
 import { PostCard, SkeletonPostCard } from "@/components/post";
 import { ProfileCard, ProfileSkeletonCard } from "@/components/user";
-import { useGetPostsByUser } from "@/hooks/post.hooks";
+import { useGetPostsByUser } from "@/hooks/query/post.hooks";
 import useInfiniteScroll from "@/hooks/useInfiniteScroll";
-import { useGetUser } from "@/hooks/user.hooks";
+import { useGetUser } from "@/hooks/query/user.hooks";
 import { splitPagesData } from "@/lib/infiniteScroll";
 import { Post } from "@/types/post.types";
 import { User } from "@/types/user.type";

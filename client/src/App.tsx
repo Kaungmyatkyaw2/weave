@@ -4,7 +4,7 @@ import {
   SkeletonPostCard,
 } from "./components/post";
 import { Post } from "./types/post.types";
-import { useGetPosts } from "./hooks/post.hooks";
+import { useGetPosts } from "./hooks/query/post.hooks";
 import { splitPagesData } from "./lib/infiniteScroll";
 import useInfiniteScroll from "./hooks/useInfiniteScroll";
 import { Button } from "./components/ui/button";

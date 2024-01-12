@@ -7,7 +7,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
-import { useUpdateMe } from "@/hooks/user.hooks";
+import { useUpdateMe } from "@/hooks/query/user.hooks";
 import { MyInput } from "@/shared/form";
 import LoadingButton from "@/shared/others/LoadingButton";
 import { RootState } from "@/store/store";
@@ -104,7 +104,7 @@ export default function ProfileUpdateDialog({
             disabled={isDirty && !isValid}
             loading={updateMeMutation.isLoading}
             type="submit"
-            className="text-sm py-[15px] px-[20px] w-fit"
+            className="text-[15px] py-[15px] px-[20px] w-fit"
           >
             Save changes
           </LoadingButton>

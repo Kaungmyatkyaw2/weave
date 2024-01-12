@@ -3,7 +3,7 @@ import { User } from "@/types/user.type";
 import { Skeleton } from "../ui/skeleton";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
-import { useCreateFollow, useDeleteFollow } from "@/hooks/follow.hooks";
+import { useCreateFollow, useDeleteFollow } from "@/hooks/query/follow.hooks";
 import LoadingButton from "@/shared/others/LoadingButton";
 import { useState } from "react";
 import ProfileUpdateDialog from "./ProfileUpdateDialog";
@@ -127,7 +127,7 @@ export const ProfileCard = ({ user }: { user: User }) => {
               ? onUnfollow
               : onFollow
           }
-          className="w-full mt-[25px] text-[16px] py-[25px]"
+          className="w-full mt-[25px] text-[15px] py-[25px]"
         >
           {isMe ? "Edit Profile" : user.followId ? "Unfollow" : "Follow"}
         </LoadingButton>

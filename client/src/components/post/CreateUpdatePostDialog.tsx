@@ -5,7 +5,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 import { Avatar, AvatarFallback } from "../ui/avatar";
 import LoadingButton from "@/shared/others/LoadingButton";
-import { useCreatePost, useUpdatePost } from "@/hooks/post.hooks";
+import { useCreatePost, useUpdatePost } from "@/hooks/query/post.hooks";
 import { Input } from "../ui/input";
 import { Post } from "@/types/post.types";
 import { Image, X } from "lucide-react";
@@ -162,7 +162,7 @@ export const CreateUpdatePostDialog = ({
             <LoadingButton
               loading={createMutation.isLoading || updateMutation.isLoading}
               onClick={onCreateOrUpdate}
-              className="py-[25px] px-[20px] w-fit text-[14px] rounded-full"
+              className="py-[25px] px-[20px] w-fit text-[15px] rounded-full"
             >
               Submit
             </LoadingButton>

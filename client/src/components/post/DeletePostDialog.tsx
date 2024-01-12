@@ -7,7 +7,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { useDeletePost } from "@/hooks/post.hooks";
+import { useDeletePost } from "@/hooks/query/post.hooks";
 import LoadingButton from "@/shared/others/LoadingButton";
 import { useToast } from "../ui/use-toast";
 
@@ -48,14 +48,14 @@ const DeletePostDialog = ({ post, onOpenChange, ...props }: Prop) => {
             disabled={delMutation.isLoading}
             variant={"outline"}
             onClick={() => handleOpenChange?.(false)}
-            className="bg-white hover:bg-gray-50 w-fit py-[10px]"
+            className="bg-white hover:bg-gray-50 w-fit py-[10px] text-[15px]"
           >
             Cancel
           </LoadingButton>
           <LoadingButton
             loading={delMutation.isLoading}
             onClick={onDelete}
-            className="w-fit py-[10px] !text-[12px]"
+            className="w-fit py-[10px] !text-[15px]"
           >
             Continue
           </LoadingButton>

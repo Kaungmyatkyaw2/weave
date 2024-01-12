@@ -1,9 +1,8 @@
 const Follow = require("../models/followModel");
 const handlerFactory = require("./handlerFactory");
 
-exports.createFollow = handlerFactory.createOne(Follow);
-exports.getFollows = handlerFactory.getAll(Follow, [
-  { path: "followerUser" },
-  { path: "followingUser" },
-]);
+const popOpt = [{ path: "followerUser" }, { path: "followingUser" }];
+
+exports.createFollow = handlerFactory.createOne(Follow, popOpt);
+exports.getFollows = handlerFactory.getAll(Follow, popOpt);
 exports.deleteFollow = handlerFactory.deleteOne(Follow);

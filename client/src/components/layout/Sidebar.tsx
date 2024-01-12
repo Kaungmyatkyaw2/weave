@@ -1,6 +1,6 @@
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Newspaper, UserCircle, Search, LogOut } from "lucide-react";
-import { NavLink, NavLinkProps } from "react-router-dom";
+import { NavLink, NavLinkProps, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { removeToken } from "@/store/slice/auth.slice";
 import { removeCurrentUser } from "@/store/slice/user.slice";
@@ -18,9 +18,30 @@ const SideBtn = ({ className, children, ...props }: SideBtnProps) => {
       {...props}
       className={({ isActive }) =>
         `flex sm:space-x-[10px] transition-all duration-200  ${className} ${
-          isActive ? "text-icon sm:border-b-0 border-b-2 border-icon pb-[5px]" : "text-black"
+          isActive
+            ? "text-icon sm:border-b-0 border-b-2 border-icon sm:pb-[5px]"
+            : "text-black"
         }`
       }
+    >
+      <props.icon className="sm:h-5 sm:w-5" />
+      <span className="text-sm sm:inline hidden">{children}</span>
+    </NavLink>
+  );
+};
+
+const ProfileBtn = ({ className, children, ...props }: SideBtnProps) => {
+  const { currentUser } = useSelector((state: RootState) => state.user);
+  const location = useLocation();
+
+  return (
+    <NavLink
+      {...props}
+      className={`flex sm:space-x-[10px] transition-all duration-200  ${className} ${
+        location.pathname == `/user/${currentUser?._id}`
+          ? "text-icon sm:border-b-0 border-b-2 border-icon sm:pb-[5px]"
+          : "text-black"
+      }`}
     >
       <props.icon className="sm:h-5 sm:w-5" />
       <span className="text-sm sm:inline hidden">{children}</span>
@@ -56,9 +77,9 @@ const NavigationButtons = ({ userId }: { userId?: string }) => {
       <SideBtn to={"/search"} icon={Search}>
         Search
       </SideBtn>
-      <SideBtn to={`/user/${userId}`} icon={UserCircle}>
+      <ProfileBtn to={`/user/${userId}`} icon={UserCircle}>
         Profile
-      </SideBtn>
+      </ProfileBtn>
       <LogoutBtn />
     </>
   );

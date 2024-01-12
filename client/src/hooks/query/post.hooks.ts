@@ -7,10 +7,13 @@ import {
   useQueryClient,
 } from "@tanstack/react-query";
 import {
+  getNextPageParam,
   updateInfiniteQueryPages,
-  updateInfiniteQueryPagesOnDelete,
+  useQueryHandler,
 } from "./helper";
 import { AxiosResponse } from "axios";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store/store";
 
 export const useGetPosts = () =>
   useInfiniteQuery({
@@ -19,13 +22,7 @@ export const useGetPosts = () =>
       axiosClient()
         .get(`/posts?page=${pageParam}`)
         .then((res) => res.data),
-    getNextPageParam: (lastPage: Response<Post[]>, allPages: any) => {
-      if (lastPage.result < 2) {
-        return undefined;
-      } else {
-        return allPages.length + 1;
-      }
-    },
+    getNextPageParam: getNextPageParam(),
   });
 
 export const useGetPostsByUser = (userId: string | undefined) =>
@@ -35,45 +32,21 @@ export const useGetPostsByUser = (userId: string | undefined) =>
       axiosClient()
         .get(`/users/${userId}/posts?page=${pageParam}`)
         .then((res) => res.data),
-    getNextPageParam: (lastPage: Response<Post[]>, allPages: any) => {
-      if (lastPage.result < 2) {
-        return undefined;
-      } else {
-        return allPages.length + 1;
-      }
-    },
+    getNextPageParam: getNextPageParam(),
     enabled: !!userId,
   });
 
 export const useCreatePost = () => {
-  const queryClient = useQueryClient();
+  const { handleCreateInfiniteQuery } = useQueryHandler();
 
   return useMutation({
     mutationFn: (values) => axiosClient().post("/posts", values),
     onSuccess: (res) => {
       const createdPost: Post = res.data.data.data;
-      const cachedPosts: InfiniteQueryResponse<Post> | undefined =
-        queryClient.getQueryData(["posts"], {
-          exact: true,
-        });
-
-      const cachedPostUser: InfiniteQueryResponse<Post> | undefined =
-        queryClient.getQueryData(["posts", createdPost.user._id], {
-          exact: true,
-        });
-
-      const prevCachedPosts = JSON.parse(JSON.stringify(cachedPosts));
-      const prevCachedPostUser = JSON.parse(JSON.stringify(cachedPostUser));
-
-      if (prevCachedPosts) {
-        prevCachedPosts.pages[0].data.data.unshift(createdPost);
-        prevCachedPostUser.pages[0].data.data.unshift(createdPost);
-      }
-
-      queryClient.setQueryData(["posts"], prevCachedPosts);
-      queryClient.setQueryData(
+      handleCreateInfiniteQuery<Post>(["posts"], createdPost);
+      handleCreateInfiniteQuery<Post>(
         ["posts", createdPost.user._id],
-        prevCachedPostUser
+        createdPost
       );
     },
   });
@@ -121,24 +94,14 @@ export const useUpdatePost = () => {
 };
 
 export const useDeletePost = () => {
-  const queryClient = useQueryClient();
+  const { handleDeleteQuery } = useQueryHandler();
+  const { currentUser } = useSelector((state: RootState) => state.user);
 
   return useMutation({
     mutationFn: (payload: any) => axiosClient().delete(`/posts/${payload._id}`),
     onSuccess: (_, post: Post) => {
-      let prevCachedPosts: InfiniteQueryResponse<Post> | undefined =
-        queryClient.getQueryData(["posts"], {
-          exact: true,
-        });
-
-      if (prevCachedPosts) {
-        prevCachedPosts = updateInfiniteQueryPagesOnDelete(
-          prevCachedPosts,
-          post._id
-        );
-      }
-
-      queryClient.setQueryData(["posts"], prevCachedPosts);
+      handleDeleteQuery<Post>(["posts"], post._id);
+      handleDeleteQuery<Post>(["posts", currentUser?._id || ""], post._id);
     },
   });
 };
