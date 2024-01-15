@@ -1,7 +1,7 @@
 import { DialogProps } from "@radix-ui/react-alert-dialog";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "../ui/dialog";
 import { useGetFollowers, useGetFollowings } from "@/hooks/query/follow.hooks";
-import { User } from "@/types/user.type";
+import { Follow, User } from "@/types/user.type";
 import { useRef } from "react";
 import useInfiniteScroll from "@/hooks/useInfiniteScroll";
 import { Loader } from "lucide-react";
@@ -19,7 +19,7 @@ const FollowerDialog = ({
     : useGetFollowings(user._id);
   const dialogRef = useRef<HTMLDivElement>(null);
 
-  const follows = splitPagesData(query.data);
+  const follows = splitPagesData<Follow>(query.data);
 
   useInfiniteScroll(query, dialogRef.current || undefined);
 

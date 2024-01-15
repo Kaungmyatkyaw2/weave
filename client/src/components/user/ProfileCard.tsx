@@ -1,4 +1,3 @@
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { User } from "@/types/user.type";
 import { Skeleton } from "../ui/skeleton";
 import { useSelector } from "react-redux";
@@ -9,6 +8,7 @@ import { useState } from "react";
 import ProfileUpdateDialog from "./ProfileUpdateDialog";
 import FollowerDialog from "./FollowerDialog";
 import useErrorToast from "@/hooks/useErrorToast";
+import UserAvatar from "./UserAvatar";
 
 export const ProfileSkeletonCard = () => {
   return (
@@ -65,7 +65,7 @@ export const ProfileCard = ({ user }: { user: User }) => {
     };
     deleteMutation.mutateAsync(payload, {
       onError(error: any) {
-        errToast(error,"Failed to Unfollow.");
+        errToast(error, "Failed to Unfollow.");
       },
     });
   };
@@ -91,11 +91,7 @@ export const ProfileCard = ({ user }: { user: User }) => {
             <p className="text-md">@{user?.userName}</p>
           </div>
 
-          <Avatar className="w-[75px] h-[75px]">
-            <AvatarFallback className="bg-green-500 text-2xl">
-              {user?.displayName.substring(0, 2)}
-            </AvatarFallback>
-          </Avatar>
+          <UserAvatar className=" w-[75px] h-[75px] text-2xl" user={user} />
         </div>
         <div className="space-y-[5px] mt-[25px]">
           <h1 className="text-[15px] text-gray-500">No More Boiler Plate</h1>

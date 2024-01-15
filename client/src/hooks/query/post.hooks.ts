@@ -22,7 +22,7 @@ export const useGetPosts = () =>
       axiosClient()
         .get(`/posts?page=${pageParam}`)
         .then((res) => res.data),
-    getNextPageParam: getNextPageParam(),
+    getNextPageParam: getNextPageParam<Post>(),
   });
 
 export const useGetPostsByUser = (userId: string | undefined) =>
@@ -32,7 +32,7 @@ export const useGetPostsByUser = (userId: string | undefined) =>
       axiosClient()
         .get(`/users/${userId}/posts?page=${pageParam}`)
         .then((res) => res.data),
-    getNextPageParam: getNextPageParam(),
+    getNextPageParam: getNextPageParam<Post>(),
     enabled: !!userId,
   });
 

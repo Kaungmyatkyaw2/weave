@@ -3,6 +3,7 @@ const cors = require("cors");
 const UserRouter = require("./routes/userRoutes");
 const PostRouter = require("./routes/postRoutes");
 const FollowRouter = require("./routes/followRoutes");
+const CommentRouter = require("./routes/commentRoutes");
 const handleGlobalError = require("./controllers/errorController");
 const AppError = require("./utils/appError");
 
@@ -16,6 +17,7 @@ app.options("*", cors());
 app.use("/users", UserRouter);
 app.use("/posts", PostRouter);
 app.use("/follows", FollowRouter);
+app.use("/comments", CommentRouter);
 
 app.use("*", (req, res, next) => {
   next(new AppError(`Can't find ${req.originalUrl} on this server.`, 404));

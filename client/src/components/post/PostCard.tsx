@@ -1,7 +1,13 @@
-import { MoreHorizontal, Pen, Share2, Trash } from "lucide-react";
+import {
+  LucideIcon,
+  MessageSquare,
+  MoreHorizontal,
+  Pen,
+  Share2,
+  Trash,
+} from "lucide-react";
 import { ButtonHTMLAttributes, DetailedHTMLProps, useState } from "react";
 import { Post } from "@/types/post.types";
-import { Skeleton } from "../ui/skeleton";
 import { CreateUpdatePostDialog, CreateUpdateSharePostDialog } from ".";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
@@ -13,15 +19,20 @@ import {
 } from "@/components/ui/dropdown-menu";
 import DeletePostDialog from "./DeletePostDialog";
 import PostBodyCard from "./PostBodyCard";
+import { CommentDialog } from "../comment";
 
-const ShareBtn = ({
-  ...props
-}: DetailedHTMLProps<
-  ButtonHTMLAttributes<HTMLButtonElement>,
-  HTMLButtonElement
->) => (
+interface ActionBtnProps
+  extends DetailedHTMLProps<
+    ButtonHTMLAttributes<HTMLButtonElement>,
+    HTMLButtonElement
+  > {
+  icon: LucideIcon;
+  des: string;
+}
+
+const ActionBtn = ({ des, ...props }: ActionBtnProps) => (
   <button className="text-sm flex items-center space-x-[10px]" {...props}>
-    <Share2 size={20} /> <span>Share</span>
+    <props.icon size={20} /> <span>{des}</span>
   </button>
 );
 
@@ -61,34 +72,12 @@ function MoreOptions({
   );
 }
 
-export const SkeletonPostCard = () => {
-  return (
-    <div className="w-full border px-[20px] py-[20px] rounded-md space-y-[20px]">
-      <div className="w-full flex space-x-[10px]">
-        <div className="w-[60px]">
-          <Skeleton className="h-[50px] w-[50px] rounded-full" />
-        </div>
-
-        <div className="py-[1px] w-[calc(100%-60px)]">
-          <div className="flex space-x-[10px] items-center">
-            <Skeleton className="h-4 w-[50%] " />
-            <Skeleton className="h-4 w-[20%] " />
-          </div>
-          <div className="text-[13px] text-smoke pb-[10px] pt-[5px]">
-            <Skeleton className="h-2 w-12 " />
-          </div>
-          <Skeleton className="h-[100px] w-[70%] " />
-        </div>
-      </div>
-    </div>
-  );
-};
-
 export const PostCard = ({ post }: { post: Post }) => {
   const [openEdit, setOpenEdit] = useState(false);
   const [openDelete, setOpenDelete] = useState(false);
   const [openShare, setOpenShare] = useState(false);
   const [openShareEdit, setOpenShareEdit] = useState(false);
+  const [openComment, setOpenComment] = useState(false);
   const currentUser = useSelector((state: RootState) => state.user.currentUser);
 
   return (
@@ -99,6 +88,12 @@ export const PostCard = ({ post }: { post: Post }) => {
         toShare={post.sharedPost || post}
         onOpenChange={setOpenShare}
         open={openShare}
+      />
+
+      <CommentDialog
+        post={post}
+        open={openComment}
+        onOpenChange={setOpenComment}
       />
 
       <CreateUpdateSharePostDialog
@@ -122,8 +117,7 @@ export const PostCard = ({ post }: { post: Post }) => {
         open={openDelete}
       />
 
-      <div className="flex justify-between items-center">
-        <ShareBtn onClick={() => setOpenShare(true)} />
+      <div className="flex justify-end items-center">
         {post.user._id == currentUser?._id && (
           <MoreOptions
             setEditOpen={post.isSharedPost ? setOpenShareEdit : setOpenEdit}
@@ -133,6 +127,18 @@ export const PostCard = ({ post }: { post: Post }) => {
       </div>
 
       <PostBodyCard post={post} toShowSharedPost />
+      <div className="flex justify-between items-center pl-[55px] pt-[10px]">
+        <ActionBtn
+          des={"Share"}
+          icon={Share2}
+          onClick={() => setOpenShare(true)}
+        />
+        <ActionBtn
+          des={"Comment"}
+          icon={MessageSquare}
+          onClick={() => setOpenComment(true)}
+        />
+      </div>
     </div>
   );
 };

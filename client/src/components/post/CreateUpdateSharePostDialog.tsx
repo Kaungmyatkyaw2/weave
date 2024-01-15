@@ -3,12 +3,12 @@ import { DialogProps } from "@radix-ui/react-dialog";
 import { ChangeEvent, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
-import { Avatar, AvatarFallback } from "../ui/avatar";
 import LoadingButton from "@/shared/others/LoadingButton";
 import { useCreatePost, useUpdatePost } from "@/hooks/query/post.hooks";
 import { Post } from "@/types/post.types";
 import SharedPostPreviewCard from "./SharedPostPreviewCard";
 import useErrorToast from "@/hooks/useErrorToast";
+import UserAvatar from "../user/UserAvatar";
 
 interface Prop extends DialogProps {
   isUpdateDialog?: boolean;
@@ -88,11 +88,8 @@ export const CreateUpdateSharePostDialog = ({
       <DialogContent className="sm:min-w-[50%] min-w-full px-0">
         <div className="sm:h-[80vh] h-[90vh] w-full px-[30px]">
           <div className="w-full h-[20%] flex items-center">
-            <Avatar className=" w-[50px] h-[50px]">
-              <AvatarFallback className="bg-green-500">
-                {currentUser?.displayName.substring(0, 2)}
-              </AvatarFallback>
-            </Avatar>
+            <UserAvatar className=" w-[50px] h-[50px]" user={currentUser} />
+
             <div className="pl-[10px]">
               <div className="space-y-[3px]">
                 <h1 className="text-md font-bold">

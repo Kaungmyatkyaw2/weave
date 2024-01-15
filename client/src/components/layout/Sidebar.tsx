@@ -1,4 +1,3 @@
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Newspaper, UserCircle, Search, LogOut } from "lucide-react";
 import { NavLink, NavLinkProps, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
@@ -6,6 +5,7 @@ import { removeToken } from "@/store/slice/auth.slice";
 import { removeCurrentUser } from "@/store/slice/user.slice";
 import { RootState } from "@/store/store";
 import { useQueryClient } from "@tanstack/react-query";
+import UserAvatar from "../user/UserAvatar";
 
 interface SideBtnProps extends NavLinkProps {
   icon: any;
@@ -19,7 +19,7 @@ const SideBtn = ({ className, children, ...props }: SideBtnProps) => {
       className={({ isActive }) =>
         `flex sm:space-x-[10px] transition-all duration-200  ${className} ${
           isActive
-            ? "text-icon sm:border-b-0 border-b-2 border-icon sm:pb-[5px]"
+            ? "text-icon sm:border-b-0 border-b-2 border-icon sm:pb-0 pb-[5px]"
             : "text-black"
         }`
       }
@@ -92,11 +92,7 @@ export const Sidebar = () => {
     <>
       <div className="lg:w-[20%] sm:w-[35%] h-screen sm:block hidden fixed top-0 left-0 py-[10px] border-r">
         <div className="py-[20px] px-[20px] space-y-[10px] border-b">
-          <Avatar>
-            <AvatarFallback className="bg-green-500">
-              {currentUser?.displayName.substring(0, 2)}
-            </AvatarFallback>
-          </Avatar>
+          <UserAvatar user={currentUser} />
           <div className="flex items-center space-x-[10px]">
             <h1 className="font-bold text-lg">{currentUser?.displayName}</h1>
             <p className="font-medium text-sm text-smoke">

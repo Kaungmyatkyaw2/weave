@@ -1,9 +1,10 @@
+import { Comment } from "@/types/comment.types";
 import { Post } from "@/types/post.types";
 import { InfiniteQueryResponse, Response } from "@/types/response.types";
 import { Follow } from "@/types/user.type";
 import { useQueryClient } from "@tanstack/react-query";
 
-export const updateInfiniteQueryPages = <T extends Post>(
+export const updateInfiniteQueryPages = <T extends Post | Comment>(
   prevData: InfiniteQueryResponse<T>,
   data: T
 ) => {
@@ -24,7 +25,9 @@ export const updateInfiniteQueryPages = <T extends Post>(
   return prevData;
 };
 
-export const updateInfiniteQueryPagesOnDelete = <T extends Post | Follow>(
+export const updateInfiniteQueryPagesOnDelete = <
+  T extends Post | Follow | Comment
+>(
   prevData: InfiniteQueryResponse<T>,
   id: string
 ) => {
@@ -45,7 +48,7 @@ export const updateInfiniteQueryPagesOnDelete = <T extends Post | Follow>(
   return prevData;
 };
 
-export const getNextPageParam = <T extends Follow | Post>(
+export const getNextPageParam = <T extends Follow | Post | Comment>(
   limit: number = 10
 ) => {
   return (lastPage: Response<T[]>, allPages: any) => {
@@ -60,7 +63,7 @@ export const getNextPageParam = <T extends Follow | Post>(
 export const useQueryHandler = () => {
   const queryClient = useQueryClient();
 
-  const handleDeleteQuery = <T extends Post | Follow>(
+  const handleDeleteQuery = <T extends Post | Follow | Comment>(
     queryKey: string[],
     toDelete: string | undefined
   ) => {
@@ -77,7 +80,7 @@ export const useQueryHandler = () => {
     queryClient.setQueryData(queryKey, prevCache);
   };
 
-  const handleCreateInfiniteQuery = <T extends Post | Follow>(
+  const handleCreateInfiniteQuery = <T extends Post | Follow | Comment>(
     queryKey: string[],
     createdData: T
   ) => {
