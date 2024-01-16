@@ -5,7 +5,7 @@ import LoadingButton from "@/shared/others/LoadingButton";
 import { useUpdatePost } from "@/hooks/query/post.hooks";
 import { Input } from "../ui/input";
 import { Post } from "@/types/post.types";
-import { Send } from "lucide-react";
+import { Radar, Send } from "lucide-react";
 import useErrorToast from "@/hooks/useErrorToast";
 import { useCreateComment, useGetComments } from "@/hooks/query/comment.hooks";
 import { CommentCard, SkeletonCommentCard } from ".";
@@ -59,7 +59,7 @@ export const CommentDialog = ({
         <DialogHeader className="sm:pl-[10px]">
           <DialogTitle>Comments</DialogTitle>
         </DialogHeader>
-        <div className="sm:h-[80vh] h-[88vh] w-full sm:px-[30px] px-[10px]">
+        <div className="sm:h-[80vh] h-[85vh] w-full sm:px-[30px] px-[10px]">
           <div
             ref={divRef}
             className="w-full h-[85%] overflow-y-scroll styled-scroll py-[10px] space-y-[15px]"
@@ -72,7 +72,10 @@ export const CommentDialog = ({
                 <SkeletonCommentCard />
               </>
             ) : commentData?.length == 0 ? (
-              <h1>No comment yet</h1>
+              <div className="w-full h-full space-y-2 flex flex-col items-center justify-center text-gray-500">
+                <Radar size={50} />
+                <h1>No Comments Yet</h1>
+              </div>
             ) : (
               commentData?.map((co) => <CommentCard comment={co} />)
             )}

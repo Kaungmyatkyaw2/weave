@@ -8,7 +8,7 @@ import { useGetPosts } from "./hooks/query/post.hooks";
 import { splitPagesData } from "./lib/infiniteScroll";
 import useInfiniteScroll from "./hooks/useInfiniteScroll";
 import { Button } from "./components/ui/button";
-import { Loader, Plus } from "lucide-react";
+import { Loader, Plus, Radar } from "lucide-react";
 import { useState } from "react";
 
 const App = () => {
@@ -36,9 +36,14 @@ const App = () => {
         </>
       ) : (
         <>
-          {Posts?.map((el: Post) => (
-            <PostCard post={el} key={el._id} />
-          ))}
+          {Posts?.length ? (
+            Posts?.map((el: Post) => <PostCard post={el} key={el._id} />)
+          ) : (
+            <div className="w-full h-full space-y-2 flex flex-col items-center justify-center text-gray-500">
+              <Radar size={100} />
+              <h1>No Posts Yet</h1>
+            </div>
+          )}
         </>
       )}
       {query.isFetchingNextPage ? (
