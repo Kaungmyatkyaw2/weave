@@ -37,7 +37,13 @@ const PostBodyCard = ({
             locale="en-US"
           />
         </p>
-        <ShowMoreText className="text-sm text-smoke">{post.title}</ShowMoreText>
+        <ShowMoreText
+          className="text-sm text-smoke"
+          more={<span className="font-medium cursor-pointer">See more</span>}
+          less={<span className="font-medium cursor-pointer">See less</span>}
+        >
+          {post.title}
+        </ShowMoreText>
         <ImageVideoPlayer src={post.image} />
         {post.isSharedPost && toShowSharedPost && (
           <div className="min-w-full pt-[10px]">
