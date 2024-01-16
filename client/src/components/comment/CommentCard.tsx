@@ -68,11 +68,11 @@ export const CommentCard = ({ comment }: { comment: Comment }) => {
     >
       <div className="flex space-x-[10px]">
         <UserAvatar user={comment.user} />
-        <div className="w-full space-y-[5px]">
+        <div className="w-full md:space-y-[5px] space-y-[13px]">
           <div className="flex items-center justify-between pt-[2px] ">
-            <div className="flex md:items-center md:flex-row flex-col text-sm md:space-y-0 space-y-2 md:space-x-2">
+            <div className="flex md:items-center md:flex-row flex-col text-sm md:space-y-0 space-y-[2px] md:space-x-2">
               <h1 className="font-bold">{comment.user.displayName}</h1>
-              <div className="flex items-center space-x-2">
+              <div className="flex items-center space-x-2 md:text-sm text-[12px]">
                 <p>@{comment.user.userName}</p>
                 <ReactTimeAgo date={new Date(comment.createdAt)} />
               </div>

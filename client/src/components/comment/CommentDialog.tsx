@@ -59,7 +59,7 @@ export const CommentDialog = ({
         <DialogHeader className="sm:pl-[10px]">
           <DialogTitle>Comments</DialogTitle>
         </DialogHeader>
-        <div className="sm:h-[80vh] h-[90vh] w-full sm:px-[30px] px-[10px]">
+        <div className="sm:h-[80vh] h-[88vh] w-full sm:px-[30px] px-[10px]">
           <div
             ref={divRef}
             className="w-full h-[85%] overflow-y-scroll styled-scroll py-[10px] space-y-[15px]"
