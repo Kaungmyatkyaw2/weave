@@ -9,6 +9,7 @@ export interface User {
   following: number;
   follower: number;
   followId?: string;
+  bio: string;
 }
 
 export interface Follow {

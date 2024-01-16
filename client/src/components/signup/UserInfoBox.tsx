@@ -39,6 +39,14 @@ export const UserInfoBox = ({ register, errors }: Props) => {
           required: setRequired("Dispay name is required"),
         })}
       />
+
+      <LabeledInput
+        required
+        label="Bio"
+        isError={errors.bio}
+        error={errors.bio?.message}
+        {...register("bio")}
+      />
     </>
   );
 };

@@ -31,6 +31,7 @@ export const CreateUpdatePostDialog = ({
   const [isImage, setIsImage] = useState<boolean>();
   const [file, setFile] = useState<File | null>(null);
   const fileRef = useRef<HTMLInputElement>(null);
+  const textAreaRef = useRef<HTMLTextAreaElement>(null);
 
   const createMutation = useCreatePost();
   const updateMutation = useUpdatePost();
@@ -44,6 +45,18 @@ export const CreateUpdatePostDialog = ({
       setTitle(orgPost?.title);
     }
   }, [isUpdateDialog, orgPost]);
+
+  const autoExpandTextarea = () => {
+    const textarea = textAreaRef?.current;
+    if (textarea) {
+      textarea.style.height = "auto";
+      textarea.style.height = textarea.scrollHeight + "px";
+    }
+  };
+
+  useEffect(() => {
+    autoExpandTextarea();
+  }, [title]);
 
   const onCloseDialog = () => {
     setTitle(isUpdateDialog ? orgPost?.title : "");
@@ -78,12 +91,6 @@ export const CreateUpdatePostDialog = ({
     });
   };
 
-  const handleTextareaResize = (event: ChangeEvent<HTMLTextAreaElement>) => {
-    const textarea = event.target;
-    textarea.style.height = "auto";
-    textarea.style.height = textarea.scrollHeight + "px";
-  };
-
   const onFileChange = (event: ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files;
     if (files && files.length > 0) {
@@ -93,6 +100,10 @@ export const CreateUpdatePostDialog = ({
       setPreviewImg(url);
     }
   };
+
+  if (!props.open) {
+    return <></>;
+  }
 
   return (
     <Dialog
@@ -121,11 +132,13 @@ export const CreateUpdatePostDialog = ({
           </div>
           <div className="w-full h-[65%] overflow-y-scroll styled-scroll py-[10px]">
             <textarea
-              onChange={(e) => setTitle(e.target.value)}
+              ref={textAreaRef}
+              onChange={(e) => {
+                setTitle(e.target.value);
+              }}
               value={title}
-              onInput={handleTextareaResize}
               placeholder="Title...."
-              className="outline-none text-sm placeholder:text-lg resize-none w-full"
+              className="outline-none text-sm placeholder:text-lg resize-none w-full overflow-y-hidden"
             />
             {previewImg && (
               <div className="w-full relative">

@@ -32,6 +32,7 @@ export const useUpdateMe = () => {
       if (prevCachedData) {
         prevCachedData.data.data.displayName = res.data.data.data.displayName;
         prevCachedData.data.data.userName = res.data.data.data.userName;
+        prevCachedData.data.data.bio = res.data.data.data.bio;
       }
 
       queryClient.setQueryData(["user", currentUser?._id], prevCachedData);

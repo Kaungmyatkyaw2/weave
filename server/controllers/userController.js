@@ -26,7 +26,8 @@ exports.protectUpdateMe = (req, res, next) => {
     req.body,
     "profilePicture",
     "displayName",
-    "userName"
+    "userName",
+    "bio"
   );
 
   req.params.id = req.user._id;

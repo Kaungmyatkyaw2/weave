@@ -14,6 +14,7 @@ export interface FormValues {
   userName: string;
   password: string;
   passwordConfirm: string;
+  bio: string;
 }
 
 type FormKeys = keyof FormValues;

@@ -94,7 +94,9 @@ export const ProfileCard = ({ user }: { user: User }) => {
           <UserAvatar className=" w-[75px] h-[75px] text-2xl" user={user} />
         </div>
         <div className="space-y-[5px] mt-[25px]">
-          <h1 className="text-[15px] text-gray-500">No More Boiler Plate</h1>
+          {user.bio && (
+            <h1 className="text-[15px] text-gray-500">{user.bio}</h1>
+          )}
           <div className="flex gap-4 items-center text-sm text-gray-500">
             <button
               onClick={() => {

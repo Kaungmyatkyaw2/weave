@@ -4,6 +4,7 @@ import ImageVideoPlayer from "./ImageVideoPlayer";
 import SharedPostPreviewCard from "./SharedPostPreviewCard";
 import { useNavigate } from "react-router-dom";
 import UserAvatar from "../user/UserAvatar";
+import ShowMoreText from "react-show-more-text";
 
 const PostBodyCard = ({
   post,
@@ -36,7 +37,7 @@ const PostBodyCard = ({
             locale="en-US"
           />
         </p>
-        <p className="text-smoke text-sm">{post.title}</p>
+        <ShowMoreText className="text-sm text-smoke">{post.title}</ShowMoreText>
         <ImageVideoPlayer src={post.image} />
         {post.isSharedPost && toShowSharedPost && (
           <div className="min-w-full pt-[10px]">

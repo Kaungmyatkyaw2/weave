@@ -42,8 +42,7 @@ export const Protect = () => {
   if (isLoading) {
     return (
       <div className="fixed top-0 left-0 h-[100vh] w-full flex flex-col items-center justify-center z-[9999] bg-white">
-        <Loader className="animate-spin" size={30} />
-        <p className="text-gray-500">Aunthenticating. Please wait!</p>
+        <Loader className="animate-spin" size={80} />
       </div>
     );
   }

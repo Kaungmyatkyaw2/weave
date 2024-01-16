@@ -1,6 +1,6 @@
 import { Dialog, DialogContent } from "../ui/dialog";
 import { DialogProps } from "@radix-ui/react-dialog";
-import { ChangeEvent, useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 import LoadingButton from "@/shared/others/LoadingButton";
@@ -26,6 +26,7 @@ export const CreateUpdateSharePostDialog = ({
   const [title, setTitle] = useState<string | undefined>("");
   const user = useSelector((state: RootState) => state.user.currentUser);
   const currentUser = isUpdateDialog ? toUpdateSharedPost?.user : user;
+  const textAreaRef = useRef<HTMLTextAreaElement>(null);
 
   const createMutation = useCreatePost();
   const updateMutation = useUpdatePost();
@@ -37,6 +38,18 @@ export const CreateUpdateSharePostDialog = ({
       setTitle(toUpdateSharedPost?.title);
     }
   }, [isUpdateDialog, toUpdateSharedPost]);
+
+  const autoExpandTextarea = () => {
+    const textarea = textAreaRef?.current;
+    if (textarea) {
+      textarea.style.height = "auto";
+      textarea.style.height = textarea.scrollHeight + "px";
+    }
+  };
+
+  useEffect(() => {
+    autoExpandTextarea();
+  }, [title]);
 
   const onCloseDialog = () => {
     setTitle(isUpdateDialog ? toUpdateSharedPost?.title : "");
@@ -67,11 +80,9 @@ export const CreateUpdateSharePostDialog = ({
     });
   };
 
-  const handleTextareaResize = (event: ChangeEvent<HTMLTextAreaElement>) => {
-    const textarea = event.target;
-    textarea.style.height = "auto";
-    textarea.style.height = textarea.scrollHeight + "px";
-  };
+  if (!props.open) {
+    return <></>;
+  }
 
   return (
     <Dialog
@@ -102,8 +113,8 @@ export const CreateUpdateSharePostDialog = ({
           <div className="w-full h-[65%] overflow-y-scroll styled-scroll py-[10px]">
             <textarea
               onChange={(e) => setTitle(e.target.value)}
+              ref={textAreaRef}
               value={title}
-              onInput={handleTextareaResize}
               placeholder="Title...."
               className="outline-none text-sm placeholder:text-lg resize-none w-full"
             />

@@ -86,8 +86,8 @@ export const useQueryHandler = () => {
   ) => {
     let prevCache: undefined | InfiniteQueryResponse<T> =
       queryClient.getQueryData(queryKey);
-    prevCache = JSON.parse(JSON.stringify(prevCache));
     if (prevCache) {
+      prevCache = JSON.parse(JSON.stringify(prevCache));
       prevCache?.pages[0].data.data.unshift(createdData);
     }
 

@@ -33,9 +33,10 @@ const UserSchema = new mongoose.Schema({
       message: "Please provide a valid email.",
     },
   },
-  profilePicture: {
+  bio: {
     type: String,
     trim: true,
+    default: "",
   },
   password: {
     type: String,

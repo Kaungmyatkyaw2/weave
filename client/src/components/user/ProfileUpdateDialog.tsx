@@ -20,6 +20,7 @@ import useErrorToast from "@/hooks/useErrorToast";
 interface FormValues {
   userName: string;
   displayName: string;
+  bio: string;
 }
 
 export default function ProfileUpdateDialog({
@@ -34,6 +35,7 @@ export default function ProfileUpdateDialog({
     defaultValues: {
       displayName: currentUser?.displayName,
       userName: currentUser?.userName,
+      bio: currentUser?.bio,
     },
   });
   const { formState, handleSubmit, register } = form;
@@ -74,6 +76,7 @@ export default function ProfileUpdateDialog({
               Name
             </Label>
             <MyInput
+              placeholder="Name..."
               className="py-[20px]"
               parentClassName="col-span-3"
               isError={errors.displayName}
@@ -84,10 +87,24 @@ export default function ProfileUpdateDialog({
             />
           </div>
           <div className="grid grid-cols-4 items-center gap-4">
+            <Label htmlFor="bio" className="text-right">
+              Bio
+            </Label>
+            <MyInput
+              placeholder="Bio..."
+              className="py-[20px]"
+              parentClassName="col-span-3"
+              isError={errors.bio}
+              error={errors.bio?.message}
+              {...register("bio")}
+            />{" "}
+          </div>
+          <div className="grid grid-cols-4 items-center gap-4">
             <Label htmlFor="username" className="text-right">
               Username
             </Label>
             <MyInput
+              placeholder="Username..."
               className="py-[20px]"
               parentClassName="col-span-3"
               isError={errors.userName}
