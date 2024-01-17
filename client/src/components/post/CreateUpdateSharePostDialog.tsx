@@ -1,6 +1,6 @@
 import { Dialog, DialogContent } from "../ui/dialog";
 import { DialogProps } from "@radix-ui/react-dialog";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 import LoadingButton from "@/shared/others/LoadingButton";
@@ -9,6 +9,7 @@ import { Post } from "@/types/post.types";
 import SharedPostPreviewCard from "./SharedPostPreviewCard";
 import useErrorToast from "@/hooks/useErrorToast";
 import UserAvatar from "../user/UserAvatar";
+import TextareaAutosize from "react-textarea-autosize";
 
 interface Prop extends DialogProps {
   isUpdateDialog?: boolean;
@@ -26,7 +27,6 @@ export const CreateUpdateSharePostDialog = ({
   const [title, setTitle] = useState<string | undefined>("");
   const user = useSelector((state: RootState) => state.user.currentUser);
   const currentUser = isUpdateDialog ? toUpdateSharedPost?.user : user;
-  const textAreaRef = useRef<HTMLTextAreaElement>(null);
 
   const createMutation = useCreatePost();
   const updateMutation = useUpdatePost();
@@ -38,18 +38,6 @@ export const CreateUpdateSharePostDialog = ({
       setTitle(toUpdateSharedPost?.title);
     }
   }, [isUpdateDialog, toUpdateSharedPost]);
-
-  const autoExpandTextarea = () => {
-    const textarea = textAreaRef?.current;
-    if (textarea) {
-      textarea.style.height = "auto";
-      textarea.style.height = textarea.scrollHeight + "px";
-    }
-  };
-
-  useEffect(() => {
-    autoExpandTextarea();
-  }, [title]);
 
   const onCloseDialog = () => {
     setTitle(isUpdateDialog ? toUpdateSharedPost?.title : "");
@@ -80,9 +68,6 @@ export const CreateUpdateSharePostDialog = ({
     });
   };
 
-  if (!props.open) {
-    return <></>;
-  }
 
   return (
     <Dialog
@@ -111,9 +96,8 @@ export const CreateUpdateSharePostDialog = ({
             </div>
           </div>
           <div className="w-full h-[65%] overflow-y-scroll styled-scroll py-[10px]">
-            <textarea
+            <TextareaAutosize
               onChange={(e) => setTitle(e.target.value)}
-              ref={textAreaRef}
               value={title}
               placeholder="Title...."
               className="outline-none text-sm placeholder:text-lg resize-none w-full"

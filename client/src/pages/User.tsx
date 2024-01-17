@@ -7,7 +7,7 @@ import { splitPagesData } from "@/lib/infiniteScroll";
 import { Post } from "@/types/post.types";
 import { User } from "@/types/user.type";
 import { useParams } from "react-router-dom";
-import { Radar } from "lucide-react";
+import NoDataPlaceHolder from "@/shared/others/NoDataPlaceHolder";
 
 export const UserPage = () => {
   const { id } = useParams();
@@ -37,10 +37,9 @@ export const UserPage = () => {
           {Posts?.length ? (
             Posts?.map((el: Post) => <PostCard post={el} key={el._id} />)
           ) : (
-            <div className="w-full py-[50px] space-y-2 flex flex-col items-center justify-center text-gray-500">
-              <Radar size={100} />
-              <h1>No Posts Yet</h1>
-            </div>
+            <NoDataPlaceHolder iconSize={100} classID="py-[50px]">
+              No Posts Yet
+            </NoDataPlaceHolder>
           )}
         </>
       )}

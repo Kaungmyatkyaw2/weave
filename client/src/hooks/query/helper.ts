@@ -1,7 +1,7 @@
 import { Comment } from "@/types/comment.types";
 import { Post } from "@/types/post.types";
 import { InfiniteQueryResponse, Response } from "@/types/response.types";
-import { Follow } from "@/types/user.type";
+import { Follow, User } from "@/types/user.type";
 import { useQueryClient } from "@tanstack/react-query";
 
 export const updateInfiniteQueryPages = <T extends Post | Comment>(
@@ -48,7 +48,7 @@ export const updateInfiniteQueryPagesOnDelete = <
   return prevData;
 };
 
-export const getNextPageParam = <T extends Follow | Post | Comment>(
+export const getNextPageParam = <T extends Follow | Post | Comment | User>(
   limit: number = 10
 ) => {
   return (lastPage: Response<T[]>, allPages: any) => {

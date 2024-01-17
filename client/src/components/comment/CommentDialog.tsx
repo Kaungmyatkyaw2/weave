@@ -5,13 +5,14 @@ import LoadingButton from "@/shared/others/LoadingButton";
 import { useUpdatePost } from "@/hooks/query/post.hooks";
 import { Input } from "../ui/input";
 import { Post } from "@/types/post.types";
-import { Radar, Send } from "lucide-react";
+import { Send } from "lucide-react";
 import useErrorToast from "@/hooks/useErrorToast";
 import { useCreateComment, useGetComments } from "@/hooks/query/comment.hooks";
 import { CommentCard, SkeletonCommentCard } from ".";
 import { splitPagesData } from "@/lib/infiniteScroll";
 import { Comment } from "@/types/comment.types";
 import useInfiniteScroll from "@/hooks/useInfiniteScroll";
+import NoDataPlaceHolder from "@/shared/others/NoDataPlaceHolder";
 
 interface Prop extends DialogProps {
   isUpdateDialog?: boolean;
@@ -72,10 +73,9 @@ export const CommentDialog = ({
                 <SkeletonCommentCard />
               </>
             ) : commentData?.length == 0 ? (
-              <div className="w-full h-full space-y-2 flex flex-col items-center justify-center text-gray-500">
-                <Radar size={50} />
-                <h1>No Comments Yet</h1>
-              </div>
+              <NoDataPlaceHolder iconSize={50}>
+                No Comments Yet
+              </NoDataPlaceHolder>
             ) : (
               commentData?.map((co) => <CommentCard comment={co} />)
             )}

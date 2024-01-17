@@ -19,6 +19,14 @@ const PostBodyCard = ({
     navigate(`/user/${post.user._id}`);
   };
 
+  const displayText = (inputText: string) => {
+    // Replace newline characters with HTML line breaks
+    const formattedText = inputText.replace(/\n/g, "<br>");
+
+    // Set the content using dangerouslySetInnerHTML
+    return { __html: formattedText };
+  };
+
   return (
     <div className="flex space-x-[10px]">
       <UserAvatar className=" w-[50px] h-[50px]" user={post.user} />
@@ -42,7 +50,7 @@ const PostBodyCard = ({
           more={<span className="font-medium cursor-pointer">See more</span>}
           less={<span className="font-medium cursor-pointer">See less</span>}
         >
-          {post.title}
+          <div dangerouslySetInnerHTML={displayText(post.title || "")}></div>
         </ShowMoreText>
         <ImageVideoPlayer src={post.image} />
         {post.isSharedPost && toShowSharedPost && (

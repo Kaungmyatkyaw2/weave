@@ -30,6 +30,7 @@ Router.patch(
   userController.updateUser
 );
 Router.get("/me", userController.setUserId("params"), userController.getUser);
+Router.get("/whotofollow", userController.getWhotoFollow);
 Router.get("/:id", userController.getUser);
 
 Router.use(

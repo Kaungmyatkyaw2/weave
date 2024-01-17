@@ -8,8 +8,9 @@ import { useGetPosts } from "./hooks/query/post.hooks";
 import { splitPagesData } from "./lib/infiniteScroll";
 import useInfiniteScroll from "./hooks/useInfiniteScroll";
 import { Button } from "./components/ui/button";
-import { Loader, Plus, Radar } from "lucide-react";
+import { Loader, Plus } from "lucide-react";
 import { useState } from "react";
+import NoDataPlaceHolder from "./shared/others/NoDataPlaceHolder";
 
 const App = () => {
   const query = useGetPosts();
@@ -20,7 +21,7 @@ const App = () => {
   useInfiniteScroll(query);
 
   return (
-    <div className="w-full space-y-[10px] relative">
+    <div className="w-full relative">
       <Button
         onClick={() => setOpen(true)}
         className="rounded-full h-[50px] w-[50px] fixed bottom-[30px] md:right-[30px] right-[5px] z-[9]"
@@ -39,10 +40,7 @@ const App = () => {
           {Posts?.length ? (
             Posts?.map((el: Post) => <PostCard post={el} key={el._id} />)
           ) : (
-            <div className="w-full h-full space-y-2 flex flex-col items-center justify-center text-gray-500">
-              <Radar size={100} />
-              <h1>No Posts Yet</h1>
-            </div>
+            <NoDataPlaceHolder iconSize={100}>No Posts Yet</NoDataPlaceHolder>
           )}
         </>
       )}

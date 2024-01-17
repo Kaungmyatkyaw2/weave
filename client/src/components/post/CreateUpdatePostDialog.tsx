@@ -12,6 +12,7 @@ import ImageVideoPlayer from "./ImageVideoPlayer";
 import { Button } from "../ui/button";
 import useErrorToast from "@/hooks/useErrorToast";
 import UserAvatar from "../user/UserAvatar";
+import TextareaAutosize from "react-textarea-autosize";
 
 interface Prop extends DialogProps {
   isUpdateDialog?: boolean;
@@ -31,7 +32,6 @@ export const CreateUpdatePostDialog = ({
   const [isImage, setIsImage] = useState<boolean>();
   const [file, setFile] = useState<File | null>(null);
   const fileRef = useRef<HTMLInputElement>(null);
-  const textAreaRef = useRef<HTMLTextAreaElement>(null);
 
   const createMutation = useCreatePost();
   const updateMutation = useUpdatePost();
@@ -45,18 +45,6 @@ export const CreateUpdatePostDialog = ({
       setTitle(orgPost?.title);
     }
   }, [isUpdateDialog, orgPost]);
-
-  const autoExpandTextarea = () => {
-    const textarea = textAreaRef?.current;
-    if (textarea) {
-      textarea.style.height = "auto";
-      textarea.style.height = textarea.scrollHeight + "px";
-    }
-  };
-
-  useEffect(() => {
-    autoExpandTextarea();
-  }, [title]);
 
   const onCloseDialog = () => {
     setTitle(isUpdateDialog ? orgPost?.title : "");
@@ -101,10 +89,6 @@ export const CreateUpdatePostDialog = ({
     }
   };
 
-  if (!props.open) {
-    return <></>;
-  }
-
   return (
     <Dialog
       onOpenChange={
@@ -131,8 +115,7 @@ export const CreateUpdatePostDialog = ({
             </div>
           </div>
           <div className="w-full h-[65%] overflow-y-scroll styled-scroll py-[10px]">
-            <textarea
-              ref={textAreaRef}
+            <TextareaAutosize
               onChange={(e) => {
                 setTitle(e.target.value);
               }}

@@ -1,4 +1,4 @@
-import { Newspaper, UserCircle, Search, LogOut } from "lucide-react";
+import { Newspaper, UserCircle,  LogOut } from "lucide-react";
 import { NavLink, NavLinkProps, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { removeToken } from "@/store/slice/auth.slice";
@@ -39,7 +39,7 @@ const ProfileBtn = ({ className, children, ...props }: SideBtnProps) => {
       {...props}
       className={`flex sm:space-x-[10px] transition-all duration-200  ${className} ${
         location.pathname == `/user/${currentUser?._id}`
-          ? "text-icon sm:border-b-0 border-b-2 border-icon sm:pb-[5px]"
+          ? "text-icon sm:border-b-0 border-b-2 border-icon sm:pb-0 pb-[5px]"
           : "text-black"
       }`}
     >
@@ -73,9 +73,6 @@ const NavigationButtons = ({ userId }: { userId?: string }) => {
     <>
       <SideBtn icon={Newspaper} to={"/"}>
         New feed
-      </SideBtn>
-      <SideBtn to={"/search"} icon={Search}>
-        Search
       </SideBtn>
       <ProfileBtn to={`/user/${userId}`} icon={UserCircle}>
         Profile

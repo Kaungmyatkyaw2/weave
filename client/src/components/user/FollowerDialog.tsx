@@ -38,11 +38,13 @@ const FollowerDialog = ({
           ) : follows?.length ? (
             follows?.map((follow) => (
               <FollowCard
-                to={""}
                 onClick={() => {
                   onOpenChange?.(false);
                 }}
+                isShowFlBtn={!isForFollower}
+                isAlreadyFollow={!isForFollower}
                 key={follow._id}
+                followId={follow._id}
                 user={
                   isForFollower ? follow.followerUser : follow.followingUser
                 }

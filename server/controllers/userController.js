@@ -35,8 +35,32 @@ exports.protectUpdateMe = (req, res, next) => {
   next();
 };
 
-exports.getAllUsers = handlerFactory.getAll(User);
-exports.updateUser = handlerFactory.updateOne(User);
+exports.getWhotoFollow = catchAsync(async (req, res, next) => {
+  const initialQuery = User.find({
+    $and: [
+      { _id: { $ne: req.user._id } },
+      {
+        _id: {
+          $nin: await Follow.find({ followerUser: req.user._id }).distinct(
+            "followingUser"
+          ),
+        },
+      },
+    ],
+  });
+
+  const query = new ApiFeatures(initialQuery).paginate();
+
+  const data = await query.query;
+
+  res.status(200).json({
+    status: "success",
+    result: data.length,
+    data: {
+      data,
+    },
+  });
+});
 
 exports.getUser = catchAsync(async (req, res, next) => {
   const id = req.params.id;
@@ -72,3 +96,6 @@ exports.getUser = catchAsync(async (req, res, next) => {
     },
   });
 });
+
+exports.getAllUsers = handlerFactory.getAll(User);
+exports.updateUser = handlerFactory.updateOne(User);
