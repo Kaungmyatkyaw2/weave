@@ -21,15 +21,7 @@ const App = () => {
   useInfiniteScroll(query);
 
   return (
-    <div className="w-full relative">
-      <Button
-        onClick={() => setOpen(true)}
-        className="rounded-full h-[50px] w-[50px] fixed bottom-[30px] md:right-[30px] right-[5px] z-[9]"
-      >
-        <Plus />
-      </Button>
-      <CreateUpdatePostDialog onOpenChange={setOpen} open={open} />
-
+    <div className="w-full relative space-y-[15px]">
       {query.isLoading ? (
         <>
           <SkeletonPostCard />
@@ -40,7 +32,9 @@ const App = () => {
           {Posts?.length ? (
             Posts?.map((el: Post) => <PostCard post={el} key={el._id} />)
           ) : (
-            <NoDataPlaceHolder iconSize={100}>No Posts Yet</NoDataPlaceHolder>
+            <NoDataPlaceHolder className="h-[80vh]" iconSize={100}>
+              No Posts Yet
+            </NoDataPlaceHolder>
           )}
         </>
       )}
@@ -51,6 +45,15 @@ const App = () => {
       ) : (
         <></>
       )}
+
+      <CreateUpdatePostDialog onOpenChange={setOpen} open={open} />
+
+      <Button
+        onClick={() => setOpen(true)}
+        className="rounded-full h-[50px] w-[50px] fixed bottom-[30px] md:right-[30px] right-[5px] z-[9]"
+      >
+        <Plus />
+      </Button>
     </div>
   );
 };

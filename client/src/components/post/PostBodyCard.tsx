@@ -5,6 +5,7 @@ import SharedPostPreviewCard from "./SharedPostPreviewCard";
 import { useNavigate } from "react-router-dom";
 import UserAvatar from "../user/UserAvatar";
 import ShowMoreText from "react-show-more-text";
+import { Globe2, Lock } from "lucide-react";
 
 const PostBodyCard = ({
   post,
@@ -29,7 +30,10 @@ const PostBodyCard = ({
 
   return (
     <div className="flex space-x-[10px]">
-      <UserAvatar className=" w-[50px] h-[50px]" user={post.user} />
+      <div className="w-50px relative flex flex-col items-center">
+        <UserAvatar className=" w-[50px] h-[50px]" user={post.user} />
+        <div className="w-[2px] h-full bg-gray-200 rounded-b-md"></div>
+      </div>
 
       <div className="py-[1px] w-full">
         <div
@@ -38,6 +42,11 @@ const PostBodyCard = ({
         >
           <h1 className="text-md font-bold">{post.user?.displayName}</h1>
           <p className="text-sm text-smoke">@{post.user?.userName}</p>
+          {post.privacy === "PRIVATE" ? (
+            <Lock size={15} />
+          ) : (
+            <Globe2 size={15} />
+          )}
         </div>
         <p className="text-[13px] text-smoke pb-[13px]">
           <ReactTimeAgo

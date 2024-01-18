@@ -7,7 +7,12 @@ const SharedPostPreviewCard = ({
 }: {
   post: Post | null | string | undefined;
 }) => {
-  if (typeof post == "string" || !post) {
+  if (
+    typeof post == "string" ||
+    !post ||
+    (post.sharedPost?.privacy == "PRIVATE" &&
+      post.user._id != post.sharedPost.user._id)
+  ) {
     return (
       <div className="w-full flex  items-center space-x-[10px] border rounded-md bg-gray-50 px-[10px] py-[10px]">
         <Lock size={20} />

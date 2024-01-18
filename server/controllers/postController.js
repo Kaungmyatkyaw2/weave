@@ -1,4 +1,5 @@
 const Post = require("../models/postModel");
+const ApiFeatures = require("../utils/apiFeatures");
 const AppError = require("../utils/appError");
 const catchAsync = require("../utils/catchAsync");
 const cloudinary = require("../utils/cloudinary");
@@ -101,21 +102,36 @@ const popuOpt = [
 ];
 
 exports.createPost = handlerFactory.createOne(Post, popuOpt);
-exports.getAllPosts = handlerFactory.getAll(Post, popuOpt);
+
+exports.getAllPosts = catchAsync(async (req, res, next) => {
+  let orgQuery = Post.find({
+    $or: [
+      { user: req.user._id },
+      {
+        privacy: "PUBLIC",
+      },
+    ],
+  });
+
+  orgQuery = orgQuery.populate(popuOpt[0]).populate(popuOpt[1]);
+
+  const query = new ApiFeatures(orgQuery, req.query)
+    .filter()
+    .select()
+    .sort()
+    .paginate();
+
+  const documents = await query.query;
+
+  res.status(200).json({
+    status: "success",
+    result: documents.length,
+    data: {
+      data: documents,
+    },
+  });
+});
+
 exports.getPostById = handlerFactory.getOne(Post);
 exports.updatePost = handlerFactory.updateOne(Post, popuOpt);
 exports.deletePost = handlerFactory.deleteOne(Post);
-
-// exports.uploadImages = upload.array("images", 3);
-// exports.uploadToCloudinary = catchAsync(async (req, res, next) => {
-//   if (!req.files) {
-//     return next();
-//   }
-
-//   const images = await Promise.all(
-//     await req.files.map((file) => cloudinary.uploader.upload(file.path))
-//   );
-
-//   req.body.images = images.map((img) => img.secure_url);
-//   next();
-// });

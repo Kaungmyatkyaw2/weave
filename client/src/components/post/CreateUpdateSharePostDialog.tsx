@@ -10,24 +10,27 @@ import SharedPostPreviewCard from "./SharedPostPreviewCard";
 import useErrorToast from "@/hooks/useErrorToast";
 import UserAvatar from "../user/UserAvatar";
 import TextareaAutosize from "react-textarea-autosize";
+import PrivacySelectBox from "./PrivacyBox";
 
 interface Prop extends DialogProps {
   isUpdateDialog?: boolean;
-  toUpdateSharedPost?: Post;
+  orgPost?: Post;
   toShare: Post;
 }
 
 export const CreateUpdateSharePostDialog = ({
   onOpenChange,
   isUpdateDialog,
-  toUpdateSharedPost,
+  orgPost,
   toShare,
   ...props
 }: Prop) => {
   const [title, setTitle] = useState<string | undefined>("");
   const user = useSelector((state: RootState) => state.user.currentUser);
-  const currentUser = isUpdateDialog ? toUpdateSharedPost?.user : user;
-
+  const currentUser = isUpdateDialog ? orgPost?.user : user;
+  const [privacy, setPrivacy] = useState(
+    isUpdateDialog ? orgPost?.privacy || "" : "Public"
+  );
   const createMutation = useCreatePost();
   const updateMutation = useUpdatePost();
 
@@ -35,18 +38,19 @@ export const CreateUpdateSharePostDialog = ({
 
   useEffect(() => {
     if (isUpdateDialog) {
-      setTitle(toUpdateSharedPost?.title);
+      setTitle(orgPost?.title);
     }
-  }, [isUpdateDialog, toUpdateSharedPost]);
+  }, [isUpdateDialog, orgPost]);
 
   const onCloseDialog = () => {
-    setTitle(isUpdateDialog ? toUpdateSharedPost?.title : "");
+    setTitle(isUpdateDialog ? orgPost?.title : "");
   };
 
   const onCreateOrUpdate = () => {
     const formData = new FormData();
 
     formData.append("title", title || "");
+    formData.append("privacy", privacy.toUpperCase());
 
     if (!isUpdateDialog) {
       formData.append("sharedPost", toShare._id);
@@ -54,7 +58,7 @@ export const CreateUpdateSharePostDialog = ({
 
     const mutation = isUpdateDialog ? updateMutation : createMutation;
     const payload = isUpdateDialog
-      ? { id: toUpdateSharedPost?._id, values: formData }
+      ? { id: orgPost?._id, values: formData }
       : formData;
 
     mutation.mutateAsync(payload, {
@@ -67,7 +71,6 @@ export const CreateUpdateSharePostDialog = ({
       },
     });
   };
-
 
   return (
     <Dialog
@@ -83,16 +86,16 @@ export const CreateUpdateSharePostDialog = ({
     >
       <DialogContent className="sm:min-w-[50%] min-w-full px-0">
         <div className="sm:h-[80vh] h-[90vh] w-full px-[30px]">
-          <div className="w-full h-[20%] flex items-center">
+          <div className="w-full sm:h-[20%] flex sm:items-center">
             <UserAvatar className=" w-[50px] h-[50px]" user={currentUser} />
-
-            <div className="pl-[10px]">
+            <div className="pl-[10px] flex sm:flex-row flex-col items-center space-x-[10px] sm:space-y-0 space-y-2">
               <div className="space-y-[3px]">
                 <h1 className="text-md font-bold">
                   {currentUser?.displayName}
                 </h1>
                 <p className="text-sm text-smoke">@{currentUser?.userName}</p>
               </div>
+              <PrivacySelectBox value={privacy} setValue={setPrivacy} />
             </div>
           </div>
           <div className="w-full h-[65%] overflow-y-scroll styled-scroll py-[10px]">

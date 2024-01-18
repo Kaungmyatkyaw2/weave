@@ -31,8 +31,11 @@ interface ActionBtnProps
 }
 
 const ActionBtn = ({ des, ...props }: ActionBtnProps) => (
-  <button className="text-sm flex items-center space-x-[10px]" {...props}>
-    <props.icon size={20} /> <span>{des}</span>
+  <button
+    className="text-sm flex items-center space-x-[10px] text-gray-500"
+    {...props}
+  >
+    <props.icon size={19} />
   </button>
 );
 
@@ -82,7 +85,9 @@ export const PostCard = ({ post }: { post: Post }) => {
 
   return (
     <div
-      className={"w-full border rounded-md space-y-[20px] px-[20px] py-[20px] "}
+      className={
+        "w-full border rounded-md space-y-[20px] px-[20px] py-[20px] bg-white"
+      }
     >
       <CreateUpdateSharePostDialog
         toShare={post.sharedPost || post}
@@ -99,7 +104,7 @@ export const PostCard = ({ post }: { post: Post }) => {
       <CreateUpdateSharePostDialog
         isUpdateDialog={true}
         toShare={post.sharedPost || post}
-        toUpdateSharedPost={post}
+        orgPost={post}
         onOpenChange={setOpenShareEdit}
         open={openShareEdit}
       />
@@ -127,7 +132,7 @@ export const PostCard = ({ post }: { post: Post }) => {
       </div>
 
       <PostBodyCard post={post} toShowSharedPost />
-      <div className="flex justify-between items-center pl-[55px] pt-[10px]">
+      <div className="flex items-center space-x-[20px] pl-[55px] pt-[10px]">
         <ActionBtn
           des={"Share"}
           icon={Share2}

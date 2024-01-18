@@ -21,6 +21,7 @@ const FollowCard = ({
   onClick,
   followId,
   isShowFlBtn,
+  className,
   ...props
 }: Props) => {
   const createMutation = useCreateFollow();
@@ -60,7 +61,7 @@ const FollowCard = ({
         navigate(`/user/${user._id}`);
         onClick?.(e);
       }}
-      className="flex items-center space-x-[10px] cursor-pointer bg-gray-50 py-[10px] px-[10px] rounded-[10px]"
+      className={`flex items-center space-x-[10px] cursor-pointer bg-gray-50 py-[10px] px-[10px] rounded-[10px] ${className}`}
     >
       <UserAvatar className=" w-[60px] h-[60px]" user={user} />
 

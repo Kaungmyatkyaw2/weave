@@ -23,7 +23,7 @@ const PostSchema = new mongoose.Schema({
 
   privacy: {
     type: String,
-    enum: ["PUBLIC", "FRIEND", "PRIVATE"],
+    enum: ["PUBLIC", "PRIVATE"],
     default: "PRIVATE",
   },
   createdAt: {

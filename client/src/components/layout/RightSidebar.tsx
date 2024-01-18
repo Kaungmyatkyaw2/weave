@@ -14,7 +14,7 @@ const RightSidebar = () => {
   return (
     <div className="fixed top-[60px] right-[20px] lg:block hidden w-[calc(30%-20px)] h-screen rounded-sm border  p-[10px]">
       <Input placeholder="Search..." className="w-full" />
-      <div className="w-full rounded-md bg-white p-[10px] py-[20px] mt-[40px] space-y-[15px]">
+      <div className="w-full rounded-md bg-gray-50 p-[10px] py-[20px] mt-[40px] space-y-[15px]">
         <h1 className="text-lg font-bold text-smoke">Who to follow?</h1>
         {query.isLoading ? (
           <></>

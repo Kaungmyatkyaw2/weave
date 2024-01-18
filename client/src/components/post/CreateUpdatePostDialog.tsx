@@ -1,18 +1,19 @@
 import { Dialog, DialogContent } from "../ui/dialog";
-import { DialogProps } from "@radix-ui/react-dialog";
 import { ChangeEvent, useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 import LoadingButton from "@/shared/others/LoadingButton";
 import { useCreatePost, useUpdatePost } from "@/hooks/query/post.hooks";
 import { Input } from "../ui/input";
-import { Post } from "@/types/post.types";
 import { Image, X } from "lucide-react";
 import ImageVideoPlayer from "./ImageVideoPlayer";
 import { Button } from "../ui/button";
 import useErrorToast from "@/hooks/useErrorToast";
 import UserAvatar from "../user/UserAvatar";
 import TextareaAutosize from "react-textarea-autosize";
+import { DialogProps } from "@radix-ui/react-alert-dialog";
+import { Post } from "@/types/post.types";
+import PrivacySelectBox from "./PrivacyBox";
 
 interface Prop extends DialogProps {
   isUpdateDialog?: boolean;
@@ -31,6 +32,9 @@ export const CreateUpdatePostDialog = ({
   const [previewImg, setPreviewImg] = useState<string | undefined>("");
   const [isImage, setIsImage] = useState<boolean>();
   const [file, setFile] = useState<File | null>(null);
+  const [privacy, setPrivacy] = useState(
+    isUpdateDialog ? orgPost?.privacy || "" : "Public"
+  );
   const fileRef = useRef<HTMLInputElement>(null);
 
   const createMutation = useCreatePost();
@@ -59,6 +63,7 @@ export const CreateUpdatePostDialog = ({
     const formData = new FormData();
 
     formData.append("title", title || "");
+    formData.append("privacy", privacy.toUpperCase());
     if (file) {
       formData.append("image", file);
     }
@@ -103,15 +108,16 @@ export const CreateUpdatePostDialog = ({
     >
       <DialogContent className="sm:min-w-[50%] min-w-full px-0">
         <div className="sm:h-[80vh] h-[90vh] w-full px-[30px]">
-          <div className="w-full h-[20%] flex items-center">
+          <div className="w-full sm:h-[20%] flex sm:items-center">
             <UserAvatar className=" w-[50px] h-[50px]" user={currentUser} />
-            <div className="pl-[10px]">
+            <div className="pl-[10px] flex sm:flex-row flex-col items-center space-x-[10px] sm:space-y-0 space-y-2">
               <div className="space-y-[3px]">
                 <h1 className="text-md font-bold">
                   {currentUser?.displayName}
                 </h1>
                 <p className="text-sm text-smoke">@{currentUser?.userName}</p>
               </div>
+              <PrivacySelectBox value={privacy} setValue={setPrivacy} />
             </div>
           </div>
           <div className="w-full h-[65%] overflow-y-scroll styled-scroll py-[10px]">
