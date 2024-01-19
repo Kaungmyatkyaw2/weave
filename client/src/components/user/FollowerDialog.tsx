@@ -41,8 +41,6 @@ const FollowerDialog = ({
                 onClick={() => {
                   onOpenChange?.(false);
                 }}
-                isShowFlBtn={!isForFollower}
-                isAlreadyFollow={!isForFollower}
                 key={follow._id}
                 followId={follow._id}
                 user={

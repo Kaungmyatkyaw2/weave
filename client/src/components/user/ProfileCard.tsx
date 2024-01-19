@@ -74,7 +74,7 @@ export const ProfileCard = ({ user }: { user: User }) => {
     <>
       <ProfileUpdateDialog open={editOpen} onOpenChange={setEditOpen} />
       <FollowerDialog
-        isForFollower
+        isForFollower={true}
         user={user}
         open={FollowerDialogOpen}
         onOpenChange={setFollowerDialogOpen}
