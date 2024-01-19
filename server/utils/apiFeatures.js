@@ -21,6 +21,8 @@ class ApiFeatures {
 
       queryStr = JSON.parse(forMattedQueryStr);
 
+      console.log(queryStr);
+
       this.query.find(queryStr);
     }
 

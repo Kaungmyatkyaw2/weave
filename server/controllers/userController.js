@@ -65,9 +65,7 @@ exports.getWhotoFollow = catchAsync(async (req, res, next) => {
 exports.getUser = catchAsync(async (req, res, next) => {
   const id = req.params.id;
 
-  const query = new ApiFeatures(User.findById(id), req.query).select();
-
-  let document = await query.query;
+  let document = await User.findById(id);
 
   const follower = await Follow.countDocuments({
     followingUser: id,
@@ -93,6 +91,26 @@ exports.getUser = catchAsync(async (req, res, next) => {
         follower,
         followId: followDoc ? followDoc._id : undefined,
       },
+    },
+  });
+});
+
+exports.getUsersBySearching = catchAsync(async (req, res, next) => {
+  const search = new RegExp(req.query.search, "i");
+
+  const query = new ApiFeatures(
+    User.find({
+      $or: [{ userName: search }, { displayName: search }],
+    }),
+    req.query
+  ).paginate();
+
+  const documents = await query.query;
+
+  res.status(200).json({
+    status: "success",
+    data: {
+      data: documents,
     },
   });
 });

@@ -36,6 +36,16 @@ export const useGetPostsByUser = (userId: string | undefined) =>
     enabled: !!userId,
   });
 
+export const useSearchPosts = (search: string | undefined) =>
+  useInfiniteQuery({
+    queryKey: ["posts", "search", search],
+    queryFn: ({ pageParam }) =>
+      axiosClient()
+        .get(`/posts/search?search=${search}&page=${pageParam}`)
+        .then((res) => res.data),
+    getNextPageParam: getNextPageParam<Post>(10),
+  });
+
 export const useCreatePost = () => {
   const { handleCreateInfiniteQuery } = useQueryHandler();
 

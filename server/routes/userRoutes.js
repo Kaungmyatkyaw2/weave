@@ -31,6 +31,9 @@ Router.patch(
 );
 Router.get("/me", userController.setUserId("params"), userController.getUser);
 Router.get("/whotofollow", userController.getWhotoFollow);
+
+Router.get("/search", userController.getUsersBySearching);
+Router.get("/", userController.getAllUsers);
 Router.get("/:id", userController.getUser);
 
 Router.use(

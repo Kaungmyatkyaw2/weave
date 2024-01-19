@@ -101,8 +101,6 @@ const popuOpt = [
   },
 ];
 
-exports.createPost = handlerFactory.createOne(Post, popuOpt);
-
 exports.getAllPosts = catchAsync(async (req, res, next) => {
   let orgQuery = Post.find({
     $or: [
@@ -132,6 +130,29 @@ exports.getAllPosts = catchAsync(async (req, res, next) => {
   });
 });
 
+exports.getPostsBySearching = exports.getUsersBySearching = catchAsync(
+  async (req, res, next) => {
+    const search = new RegExp(req.query.search, "i");
+
+    const query = new ApiFeatures(
+      Post.find({
+        title: search,
+      }).populate({ path: "user" }),
+      req.query
+    ).paginate();
+
+    const documents = await query.query;
+
+    res.status(200).json({
+      status: "success",
+      data: {
+        data: documents,
+      },
+    });
+  }
+);
+
+exports.createPost = handlerFactory.createOne(Post, popuOpt);
 exports.getPostById = handlerFactory.getOne(Post);
 exports.updatePost = handlerFactory.updateOne(Post, popuOpt);
 exports.deletePost = handlerFactory.deleteOne(Post);

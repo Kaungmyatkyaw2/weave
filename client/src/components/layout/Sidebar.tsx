@@ -1,4 +1,4 @@
-import { Newspaper, UserCircle,  LogOut } from "lucide-react";
+import { Newspaper, UserCircle, LogOut, Search } from "lucide-react";
 import { NavLink, NavLinkProps, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { removeToken } from "@/store/slice/auth.slice";
@@ -6,6 +6,8 @@ import { removeCurrentUser } from "@/store/slice/user.slice";
 import { RootState } from "@/store/store";
 import { useQueryClient } from "@tanstack/react-query";
 import UserAvatar from "../user/UserAvatar";
+import { useState } from "react";
+import SearchDialog from "./SearchDialog";
 
 interface SideBtnProps extends NavLinkProps {
   icon: any;
@@ -69,8 +71,11 @@ const LogoutBtn = () => {
 };
 
 const NavigationButtons = ({ userId }: { userId?: string }) => {
+  const [openSearch, setOpenSearch] = useState(false);
+
   return (
     <>
+      <SearchDialog open={openSearch} onOpenChange={setOpenSearch} />
       <SideBtn icon={Newspaper} to={"/"}>
         New feed
       </SideBtn>
@@ -78,6 +83,15 @@ const NavigationButtons = ({ userId }: { userId?: string }) => {
         Profile
       </ProfileBtn>
       <LogoutBtn />
+      <button
+        onClick={() => {
+          setOpenSearch(true);
+        }}
+        className={` lg:hidden flex sm:space-x-[10px] transition-all duration-200 text-black`}
+      >
+        <Search className="sm:h-5 sm:w-5" />
+        <span className="text-sm sm:inline hidden">Search</span>
+      </button>
     </>
   );
 };

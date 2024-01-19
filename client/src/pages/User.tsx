@@ -27,7 +27,7 @@ export const UserPage = () => {
         <ProfileCard user={user} />
       )}
 
-      {postQuery.isLoading ? (
+      {postQuery.isLoading || userQuery.isLoading ? (
         <>
           <SkeletonPostCard />
           <SkeletonPostCard />

@@ -10,6 +10,7 @@ import {
   VerifyEmail,
   GetVerificationEmail,
   UserPage,
+  Search,
 } from "./pages/";
 import { Toaster } from "./components/ui/toaster.tsx";
 import { Provider } from "react-redux";
@@ -50,6 +51,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
               }
             >
               <Route path="" element={<App />} />
+              <Route path="/search" element={<Search />} />
               <Route path="/user/:id" element={<UserPage />} />
             </Route>
             <Route path="/" element={<NavigateHome />}>

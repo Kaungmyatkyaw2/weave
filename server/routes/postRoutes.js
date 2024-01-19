@@ -18,6 +18,8 @@ Router.route("/")
     postController.createPost
   );
 
+Router.get("/search", postController.getPostsBySearching);
+
 Router.route("/:id")
   .get(postController.getPostById)
   .patch(
