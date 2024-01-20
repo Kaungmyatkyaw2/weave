@@ -137,6 +137,12 @@ exports.getPostsBySearching = exports.getUsersBySearching = catchAsync(
     const query = new ApiFeatures(
       Post.find({
         title: search,
+        $or: [
+          { user: req.user._id },
+          {
+            privacy: "PUBLIC",
+          },
+        ],
       }).populate({ path: "user" }),
       req.query
     ).paginate();
