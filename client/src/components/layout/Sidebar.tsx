@@ -82,7 +82,6 @@ const NavigationButtons = ({ userId }: { userId?: string }) => {
       <ProfileBtn to={`/user/${userId}`} icon={UserCircle}>
         Profile
       </ProfileBtn>
-      <LogoutBtn />
       <button
         onClick={() => {
           setOpenSearch(true);
@@ -92,6 +91,7 @@ const NavigationButtons = ({ userId }: { userId?: string }) => {
         <Search className="sm:h-5 sm:w-5" />
         <span className="text-sm sm:inline hidden">Search</span>
       </button>
+      <LogoutBtn />
     </>
   );
 };
