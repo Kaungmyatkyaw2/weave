@@ -6,6 +6,7 @@ const filterObject = require("../utils/filterObject");
 const handlerFactory = require("./handlerFactory");
 const Follow = require("../models/followModel");
 const ApiFeatures = require("../utils/apiFeatures");
+const FollowModel = require("../models/followModel");
 
 exports.setUserId = (field) => {
   return (req, res, next) => {
@@ -105,7 +106,18 @@ exports.getUsersBySearching = catchAsync(async (req, res, next) => {
     req.query
   ).paginate();
 
-  const documents = await query.query;
+  let documents = await query.query;
+
+  documents = await Promise.all(
+    documents.map(async (doc) => {
+      const follow = await FollowModel.findOne({
+        followerUser: req.user._id,
+        followingUser: doc.id,
+      });
+
+      return { ...JSON.parse(JSON.stringify(doc)), followId: follow?._id };
+    })
+  );
 
   res.status(200).json({
     status: "success",

@@ -12,7 +12,8 @@ interface Props extends HTMLProps<HTMLDivElement> {
   user: User;
   isAlreadyFollow?: boolean;
   followId?: string;
-  isShowFlBtn?: boolean;
+  onUnFollowSuccess?: any;
+  onFollowSuccess?: any;
 }
 
 const FollowCard = ({
@@ -20,8 +21,9 @@ const FollowCard = ({
   isAlreadyFollow,
   onClick,
   followId,
-  isShowFlBtn,
   className,
+  onUnFollowSuccess,
+  onFollowSuccess,
   ...props
 }: Props) => {
   const createMutation = useCreateFollow();
@@ -37,6 +39,9 @@ const FollowCard = ({
       followerUser: currentUser?._id,
     };
     createMutation.mutateAsync(payload, {
+      onSuccess(res) {
+        onFollowSuccess(res.data.data.data);
+      },
       onError(error: any) {
         errToast(error, "Failed to follow.");
       },
@@ -49,6 +54,9 @@ const FollowCard = ({
       followingUser: user._id,
     };
     deleteMutation.mutateAsync(payload, {
+      onSuccess() {
+        onUnFollowSuccess?.(user._id);
+      },
       onError(error: any) {
         errToast(error, "Failed to Unfollow.");
       },
@@ -69,7 +77,7 @@ const FollowCard = ({
         <h1 className="font-bold">{user?.displayName}</h1>
         <p className="text-sm">@{user?.userName}</p>
       </div>
-      {currentUser?._id != user._id && isShowFlBtn && (
+      {currentUser?._id != user._id && (
         <Button
           onClick={(e) => {
             e.stopPropagation();

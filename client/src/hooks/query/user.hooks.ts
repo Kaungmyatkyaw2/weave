@@ -24,7 +24,7 @@ export const useGetUser = (id: string | undefined) =>
 
 export const useSearchUsers = (search: string | undefined) =>
   useInfiniteQuery({
-    queryKey: ["users", search],
+    queryKey: ["users", "search", search],
     queryFn: ({ pageParam }) =>
       axiosClient()
         .get(`/users/search?search=${search}&limit=${3}&page=${pageParam}`)

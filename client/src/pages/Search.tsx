@@ -1,21 +1,27 @@
 import { PostCard, SkeletonPostCard } from "@/components/post";
 import FollowCard from "@/components/user/FollowCard";
 import SkeletonFollowCard from "@/components/user/SkeletonFollowCard";
+import { updateQuerySearchUsers } from "@/hooks/query/helper";
 import { useSearchPosts } from "@/hooks/query/post.hooks";
 import { useSearchUsers } from "@/hooks/query/user.hooks";
 import useInfiniteScroll from "@/hooks/useInfiniteScroll";
 import { splitPagesData } from "@/lib/infiniteScroll";
 import LoadingButton from "@/shared/others/LoadingButton";
 import { Post } from "@/types/post.types";
-import { User } from "@/types/user.type";
+import { Follow, User } from "@/types/user.type";
+import { useQueryClient } from "@tanstack/react-query";
 import { Loader } from "lucide-react";
 import { useSearchParams } from "react-router-dom";
 
 export const Search = () => {
   const [searchParams] = useSearchParams();
 
-  const userQuery = useSearchUsers(searchParams.get("context") || "");
-  const postQuery = useSearchPosts(searchParams.get("context") || "");
+  const context = searchParams.get("context");
+
+  const userQuery = useSearchUsers(context || "");
+  const postQuery = useSearchPosts(context || "");
+
+  const queryClient = useQueryClient();
 
   const Users = splitPagesData<User>(userQuery.data);
   const Posts = splitPagesData<Post>(postQuery.data);
@@ -27,6 +33,20 @@ export const Search = () => {
       userQuery.fetchNextPage();
     }
   };
+
+  const onFollowSuccess = (follow: Follow) => {
+    updateQuerySearchUsers(
+      queryClient,
+      follow.followingUser._id,
+      context as string,
+      follow._id
+    );
+  };
+
+  const onUnFollowSuccess = (followUserId: string) =>
+    updateQuerySearchUsers(queryClient, followUserId, context as string);
+  {
+  }
 
   return (
     <div className="w-full space-y-[20px] ">
@@ -41,7 +61,15 @@ export const Search = () => {
             <SkeletonFollowCard />
           </>
         ) : Users?.length ? (
-          Users?.map((user) => <FollowCard user={user} />)
+          Users?.map((user) => (
+            <FollowCard
+              onFollowSuccess={onFollowSuccess}
+              onUnFollowSuccess={onUnFollowSuccess}
+              followId={user.followId}
+              isAlreadyFollow={!!user.followId}
+              user={user}
+            />
+          ))
         ) : (
           <h1 className="font-bold text-center text-lg">No Users Found</h1>
         )}

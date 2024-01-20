@@ -42,9 +42,7 @@ const RightSidebar = () => {
         {query.isLoading ? (
           <></>
         ) : Users?.length ? (
-          Users?.map((user) => (
-            <FollowCard key={user._id} isShowFlBtn user={user} />
-          ))
+          Users?.map((user) => <FollowCard key={user._id} user={user} />)
         ) : (
           <NoDataPlaceHolder iconSize={30} className="py-[10px]">
             No Users To Follow

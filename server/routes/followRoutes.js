@@ -9,5 +9,7 @@ Router.route("/")
   .get(followController.getFollows)
   .post(followController.createFollow);
 Router.route("/:id").delete(followController.deleteFollow);
+Router.get("/followers/:userId", followController.getFollowers);
+Router.get("/followings/:userId", followController.getFollowings);
 
 module.exports = Router;

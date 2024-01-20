@@ -51,7 +51,7 @@ exports.getOne = (Model) =>
     });
   });
 
-exports.createOne = (Model, popuOpt) =>
+exports.createOne = (Model, popuOpt, isForFollow) =>
   catchAsync(async (req, res, next) => {
     let query = await Model.create({ ...req.body, createdAt: Date.now() });
 
@@ -61,10 +61,17 @@ exports.createOne = (Model, popuOpt) =>
 
     const data = await query;
 
+    const parsed = JSON.parse(JSON.stringify(data));
+
     res.status(201).json({
       status: "success",
       data: {
-        data,
+        data: isForFollow
+          ? {
+              ...parsed,
+              followingUser: { ...parsed.followingUser, followId: parsed._id },
+            }
+          : data,
       },
     });
   });

@@ -8,7 +8,7 @@ export interface User {
   _id: string;
   following: number;
   follower: number;
-  followId?: string;
+  followId?: string | undefined;
   bio: string;
 }
 

@@ -7,6 +7,8 @@ import useInfiniteScroll from "@/hooks/useInfiniteScroll";
 import { Loader } from "lucide-react";
 import { splitPagesData } from "@/lib/infiniteScroll";
 import FollowCard from "./FollowCard";
+import { useQueryClient } from "@tanstack/react-query";
+import { updateQueryFollow } from "@/hooks/query/helper";
 
 const FollowerDialog = ({
   onOpenChange,
@@ -18,10 +20,31 @@ const FollowerDialog = ({
     ? useGetFollowers(user._id)
     : useGetFollowings(user._id);
   const dialogRef = useRef<HTMLDivElement>(null);
+  const queryClient = useQueryClient();
 
   const follows = splitPagesData<Follow>(query.data);
 
   useInfiniteScroll(query, dialogRef.current || undefined);
+
+  const onFollowSuccess = (follow: Follow) => {
+    const field = isForFollower ? "followerUser" : "followingUser";
+    const key = isForFollower ? "followers" : "followings";
+
+    updateQueryFollow(
+      queryClient,
+      [key, user._id || ""],
+      follow.followingUser._id,
+      field,
+      follow._id
+    );
+  };
+
+  const onUnFollowSuccess = (followUserId: string) => {
+    const field = isForFollower ? "followerUser" : "followingUser";
+    const key = isForFollower ? "followers" : "followings";
+
+    updateQueryFollow(queryClient, [key, user._id || ""], followUserId, field);
+  };
 
   return (
     <Dialog {...props} onOpenChange={onOpenChange}>
@@ -41,8 +64,16 @@ const FollowerDialog = ({
                 onClick={() => {
                   onOpenChange?.(false);
                 }}
+                onFollowSuccess={onFollowSuccess}
+                onUnFollowSuccess={onUnFollowSuccess}
                 key={follow._id}
-                followId={follow._id}
+                isAlreadyFollow={
+                  !!follow.followerUser.followId ||
+                  !!follow.followingUser.followId
+                }
+                followId={
+                  follow.followerUser.followId || follow.followingUser.followId
+                }
                 user={
                   isForFollower ? follow.followerUser : follow.followingUser
                 }

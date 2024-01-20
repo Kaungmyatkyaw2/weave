@@ -11,7 +11,7 @@ import {
 } from "@tanstack/react-query";
 import { AxiosResponse } from "axios";
 import { useDispatch, useSelector } from "react-redux";
-import { getNextPageParam, useQueryHandler } from "./helper";
+import { getNextPageParam, updateQueryFollow, useQueryHandler } from "./helper";
 
 interface Payload {
   field: "follower" | "following";
@@ -44,7 +44,7 @@ export const useGetFollowers = (id: string | undefined) => {
     queryKey: ["followers", id],
     queryFn: ({ pageParam = 1 }) =>
       axiosClient()
-        .get(`/follows?followingUser=${id}&page=${pageParam}`)
+        .get(`/follows/followers/${id}?page=${pageParam}`)
         .then((res) => res.data),
     getNextPageParam: getNextPageParam<Follow>(),
   });
@@ -55,7 +55,7 @@ export const useGetFollowings = (id: string | undefined) => {
     queryKey: ["followings", id],
     queryFn: ({ pageParam = 1 }) =>
       axiosClient()
-        .get(`/follows?followerUser=${id}&page=${pageParam}`)
+        .get(`/follows/followings/${id}?page=${pageParam}`)
         .then((res) => res.data),
     getNextPageParam: getNextPageParam<Follow>(),
   });
@@ -82,26 +82,36 @@ export const useCreateFollow = () => {
     mutationFn: (values: any) => axiosClient().post("/follows", values),
     onSuccess(res: AxiosResponse<Response<Follow>>, val) {
       dispatch(updateFollow("add"));
+      const createdFollow = res.data.data.data;
 
       handleCreateInfiniteQuery(
         ["followings", currentUser?._id || ""],
-        res.data.data.data
-      );
-      handleCreateInfiniteQuery(
-        ["followers", res.data.data.data.followingUser._id || ""],
-        res.data.data.data
+        createdFollow
       );
 
-      handleDeleteQuery(["whoToFollow"], res.data.data.data.followingUser._id);
+      handleCreateInfiniteQuery(
+        ["followers", createdFollow.followingUser._id || ""],
+        createdFollow
+      );
+
+      handleDeleteQuery(["whoToFollow"], createdFollow.followingUser._id);
 
       incDrcFollow(queryClient, ["user", val.followingUser], {
         field: "follower",
-        followId: res.data.data.data._id,
+        followId: createdFollow._id,
       });
 
       incDrcFollow(queryClient, ["user", currentUser?._id || ""], {
         field: "following",
       });
+
+      updateQueryFollow(
+        queryClient,
+        ["followers", currentUser?._id || ""],
+        createdFollow.followingUser._id,
+        "followerUser",
+        createdFollow._id
+      );
     },
   });
 };
@@ -137,6 +147,13 @@ export const useDeleteFollow = () => {
         field: "following",
         isDecrease: true,
       });
+
+      updateQueryFollow(
+        queryClient,
+        ["followers", currentUser?._id || ""],
+        payload.followingUser,
+        "followerUser"
+      );
     },
   });
 };
