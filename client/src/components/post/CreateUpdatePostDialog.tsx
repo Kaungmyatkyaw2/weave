@@ -165,6 +165,7 @@ export const CreateUpdatePostDialog = ({
               onChange={onFileChange}
               id="picture"
               type="file"
+              accept="image/*,video/*"
               className="hidden"
             />
             <LoadingButton
