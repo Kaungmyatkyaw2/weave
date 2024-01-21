@@ -82,7 +82,9 @@ export const PostCard = ({ post }: { post: Post }) => {
                 icon: Pen,
                 text: "Edit",
                 onClick: () => {
-                  setOpenEdit(true);
+                  post.isSharedPost
+                    ? setOpenShareEdit(true)
+                    : setOpenEdit(true);
                 },
               },
               {

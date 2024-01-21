@@ -13,7 +13,7 @@ import UserAvatar from "../user/UserAvatar";
 import TextareaAutosize from "react-textarea-autosize";
 import { DialogProps } from "@radix-ui/react-alert-dialog";
 import { Post } from "@/types/post.types";
-import PrivacySelectBox from "./PrivacyBox";
+import PrivacySelectBox from "./PrivacySelectBox";
 
 interface Prop extends DialogProps {
   isUpdateDialog?: boolean;
@@ -24,6 +24,7 @@ export const CreateUpdatePostDialog = ({
   onOpenChange,
   isUpdateDialog,
   orgPost,
+  open,
   ...props
 }: Prop) => {
   const user = useSelector((state: RootState) => state.user.currentUser);
@@ -33,7 +34,7 @@ export const CreateUpdatePostDialog = ({
   const [isImage, setIsImage] = useState<boolean>();
   const [file, setFile] = useState<File | null>(null);
   const [privacy, setPrivacy] = useState(
-    isUpdateDialog ? orgPost?.privacy || "" : "Public"
+    isUpdateDialog ? orgPost?.privacy || "" : "PUBLIC"
   );
 
   const { isDarkMode } = useSelector((state: RootState) => state.theme);
@@ -47,11 +48,12 @@ export const CreateUpdatePostDialog = ({
 
   useEffect(() => {
     if (isUpdateDialog) {
+      setPrivacy(orgPost?.privacy || "PUBLIC");
       setPreviewImg(orgPost?.image);
       setIsImage(orgPost?.image?.includes("image"));
       setTitle(orgPost?.title);
     }
-  }, [isUpdateDialog, orgPost]);
+  }, [isUpdateDialog, orgPost, open]);
 
   const onCloseDialog = () => {
     setTitle(isUpdateDialog ? orgPost?.title : "");
@@ -99,6 +101,7 @@ export const CreateUpdatePostDialog = ({
 
   return (
     <Dialog
+      open={open}
       onOpenChange={
         createMutation.isLoading || updateMutation.isLoading
           ? () => {}
@@ -112,7 +115,7 @@ export const CreateUpdatePostDialog = ({
       <DialogContent
         className={` ${
           isDarkMode ? "dark " : ""
-        } sm:min-w-[50%] min-w-full px-0  py-0 bg-white text-black`}
+        } sm:min-w-[50%] min-w-full px-0 bg-white text-black`}
       >
         <div className="sm:h-[80vh] h-[90vh] w-full px-[30px] rounded-full">
           <div className="w-full sm:h-[20%] flex sm:items-center">

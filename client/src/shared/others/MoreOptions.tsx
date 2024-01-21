@@ -25,8 +25,9 @@ export default function MoreOptions({ actions }: { actions: Action[] }) {
       <DropdownMenuContent
         className={`${isDarkMode ? "dark " : ""}  bg-white text-black`}
       >
-        {actions.map((ac) => (
+        {actions.map((ac, index) => (
           <DropdownMenuItem
+            key={index}
             onClick={ac.onClick}
             className="cursor-pointer space-x-[10px] flex items-center py-[8px]"
           >

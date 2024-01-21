@@ -25,9 +25,9 @@ export default function PrivacySelectBox({ value, setValue }: Props) {
           variant="outline"
           role="combobox"
           aria-expanded={open}
-          className="w-[130px] text-[14px] h-[30px] justify-between text-black"
+          className="w-[130px] text-[14px] h-[30px] justify-between text-black capitalize"
         >
-          {value}
+          {value == "PRIVATE" ? "Private" : "Public"}
           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
@@ -39,14 +39,15 @@ export default function PrivacySelectBox({ value, setValue }: Props) {
                 key={val}
                 value={val}
                 onSelect={() => {
-                  setValue(val);
+                  setValue(val.toLocaleUpperCase());
                   setOpen(false);
                 }}
+                className="capitalize"
               >
                 <Check
                   className={cn(
                     "mr-2 h-4 w-4",
-                    value === val ? "opacity-100" : "opacity-0"
+                    value === val.toUpperCase() ? "opacity-100" : "opacity-0"
                   )}
                 />
                 {val}

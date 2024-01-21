@@ -10,7 +10,7 @@ import SharedPostPreviewCard from "./SharedPostPreviewCard";
 import useErrorToast from "@/hooks/useErrorToast";
 import UserAvatar from "../user/UserAvatar";
 import TextareaAutosize from "react-textarea-autosize";
-import PrivacySelectBox from "./PrivacyBox";
+import PrivacySelectBox from "./PrivacySelectBox";
 
 interface Prop extends DialogProps {
   isUpdateDialog?: boolean;
@@ -23,13 +23,14 @@ export const CreateUpdateSharePostDialog = ({
   isUpdateDialog,
   orgPost,
   toShare,
+  open,
   ...props
 }: Prop) => {
   const [title, setTitle] = useState<string | undefined>("");
   const user = useSelector((state: RootState) => state.user.currentUser);
   const currentUser = isUpdateDialog ? orgPost?.user : user;
   const [privacy, setPrivacy] = useState(
-    isUpdateDialog ? orgPost?.privacy || "" : "Public"
+    isUpdateDialog ? orgPost?.privacy || "" : "PUBLIC"
   );
 
   const { isDarkMode } = useSelector((state: RootState) => state.theme);
@@ -41,9 +42,10 @@ export const CreateUpdateSharePostDialog = ({
 
   useEffect(() => {
     if (isUpdateDialog) {
+      setPrivacy(orgPost?.privacy || "PUBLIC");
       setTitle(orgPost?.title);
     }
-  }, [isUpdateDialog, orgPost]);
+  }, [isUpdateDialog, orgPost, open]);
 
   const onCloseDialog = () => {
     setTitle(isUpdateDialog ? orgPost?.title : "");
@@ -77,6 +79,7 @@ export const CreateUpdateSharePostDialog = ({
 
   return (
     <Dialog
+      open={open}
       onOpenChange={
         createMutation.isLoading || updateMutation.isLoading
           ? () => {}
