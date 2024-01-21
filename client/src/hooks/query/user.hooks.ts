@@ -30,6 +30,8 @@ export const useSearchUsers = (search: string | undefined) =>
         .get(`/users/search?search=${search}&limit=${3}&page=${pageParam}`)
         .then((res) => res.data),
     getNextPageParam: getNextPageParam<User>(3),
+    cacheTime: 0,
+    staleTime: 0,
   });
 
 export const useUpdateMe = () => {

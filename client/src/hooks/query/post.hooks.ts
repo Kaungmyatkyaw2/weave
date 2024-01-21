@@ -44,6 +44,8 @@ export const useSearchPosts = (search: string | undefined) =>
         .get(`/posts/search?search=${search}&page=${pageParam}`)
         .then((res) => res.data),
     getNextPageParam: getNextPageParam<Post>(10),
+    cacheTime: 0,
+    staleTime: 0,
   });
 
 export const useCreatePost = () => {

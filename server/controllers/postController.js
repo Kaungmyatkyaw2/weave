@@ -5,7 +5,6 @@ const catchAsync = require("../utils/catchAsync");
 const cloudinary = require("../utils/cloudinary");
 const handlerFactory = require("./handlerFactory");
 const multer = require("multer");
-const uuid = require("uuid").v4;
 
 const streamifier = require("streamifier");
 
@@ -119,13 +118,13 @@ exports.getAllPosts = catchAsync(async (req, res, next) => {
     .sort()
     .paginate();
 
-  const documents = await query.query;
+  const data = await query.query;
 
   res.status(200).json({
     status: "success",
-    result: documents.length,
+    result: data.length,
     data: {
-      data: documents,
+      data: data,
     },
   });
 });
@@ -147,12 +146,13 @@ exports.getPostsBySearching = exports.getUsersBySearching = catchAsync(
       req.query
     ).paginate();
 
-    const documents = await query.query;
+    const data = await query.query;
 
     res.status(200).json({
       status: "success",
+      result: data.length,
       data: {
-        data: documents,
+        data: data,
       },
     });
   }

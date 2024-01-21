@@ -66,7 +66,7 @@ exports.getWhotoFollow = catchAsync(async (req, res, next) => {
 exports.getUser = catchAsync(async (req, res, next) => {
   const id = req.params.id;
 
-  let document = await User.findById(id);
+  let data = await User.findById(id);
 
   const follower = await Follow.countDocuments({
     followingUser: id,
@@ -81,13 +81,13 @@ exports.getUser = catchAsync(async (req, res, next) => {
     followingUser: new mongoose.Types.ObjectId(id),
   });
 
-  const updatedDocument = JSON.parse(JSON.stringify(document));
+  const parsed = JSON.parse(JSON.stringify(data));
 
   res.status(200).json({
     status: "success",
     data: {
       data: {
-        ...updatedDocument,
+        ...parsed,
         following,
         follower,
         followId: followDoc ? followDoc._id : undefined,
@@ -106,10 +106,10 @@ exports.getUsersBySearching = catchAsync(async (req, res, next) => {
     req.query
   ).paginate();
 
-  let documents = await query.query;
+  let data = await query.query;
 
-  documents = await Promise.all(
-    documents.map(async (doc) => {
+  data = await Promise.all(
+    data.map(async (doc) => {
       const follow = await FollowModel.findOne({
         followerUser: req.user._id,
         followingUser: doc.id,
@@ -121,8 +121,9 @@ exports.getUsersBySearching = catchAsync(async (req, res, next) => {
 
   res.status(200).json({
     status: "success",
+    result: data.length,
     data: {
-      data: documents,
+      data: data,
     },
   });
 });

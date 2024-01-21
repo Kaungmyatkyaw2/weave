@@ -43,10 +43,9 @@ export const Search = () => {
     );
   };
 
-  const onUnFollowSuccess = (followUserId: string) =>
+  const onUnFollowSuccess = (followUserId: string) => {
     updateQuerySearchUsers(queryClient, followUserId, context as string);
-  {
-  }
+  };
 
   return (
     <div className="w-full space-y-[20px] ">
@@ -63,6 +62,7 @@ export const Search = () => {
         ) : Users?.length ? (
           Users?.map((user) => (
             <FollowCard
+              key={user._id}
               onFollowSuccess={onFollowSuccess}
               onUnFollowSuccess={onUnFollowSuccess}
               followId={user.followId}
