@@ -12,10 +12,12 @@ import {
 } from "redux-persist";
 import authSlice from "./slice/auth.slice";
 import userSlice from "./slice/user.slice";
+import themeSlice from "./slice/theme.slice";
 
 const reducers = {
   auth: authSlice,
   user: userSlice,
+  theme: themeSlice,
 };
 
 const combinedReducer = combineReducers<typeof reducers>(reducers);
@@ -24,7 +26,7 @@ const persistConfig = {
   key: "root",
   version: 1,
   storage,
-  whitelist: ["auth"],
+  whitelist: ["auth", "theme"],
 };
 
 export const store = configureStore({

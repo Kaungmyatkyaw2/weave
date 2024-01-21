@@ -16,11 +16,11 @@ export const LayoutProvider = ({
   }
 
   return (
-    <section>
+    <section className={`text-black bg-white`}>
       <Sidebar />
       <Navbar />
-      <div className="lg:w-[50%] sm:w-[65%] w-full lg:ml-[20%] sm:ml-[35%] ml-0 mt-[50px] px-[20px] flex items-center justify-center">
-        <div className="w-full pt-[10px] sm:pb-[30px] pb-[80px] flex justify-center">
+      <div className="lg:w-[50%] sm:w-[65%] w-full lg:ml-[20%] sm:ml-[35%] ml-0 pt-[50px] px-[20px] flex items-center justify-center">
+        <div className="w-full pt-[10px] sm:pb-[30px] pb-[80px] flex justify-center min-h-screen">
           {children}
         </div>
       </div>

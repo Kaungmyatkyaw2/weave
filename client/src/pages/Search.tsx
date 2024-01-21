@@ -48,7 +48,7 @@ export const Search = () => {
   };
 
   return (
-    <div className="w-full space-y-[20px] ">
+    <div className="w-full space-y-[20px]">
       <h1 className="font-bold py-[10px] text-lg">
         Result for "{searchParams.get("context")}"
       </h1>

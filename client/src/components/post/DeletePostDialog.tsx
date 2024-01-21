@@ -10,6 +10,8 @@ import {
 import { useDeletePost } from "@/hooks/query/post.hooks";
 import LoadingButton from "@/shared/others/LoadingButton";
 import { useToast } from "../ui/use-toast";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store/store";
 
 interface Prop extends DialogProps {
   post: Post;
@@ -18,6 +20,7 @@ interface Prop extends DialogProps {
 const DeletePostDialog = ({ post, onOpenChange, ...props }: Prop) => {
   const delMutation = useDeletePost();
   const { toast } = useToast();
+  const { isDarkMode } = useSelector((state: RootState) => state.theme);
 
   const handleOpenChange = delMutation.isLoading ? undefined : onOpenChange;
 
@@ -33,9 +36,9 @@ const DeletePostDialog = ({ post, onOpenChange, ...props }: Prop) => {
 
   return (
     <AlertDialog {...props}>
-      <AlertDialogContent>
+      <AlertDialogContent className={`${isDarkMode ? "dark " : ""} bg-white`}>
         <AlertDialogHeader>
-          <AlertDialogTitle>
+          <AlertDialogTitle className="text-black">
             Are you absolutely sure to delete the post?
           </AlertDialogTitle>
           <AlertDialogDescription>
@@ -48,7 +51,7 @@ const DeletePostDialog = ({ post, onOpenChange, ...props }: Prop) => {
             disabled={delMutation.isLoading}
             variant={"outline"}
             onClick={() => handleOpenChange?.(false)}
-            className="bg-white hover:bg-gray-50 w-fit py-[10px] text-[15px]"
+            className="bg-white hover:bg-opacity-90 w-fit py-[10px] text-[15px]"
           >
             Cancel
           </LoadingButton>

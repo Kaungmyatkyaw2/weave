@@ -84,7 +84,7 @@ export const ProfileCard = ({ user }: { user: User }) => {
         open={followingDialogOpen}
         onOpenChange={setFollowingDialogOpen}
       />
-      <div className="w-full bg-gray-50 py-[20px] px-[20px] rounded-[10px]">
+      <div className="w-full bg-gray-50 dark:bg-white dark:border py-[20px] px-[20px] rounded-[10px]">
         <div className="flex items-center justify-between">
           <div className=" w-full">
             <h1 className="font-bold text-2xl">{user?.displayName}</h1>

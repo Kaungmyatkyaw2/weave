@@ -35,6 +35,9 @@ export const CreateUpdatePostDialog = ({
   const [privacy, setPrivacy] = useState(
     isUpdateDialog ? orgPost?.privacy || "" : "Public"
   );
+
+  const { isDarkMode } = useSelector((state: RootState) => state.theme);
+
   const fileRef = useRef<HTMLInputElement>(null);
 
   const createMutation = useCreatePost();
@@ -106,13 +109,17 @@ export const CreateUpdatePostDialog = ({
       }
       {...props}
     >
-      <DialogContent className="sm:min-w-[50%] min-w-full px-0">
-        <div className="sm:h-[80vh] h-[90vh] w-full px-[30px]">
+      <DialogContent
+        className={` ${
+          isDarkMode ? "dark " : ""
+        } sm:min-w-[50%] min-w-full px-0 sm:h-[80vh] h-[90vh] py-0 bg-white`}
+      >
+        <div className="h-full w-full px-[30px] rounded-full">
           <div className="w-full sm:h-[20%] flex sm:items-center">
             <UserAvatar className=" w-[50px] h-[50px]" user={currentUser} />
             <div className="pl-[10px] flex sm:flex-row flex-col items-center space-x-[10px] sm:space-y-0 space-y-2">
               <div className="space-y-[3px]">
-                <h1 className="text-md font-bold">
+                <h1 className="text-md font-bold text-black">
                   {currentUser?.displayName}
                 </h1>
                 <p className="text-sm text-smoke">@{currentUser?.userName}</p>
@@ -127,7 +134,7 @@ export const CreateUpdatePostDialog = ({
               }}
               value={title}
               placeholder="Title...."
-              className="outline-none text-sm placeholder:text-lg resize-none w-full overflow-y-hidden"
+              className="outline-none text-sm placeholder:text-lg resize-none w-full overflow-y-hidden bg-white text-black"
             />
             {previewImg && (
               <div className="w-full relative">
@@ -147,7 +154,7 @@ export const CreateUpdatePostDialog = ({
           </div>
           <div className="w-full h-[15%] flex items-center justify-between">
             <Image
-              className="cursor-pointer"
+              className="cursor-pointer text-black"
               onClick={() => fileRef.current?.click()}
             />
             <Input

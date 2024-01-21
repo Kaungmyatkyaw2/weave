@@ -10,14 +10,22 @@ import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store/store";
 
 export default function SearchDialog({ onOpenChange, ...props }: DialogProps) {
   const [search, setSearch] = useState("");
   const navigate = useNavigate();
 
+  const { isDarkMode } = useSelector((state: RootState) => state.theme);
+
   return (
     <Dialog {...props} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent
+        className={`${
+          isDarkMode ? "dark " : ""
+        } sm:max-w-[425px] bg-white text-black`}
+      >
         <DialogHeader>
           <DialogTitle>Search Everything</DialogTitle>
         </DialogHeader>
@@ -27,6 +35,7 @@ export default function SearchDialog({ onOpenChange, ...props }: DialogProps) {
             placeholder="Search...."
           />
           <Button
+            className="text-smoke"
             onClick={() => {
               onOpenChange?.(false);
               navigate(`/search?context=${search}`);

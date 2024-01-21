@@ -69,7 +69,7 @@ const FollowCard = ({
         navigate(`/user/${user._id}`);
         onClick?.(e);
       }}
-      className={`flex items-center space-x-[10px] cursor-pointer bg-gray-50 py-[10px] px-[10px] rounded-[10px] ${className}`}
+      className={`flex items-center space-x-[10px] cursor-pointer bg-gray-50 dark:bg-primary py-[10px] px-[10px] rounded-[10px] ${className}`}
     >
       <UserAvatar className=" w-[60px] h-[60px]" user={user} />
 
@@ -83,7 +83,7 @@ const FollowCard = ({
             e.stopPropagation();
             isAlreadyFollow ? onUnfollow() : onFollow();
           }}
-          className="w-full text-[14px] py-[2px] px-[5px] rounded-full border bg-gray-50 text-smoke hover:bg-gray-100 disabled:bg-gray-200"
+          className="w-full text-[14px] py-[2px] px-[5px] rounded-full border dark:border-gray-500 bg-gray-50 dark:bg-primary text-smoke hover:opacity-90 disabled:opacity-80"
           disabled={createMutation.isLoading || deleteMutation.isLoading}
         >
           {isAlreadyFollow ? "Unfollow" : "Follow"}

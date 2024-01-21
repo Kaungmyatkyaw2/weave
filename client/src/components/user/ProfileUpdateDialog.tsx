@@ -28,6 +28,7 @@ export default function ProfileUpdateDialog({
   ...props
 }: DialogProps) {
   const { currentUser } = useSelector((state: RootState) => state.user);
+  const { isDarkMode } = useSelector((state: RootState) => state.theme);
 
   const updateMeMutation = useUpdateMe();
 
@@ -59,7 +60,11 @@ export default function ProfileUpdateDialog({
       {...props}
       onOpenChange={updateMeMutation.isLoading ? undefined : onOpenChange}
     >
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent
+        className={`${
+          isDarkMode ? "dark " : ""
+        } sm:max-w-[425px] text-black bg-white`}
+      >
         <DialogHeader>
           <DialogTitle>Edit Your profile</DialogTitle>
           <DialogDescription>

@@ -1,60 +1,53 @@
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import {
-  CreateUpdatePostDialog,
-  PostCard,
-  SkeletonPostCard,
-} from "./components/post";
-import { Post } from "./types/post.types";
-import { useGetPosts } from "./hooks/query/post.hooks";
-import { splitPagesData } from "./lib/infiniteScroll";
-import useInfiniteScroll from "./hooks/useInfiniteScroll";
-import { Button } from "./components/ui/button";
-import { Loader, Plus } from "lucide-react";
-import { useState } from "react";
-import NoDataPlaceHolder from "./shared/others/NoDataPlaceHolder";
+  ForgotPassword,
+  Login,
+  ResetPassword,
+  Signup,
+  VerifyEmail,
+  GetVerificationEmail,
+  UserPage,
+  Search,
+  Home,
+} from "./pages/";
+import { LayoutProvider } from "./components/layout";
+import { NavigateHome, Protect } from "./components/auth";
+import { RootState } from "./store/store";
+import { useSelector } from "react-redux";
 
 const App = () => {
-  const query = useGetPosts();
-  const Posts = splitPagesData<Post>(query.data);
-
-  const [open, setOpen] = useState(false);
-
-  useInfiniteScroll(query);
+  const { isDarkMode } = useSelector((state: RootState) => state.theme);
 
   return (
-    <div className="w-full relative space-y-[15px]">
-      {query.isLoading ? (
-        <>
-          <SkeletonPostCard />
-          <SkeletonPostCard />
-        </>
-      ) : (
-        <>
-          {Posts?.length ? (
-            Posts?.map((el: Post) => <PostCard post={el} key={el._id} />)
-          ) : (
-            <NoDataPlaceHolder className="h-[80vh]" iconSize={100}>
-              No Posts Yet
-            </NoDataPlaceHolder>
-          )}
-        </>
-      )}
-      {query.isFetchingNextPage ? (
-        <div className="w-full flex items-center justify-center py-[10px]">
-          <Loader size={20} className="animate-spin" />
-        </div>
-      ) : (
-        <></>
-      )}
-
-      <CreateUpdatePostDialog onOpenChange={setOpen} open={open} />
-
-      <Button
-        onClick={() => setOpen(true)}
-        className="rounded-full h-[50px] w-[50px] fixed bottom-[30px] md:right-[30px] right-[5px] z-[9]"
-      >
-        <Plus />
-      </Button>
-    </div>
+    <BrowserRouter>
+      <section className={`${isDarkMode ? "dark" : ""} h-full w-full`}>
+        <Routes>
+          <Route
+            path="/"
+            element={
+              <LayoutProvider>
+                <Protect />
+              </LayoutProvider>
+            }
+          >
+            <Route path="" element={<Home />} />
+            <Route path="/search" element={<Search />} />
+            <Route path="/user/:id" element={<UserPage />} />
+          </Route>
+          <Route path="/" element={<NavigateHome />}>
+            <Route path="/login" element={<Login />} />
+            <Route path="/signup" element={<Signup />} />
+            <Route path="/verifyEmail" element={<VerifyEmail />} />
+            <Route
+              path="/getVerificationEmail"
+              element={<GetVerificationEmail />}
+            />
+            <Route path="/forgotPassword" element={<ForgotPassword />} />
+            <Route path="/resetPassword" element={<ResetPassword />} />
+          </Route>
+        </Routes>
+      </section>
+    </BrowserRouter>
   );
 };
 

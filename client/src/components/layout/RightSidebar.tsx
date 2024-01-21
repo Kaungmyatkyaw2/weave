@@ -37,7 +37,7 @@ const RightSidebar = () => {
           className="w-full"
         />
       </form>
-      <div className="w-full rounded-md bg-gray-50 p-[10px] py-[20px] mt-[40px] space-y-[15px]">
+      <div className="w-full rounded-md bg-gray-50 dark:bg-primary p-[10px] py-[20px] mt-[40px] space-y-[15px]">
         <h1 className="text-lg font-bold text-smoke">Who to follow?</h1>
         {query.isLoading ? (
           <></>

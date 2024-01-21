@@ -31,6 +31,9 @@ export const CreateUpdateSharePostDialog = ({
   const [privacy, setPrivacy] = useState(
     isUpdateDialog ? orgPost?.privacy || "" : "Public"
   );
+
+  const { isDarkMode } = useSelector((state: RootState) => state.theme);
+
   const createMutation = useCreatePost();
   const updateMutation = useUpdatePost();
 
@@ -84,13 +87,17 @@ export const CreateUpdateSharePostDialog = ({
       }
       {...props}
     >
-      <DialogContent className="sm:min-w-[50%] min-w-full px-0">
+      <DialogContent
+        className={`${
+          isDarkMode ? "dark " : ""
+        } sm:min-w-[50%] min-w-full px-0 bg-white`}
+      >
         <div className="sm:h-[80vh] h-[90vh] w-full px-[30px]">
           <div className="w-full sm:h-[20%] flex sm:items-center">
             <UserAvatar className=" w-[50px] h-[50px]" user={currentUser} />
             <div className="pl-[10px] flex sm:flex-row flex-col items-center space-x-[10px] sm:space-y-0 space-y-2">
               <div className="space-y-[3px]">
-                <h1 className="text-md font-bold">
+                <h1 className="text-md font-bold text-black">
                   {currentUser?.displayName}
                 </h1>
                 <p className="text-sm text-smoke">@{currentUser?.userName}</p>
@@ -103,7 +110,7 @@ export const CreateUpdateSharePostDialog = ({
               onChange={(e) => setTitle(e.target.value)}
               value={title}
               placeholder="Title...."
-              className="outline-none text-sm placeholder:text-lg resize-none w-full"
+              className="outline-none text-sm placeholder:text-lg resize-none w-full bg-white text-black"
             />
 
             <SharedPostPreviewCard post={toShare} />

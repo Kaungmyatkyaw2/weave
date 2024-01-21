@@ -8,6 +8,9 @@ import { useQueryClient } from "@tanstack/react-query";
 import UserAvatar from "../user/UserAvatar";
 import { useState } from "react";
 import SearchDialog from "./SearchDialog";
+import { Switch } from "../ui/switch";
+import { Label } from "../ui/label";
+import { toggleMode } from "@/store/slice/theme.slice";
 
 interface SideBtnProps extends NavLinkProps {
   icon: any;
@@ -39,7 +42,7 @@ const ProfileBtn = ({ className, children, ...props }: SideBtnProps) => {
   return (
     <NavLink
       {...props}
-      className={`flex sm:space-x-[10px] transition-all duration-200  ${className} ${
+      className={`flex sm:space-x-[10px] transition-transform duration-200  ${className} ${
         location.pathname == `/user/${currentUser?._id}`
           ? "text-icon sm:border-b-0 border-b-2 border-icon sm:pb-0 pb-[5px]"
           : "text-black"
@@ -86,7 +89,7 @@ const NavigationButtons = ({ userId }: { userId?: string }) => {
         onClick={() => {
           setOpenSearch(true);
         }}
-        className={` lg:hidden flex sm:space-x-[10px] transition-all duration-200 text-black`}
+        className={` lg:hidden flex sm:space-x-[10px] text-black`}
       >
         <Search className="sm:h-5 sm:w-5" />
         <span className="text-sm sm:inline hidden">Search</span>
@@ -98,10 +101,13 @@ const NavigationButtons = ({ userId }: { userId?: string }) => {
 
 export const Sidebar = () => {
   const { currentUser } = useSelector((state: RootState) => state.user);
+  const { isDarkMode } = useSelector((state: RootState) => state.theme);
+
+  const dispatch = useDispatch();
 
   return (
     <>
-      <div className="lg:w-[20%] sm:w-[35%] h-screen sm:block hidden fixed top-0 left-0 py-[10px] border-r">
+      <div className="lg:w-[20%] sm:w-[35%] h-screen sm:block hidden fixed top-0 left-0 py-[10px] border-r bg-white">
         <div className="py-[20px] px-[20px] space-y-[10px] border-b">
           <UserAvatar user={currentUser} />
           <div className="flex items-center space-x-[10px]">
@@ -117,6 +123,18 @@ export const Sidebar = () => {
         </div>
         <div className="py-[30px] px-[20px] space-y-[30px] border-b">
           <NavigationButtons userId={currentUser?._id} />
+        </div>
+        <div className="flex items-center justify-center py-[20px]">
+          <div className="sm:flex hidden items-center space-x-2">
+            <Switch
+              checked={isDarkMode}
+              onCheckedChange={(e) => {
+                dispatch(toggleMode(e.valueOf()));
+              }}
+              id="dark-mode"
+            />
+            <Label htmlFor="dark-mode">Dark Mode</Label>
+          </div>
         </div>
       </div>
 

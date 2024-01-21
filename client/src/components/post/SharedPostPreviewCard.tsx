@@ -14,7 +14,7 @@ const SharedPostPreviewCard = ({
       post.user._id != post.sharedPost.user._id)
   ) {
     return (
-      <div className="w-full flex  items-center space-x-[10px] border rounded-md bg-gray-50 px-[10px] py-[10px]">
+      <div className="w-full flex  items-center space-x-[10px] border rounded-md bg-gray-50 dark:bg-primary px-[10px] py-[10px]">
         <Lock size={20} />
         <h1 className="text-sm">Post is no longer available</h1>
       </div>
@@ -22,7 +22,7 @@ const SharedPostPreviewCard = ({
   }
 
   return (
-    <div className="w-full border rounded-md space-y-[20px]  bg-gray-50 px-[10px] py-[10px]">
+    <div className="w-full border rounded-md space-y-[20px]  bg-gray-50 dark:bg-primary px-[10px] py-[10px]">
       <PostBodyCard post={post} toShowSharedPost={true} />
     </div>
   );

@@ -32,7 +32,7 @@ const PostBodyCard = ({
     <div className="flex space-x-[10px]">
       <div className="w-50px relative flex flex-col items-center">
         <UserAvatar className=" w-[50px] h-[50px]" user={post.user} />
-        <div className="w-[2px] h-full bg-gray-200 rounded-b-md"></div>
+        <div className="w-[2px] h-full bg-gray-200 dark:bg-gray-500 rounded-b-md"></div>
       </div>
 
       <div className="py-[1px] w-full">

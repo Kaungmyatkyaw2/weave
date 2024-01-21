@@ -9,6 +9,8 @@ import { splitPagesData } from "@/lib/infiniteScroll";
 import FollowCard from "./FollowCard";
 import { useQueryClient } from "@tanstack/react-query";
 import { updateQueryFollow } from "@/hooks/query/helper";
+import { RootState } from "@/store/store";
+import { useSelector } from "react-redux";
 
 const FollowerDialog = ({
   onOpenChange,
@@ -20,6 +22,9 @@ const FollowerDialog = ({
     ? useGetFollowers(user._id)
     : useGetFollowings(user._id);
   const dialogRef = useRef<HTMLDivElement>(null);
+
+  const { isDarkMode } = useSelector((state: RootState) => state.theme);
+
   const queryClient = useQueryClient();
 
   const follows = splitPagesData<Follow>(query.data);
@@ -48,7 +53,12 @@ const FollowerDialog = ({
 
   return (
     <Dialog {...props} onOpenChange={onOpenChange}>
-      <DialogContent ref={dialogRef} className="sm:max-w-[425px]">
+      <DialogContent
+        ref={dialogRef}
+        className={`${
+          isDarkMode ? "dark " : ""
+        } sm:max-w-[425px] bg-white text-black`}
+      >
         <DialogHeader>
           <DialogTitle>
             {user.displayName}'s

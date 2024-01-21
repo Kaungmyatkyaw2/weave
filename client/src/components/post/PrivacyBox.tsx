@@ -25,7 +25,7 @@ export default function PrivacySelectBox({ value, setValue }: Props) {
           variant="outline"
           role="combobox"
           aria-expanded={open}
-          className="w-[130px] text-[14px] h-[30px] justify-between"
+          className="w-[130px] text-[14px] h-[30px] justify-between text-black"
         >
           {value}
           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
