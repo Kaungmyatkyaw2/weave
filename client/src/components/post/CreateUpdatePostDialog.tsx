@@ -112,9 +112,9 @@ export const CreateUpdatePostDialog = ({
       <DialogContent
         className={` ${
           isDarkMode ? "dark " : ""
-        } sm:min-w-[50%] min-w-full px-0 sm:h-[80vh] h-[90vh] py-0 bg-white`}
+        } sm:min-w-[50%] min-w-full px-0  py-0 bg-white text-black`}
       >
-        <div className="h-full w-full px-[30px] rounded-full">
+        <div className="sm:h-[80vh] h-[90vh] w-full px-[30px] rounded-full">
           <div className="w-full sm:h-[20%] flex sm:items-center">
             <UserAvatar className=" w-[50px] h-[50px]" user={currentUser} />
             <div className="pl-[10px] flex sm:flex-row flex-col items-center space-x-[10px] sm:space-y-0 space-y-2">

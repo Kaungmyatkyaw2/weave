@@ -1,25 +1,13 @@
-import {
-  LucideIcon,
-  MessageSquare,
-  MoreHorizontal,
-  Pen,
-  Share2,
-  Trash,
-} from "lucide-react";
+import { LucideIcon, MessageSquare, Pen, Share2, Trash } from "lucide-react";
 import { ButtonHTMLAttributes, DetailedHTMLProps, useState } from "react";
 import { Post } from "@/types/post.types";
 import { CreateUpdatePostDialog, CreateUpdateSharePostDialog } from ".";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import DeletePostDialog from "./DeletePostDialog";
 import PostBodyCard from "./PostBodyCard";
 import { CommentDialog } from "../comment";
+import MoreOptions from "@/shared/others/MoreOptions";
 
 interface ActionBtnProps
   extends DetailedHTMLProps<
@@ -38,42 +26,6 @@ const ActionBtn = ({ des, ...props }: ActionBtnProps) => (
     <props.icon size={19} />
   </button>
 );
-
-function MoreOptions({
-  setEditOpen,
-  setDeleteOpen,
-}: {
-  setEditOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  setDeleteOpen: React.Dispatch<React.SetStateAction<boolean>>;
-}) {
-  return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <MoreHorizontal size={20} />
-      </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-24">
-        <DropdownMenuItem
-          onClick={() => {
-            setEditOpen(true);
-          }}
-          className="cursor-pointer space-x-[10px] flex items-center py-[8px]"
-        >
-          <Pen size={15} />
-          <span>Edit</span>
-        </DropdownMenuItem>
-        <DropdownMenuItem
-          onClick={() => {
-            setDeleteOpen(true);
-          }}
-          className="cursor-pointer space-x-[10px] flex items-center py-[8px]"
-        >
-          <Trash size={15} />
-          <span>Delete</span>
-        </DropdownMenuItem>{" "}
-      </DropdownMenuContent>
-    </DropdownMenu>
-  );
-}
 
 export const PostCard = ({ post }: { post: Post }) => {
   const [openEdit, setOpenEdit] = useState(false);
@@ -125,8 +77,22 @@ export const PostCard = ({ post }: { post: Post }) => {
       <div className="flex justify-end items-center">
         {post.user._id == currentUser?._id && (
           <MoreOptions
-            setEditOpen={post.isSharedPost ? setOpenShareEdit : setOpenEdit}
-            setDeleteOpen={setOpenDelete}
+            actions={[
+              {
+                icon: Pen,
+                text: "Edit",
+                onClick: () => {
+                  setOpenEdit(true);
+                },
+              },
+              {
+                icon: Trash,
+                text: "Delete",
+                onClick: () => {
+                  setOpenDelete(true);
+                },
+              },
+            ]}
           />
         )}
       </div>

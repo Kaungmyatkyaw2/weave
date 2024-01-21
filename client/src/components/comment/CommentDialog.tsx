@@ -13,6 +13,8 @@ import { splitPagesData } from "@/lib/infiniteScroll";
 import { Comment } from "@/types/comment.types";
 import useInfiniteScroll from "@/hooks/useInfiniteScroll";
 import NoDataPlaceHolder from "@/shared/others/NoDataPlaceHolder";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store/store";
 
 interface Prop extends DialogProps {
   isUpdateDialog?: boolean;
@@ -30,6 +32,8 @@ export const CommentDialog = ({
 
   const commentQuery = useGetComments(post._id, !!props.open);
   const commentData = splitPagesData<Comment>(commentQuery.data);
+
+  const { isDarkMode } = useSelector((state: RootState) => state.theme);
 
   const createMutation = useCreateComment();
   const updateMutation = useUpdatePost();
@@ -56,7 +60,10 @@ export const CommentDialog = ({
 
   return (
     <Dialog onOpenChange={onOpenChange} {...props}>
-      <DialogContent className="sm:min-w-[50%] min-w-full px-0">
+      <DialogContent
+        className={`${isDarkMode ? "dark " : ""} 
+      sm:min-w-[50%] min-w-full px-0 bg-white text-black`}
+      >
         <DialogHeader className="sm:pl-[10px]">
           <DialogTitle>Comments</DialogTitle>
         </DialogHeader>

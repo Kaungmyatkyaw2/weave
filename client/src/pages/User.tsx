@@ -37,9 +37,9 @@ export const UserPage = () => {
           {Posts?.length ? (
             Posts?.map((el: Post) => <PostCard post={el} key={el._id} />)
           ) : (
-            <NoDataPlaceHolder iconSize={100} classID="py-[50px]">
-              No Posts Yet
-            </NoDataPlaceHolder>
+            <div className="py-[100px]">
+              <NoDataPlaceHolder iconSize={100}>No Posts Yet</NoDataPlaceHolder>
+            </div>
           )}
         </>
       )}

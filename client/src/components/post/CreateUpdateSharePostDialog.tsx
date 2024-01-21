@@ -90,7 +90,7 @@ export const CreateUpdateSharePostDialog = ({
       <DialogContent
         className={`${
           isDarkMode ? "dark " : ""
-        } sm:min-w-[50%] min-w-full px-0 bg-white`}
+        } sm:min-w-[50%] min-w-full px-0 bg-white text-black`}
       >
         <div className="sm:h-[80vh] h-[90vh] w-full px-[30px]">
           <div className="w-full sm:h-[20%] flex sm:items-center">
