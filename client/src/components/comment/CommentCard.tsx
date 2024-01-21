@@ -11,6 +11,7 @@ import { MoreHorizontal, Trash } from "lucide-react";
 import { useDeleteComment } from "@/hooks/query/comment.hooks";
 import useErrorToast from "@/hooks/useErrorToast";
 import { useToast } from "../ui/use-toast";
+import ReactShowMoreText from "react-show-more-text";
 
 function MoreOptions({ onDelete }: { onDelete: any }) {
   return (
@@ -58,6 +59,14 @@ export const CommentCard = ({ comment }: { comment: Comment }) => {
     });
   };
 
+  const displayText = (inputText: string) => {
+    // Replace newline characters with HTML line breaks
+    const formattedText = inputText.replace(/\n/g, "<br>");
+
+    // Set the content using dangerouslySetInnerHTML
+    return { __html: formattedText };
+  };
+
   return (
     <div
       className={`p-[10px] border rounded-[10px] ${
@@ -79,7 +88,15 @@ export const CommentCard = ({ comment }: { comment: Comment }) => {
             </div>
             <MoreOptions onDelete={onDelete} />
           </div>
-          <p className="text-sm">{comment.comment}</p>
+          <ReactShowMoreText
+            className="text-sm text-smoke"
+            more={<span className="font-medium cursor-pointer">See more</span>}
+            less={<span className="font-medium cursor-pointer">See less</span>}
+          >
+            <div
+              dangerouslySetInnerHTML={displayText(comment.comment || "")}
+            ></div>
+          </ReactShowMoreText>
         </div>
       </div>
     </div>

@@ -77,7 +77,9 @@ export const CommentDialog = ({
                 No Comments Yet
               </NoDataPlaceHolder>
             ) : (
-              commentData?.map((co) => <CommentCard comment={co} />)
+              commentData?.map((co) => (
+                <CommentCard key={co._id} comment={co} />
+              ))
             )}
           </div>
           <div className="w-ful h-[15%] flex items-center space-x-[20px]">
