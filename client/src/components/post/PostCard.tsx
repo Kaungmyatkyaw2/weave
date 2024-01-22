@@ -126,7 +126,7 @@ export const PostCard = ({
             e.stopPropagation();
           }}
         />
-        {isForPage && (
+        {!isForPage && (
           <ActionBtn
             des={"Comment"}
             icon={MessageSquare}
