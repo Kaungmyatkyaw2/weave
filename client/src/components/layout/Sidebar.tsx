@@ -22,7 +22,7 @@ const SideBtn = ({ className, children, ...props }: SideBtnProps) => {
     <NavLink
       {...props}
       className={({ isActive }) =>
-        `flex sm:space-x-[10px] duration-200  ${className} ${
+        `flex sm:space-x-[10px]  ${className} ${
           isActive
             ? "text-icon sm:border-b-0 border-b-2 border-icon sm:pb-0 pb-[5px]"
             : "text-black"
@@ -42,7 +42,7 @@ const ProfileBtn = ({ className, children, ...props }: SideBtnProps) => {
   return (
     <NavLink
       {...props}
-      className={`flex sm:space-x-[10px] duration-200  ${className} ${
+      className={`flex sm:space-x-[10px]  ${className} ${
         location.pathname == `/user/${currentUser?._id}`
           ? "text-icon sm:border-b-0 border-b-2 border-icon sm:pb-0 pb-[5px]"
           : "text-black"

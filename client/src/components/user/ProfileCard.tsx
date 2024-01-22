@@ -9,6 +9,9 @@ import ProfileUpdateDialog from "./ProfileUpdateDialog";
 import FollowerDialog from "./FollowerDialog";
 import useErrorToast from "@/hooks/useErrorToast";
 import UserAvatar from "./UserAvatar";
+import { Button } from "../ui/button";
+import { Shield } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 export const ProfileSkeletonCard = () => {
   return (
@@ -45,6 +48,7 @@ export const ProfileCard = ({ user }: { user: User }) => {
   const createMutation = useCreateFollow();
   const deleteMutation = useDeleteFollow();
   const errToast = useErrorToast();
+  const navigate = useNavigate();
 
   const onFollow = () => {
     const payload = {
@@ -114,21 +118,36 @@ export const ProfileCard = ({ user }: { user: User }) => {
             </button>
           </div>
         </div>
-        <LoadingButton
-          loading={createMutation.isLoading || deleteMutation.isLoading}
-          onClick={
-            isMe
-              ? () => {
-                  setEditOpen(true);
-                }
-              : user.followId
-              ? onUnfollow
-              : onFollow
-          }
-          className="w-full mt-[25px] text-[15px] py-[25px]"
-        >
-          {isMe ? "Edit Profile" : user.followId ? "Unfollow" : "Follow"}
-        </LoadingButton>
+        <div className="w-full mt-[25px] flex space-x-[10px]">
+          <LoadingButton
+            loading={createMutation.isLoading || deleteMutation.isLoading}
+            onClick={
+              isMe
+                ? () => {
+                    setEditOpen(true);
+                  }
+                : user.followId
+                ? onUnfollow
+                : onFollow
+            }
+            className="w-full text-[15px] py-[25px]"
+          >
+            {isMe ? "Edit Profile" : user.followId ? "Unfollow" : "Follow"}
+          </LoadingButton>
+          {isMe ? (
+            <Button
+              onClick={() => {
+                navigate("/updateMyPassword");
+              }}
+              variant={"outline"}
+              className="text-[15px] py-[25px]"
+            >
+              <Shield />
+            </Button>
+          ) : (
+            <></>
+          )}
+        </div>
       </div>
     </>
   );

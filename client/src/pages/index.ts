@@ -8,3 +8,4 @@ export * from "./User";
 export * from "./Search";
 export * from "./Home";
 export * from "./PostPage";
+export * from "./UpdateMyPassword";

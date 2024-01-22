@@ -10,6 +10,7 @@ import {
   Search,
   Home,
   PostPage,
+  UpdateMyPassword,
 } from "./pages/";
 import { LayoutProvider } from "./components/layout";
 import { NavigateHome, Protect } from "./components/auth";
@@ -21,7 +22,9 @@ const App = () => {
 
   return (
     <BrowserRouter>
-      <section className={`${isDarkMode ? "dark" : ""} min-h-screen w-full bg-white`}>
+      <section
+        className={`${isDarkMode ? "dark" : ""} min-h-screen w-full bg-white`}
+      >
         <Routes>
           <Route
             path="/"
@@ -33,6 +36,7 @@ const App = () => {
           >
             <Route path="" element={<Home />} />
             <Route path="/search" element={<Search />} />
+            <Route path="/updateMyPassword" element={<UpdateMyPassword />} />
             <Route path="/user/:id" element={<UserPage />} />
             <Route path="/post/:id" element={<PostPage />} />
           </Route>

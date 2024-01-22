@@ -4,53 +4,65 @@ import { useForm } from "react-hook-form";
 import { passwordLength, setRequired } from "@/validation";
 import axiosClient from "@/lib/axios";
 import { useToast } from "@/components/ui/use-toast";
-import { useSearchParams } from "react-router-dom";
-import { AuthPageWrapper } from "@/components/layout";
 import { LabeledInput } from "@/shared/form/LabeledInput";
 import useErrorToast from "@/hooks/useErrorToast";
+import { useDispatch } from "react-redux";
+import { login } from "@/store/slice/auth.slice";
 
 interface FormValues {
+  oldPassword: string;
   password: string;
   passwordConfirm: string;
 }
 
-export const ResetPassword = () => {
+export const UpdateMyPassword = () => {
   const [isLoading, setIsLoading] = useState(false);
   const form = useForm<FormValues>();
   const { formState, handleSubmit, register } = form;
   const { isValid, isDirty, errors } = formState;
 
-  const [searchParam] = useSearchParams();
-
   const { toast } = useToast();
   const errToast = useErrorToast();
+
+  const dispatch = useDispatch();
 
   const onSubmit = async (values: FormValues) => {
     try {
       setIsLoading(true);
-      await axiosClient().post(
-        `users/resetPassword/${searchParam.get("token")}`,
-        values
-      );
+      const res = await axiosClient().patch(`users/updateMyPassword`, values);
       toast({
         title: "Succesfully update your password",
       });
+
+      dispatch(login(res.data.token));
+      form.reset();
       setIsLoading(false);
     } catch (error: any) {
-      errToast(error, "Failed to sign up.");
+      errToast(error, "Failed to update password.");
       setIsLoading(false);
     }
   };
 
   return (
-    <AuthPageWrapper>
-      <div className=" w-[400px]">
-        <h1 className="text-3xl font-bold">Sign in to Weave</h1>
+    <div className="flex justify-center items-center h-full w-full  pt-[20px]">
+      <div className=" w-[500px]">
+        <h1 className="text-3xl font-bold">Update Your Password</h1>
         <form
           noValidate
           className="space-y-[20px] pt-[20px]"
           onSubmit={handleSubmit(onSubmit)}
         >
+          <LabeledInput
+            required
+            type="password"
+            isError={errors.oldPassword}
+            error={errors.oldPassword?.message}
+            {...register("oldPassword", {
+              required: setRequired("Old Password is required"),
+              minLength: passwordLength,
+            })}
+            label="Old Password"
+          />
           <LabeledInput
             required
             type="password"
@@ -77,14 +89,8 @@ export const ResetPassword = () => {
           <LoadingButton loading={isLoading} disabled={isDirty && !isValid}>
             Reset
           </LoadingButton>
-          {/* <p className="text-smoke text-sm text-center">
-            Don't have an account?{" "}
-            <NavLink to={"/signup"} className={"text-black underline"}>
-              Sign up
-            </NavLink>
-          </p> */}
         </form>
       </div>
-    </AuthPageWrapper>
+    </div>
   );
 };

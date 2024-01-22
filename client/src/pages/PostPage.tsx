@@ -9,9 +9,9 @@ import { splitPagesData } from "@/lib/infiniteScroll";
 import LoadingButton from "@/shared/others/LoadingButton";
 import NoDataPlaceHolder from "@/shared/others/NoDataPlaceHolder";
 import { Comment } from "@/types/comment.types";
-import { Loader, Send } from "lucide-react";
+import { ArrowLeft, Loader, Send } from "lucide-react";
 import { useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 export const PostPage = () => {
   const { id } = useParams();
@@ -19,6 +19,7 @@ export const PostPage = () => {
   const postQuery = useGetPost(id);
   const commentQuery = useGetComments(id || "", true);
   const commentData = splitPagesData<Comment>(commentQuery.data);
+  const navigate = useNavigate();
 
   const post = postQuery.data?.data.data;
 
@@ -46,6 +47,16 @@ export const PostPage = () => {
 
   return (
     <div className="w-full min-h-screen relative">
+      <button
+        onClick={() => {
+          navigate(-1);
+        }}
+        className="flex items-center space-x-[5px] pb-[10px]"
+      >
+        <ArrowLeft />
+        <span>Back</span>
+      </button>
+
       {postQuery.isLoading ? (
         <div className="py-[20px]">
           <SkeletonPostCard />

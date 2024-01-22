@@ -63,6 +63,7 @@ export const Login = () => {
             <LabeledInput
               label="Password"
               required
+              type="password"
               isError={errors.password}
               error={errors.password?.message}
               {...register("password", {
