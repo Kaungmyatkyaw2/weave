@@ -1,17 +1,20 @@
 import { Post } from "@/types/post.types";
 import { Lock } from "lucide-react";
 import PostBodyCard from "./PostBodyCard";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store/store";
 
 const SharedPostPreviewCard = ({
   post,
 }: {
   post: Post | null | string | undefined;
 }) => {
+  const { currentUser } = useSelector((state: RootState) => state.user);
+
   if (
     typeof post == "string" ||
     !post ||
-    (post.sharedPost?.privacy == "PRIVATE" &&
-      post.user._id != post.sharedPost.user._id)
+    (post?.privacy == "PRIVATE" && post.user._id != currentUser?._id)
   ) {
     return (
       <div className="w-full flex  items-center space-x-[10px] border rounded-md bg-gray-50 dark:bg-primary px-[10px] py-[10px]">
