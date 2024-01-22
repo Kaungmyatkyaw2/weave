@@ -51,7 +51,7 @@ export const PostPage = () => {
           <SkeletonPostCard />
         </div>
       ) : (
-        <PostCard post={post} />
+        <PostCard isForPage={true} post={post} />
       )}
 
       <div className="flex flex-col">
