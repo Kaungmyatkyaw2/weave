@@ -21,15 +21,19 @@ const PostBodyCard = ({
   };
 
   const displayText = (inputText: string) => {
-    // Replace newline characters with HTML line breaks
     const formattedText = inputText.replace(/\n/g, "<br>");
 
-    // Set the content using dangerouslySetInnerHTML
     return { __html: formattedText };
   };
 
   return (
-    <div className="flex space-x-[10px]">
+    <div
+      onClick={(e) => {
+        e.stopPropagation();
+        navigate(`/post/${post._id}`);
+      }}
+      className="flex space-x-[10px] cursor-pointer"
+    >
       <div className="w-50px relative flex flex-col items-center">
         <UserAvatar className=" w-[50px] h-[50px]" user={post.user} />
         <div className="w-[2px] h-full bg-gray-200 dark:bg-gray-500 rounded-b-md"></div>

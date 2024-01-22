@@ -2,8 +2,10 @@ import axiosClient from "@/lib/axios";
 import { Post } from "@/types/post.types";
 import { InfiniteQueryResponse, Response } from "@/types/response.types";
 import {
+  QueryClient,
   useInfiniteQuery,
   useMutation,
+  useQuery,
   useQueryClient,
 } from "@tanstack/react-query";
 import {
@@ -15,6 +17,45 @@ import { AxiosResponse } from "axios";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 
+const updateInfiniteQueryPosts = (
+  queryClient: QueryClient,
+  queryKey: string[],
+  updatedPost: Post
+) => {
+  let prevCachedPosts: InfiniteQueryResponse<Post> | undefined =
+    queryClient.getQueryData(queryKey, {
+      exact: true,
+    });
+
+  if (prevCachedPosts) {
+    prevCachedPosts = updateInfiniteQueryPages<Post>(
+      prevCachedPosts,
+      updatedPost
+    );
+  }
+
+  queryClient.setQueryData(queryKey, prevCachedPosts);
+};
+
+const updatePost = (
+  queryClient: QueryClient,
+  queryKey: string[],
+  updatedPost: Post
+) => {
+  let prevCachedPost: Response<Post> | undefined = queryClient.getQueryData(
+    queryKey,
+    {
+      exact: true,
+    }
+  );
+
+  if (prevCachedPost) {
+    prevCachedPost = { ...prevCachedPost, data: { data: updatedPost } };
+  }
+
+  queryClient.setQueryData(queryKey, prevCachedPost);
+};
+
 export const useGetPosts = () =>
   useInfiniteQuery({
     queryKey: ["posts"],
@@ -23,6 +64,15 @@ export const useGetPosts = () =>
         .get(`/posts?page=${pageParam}`)
         .then((res) => res.data),
     getNextPageParam: getNextPageParam<Post>(),
+  });
+
+export const useGetPost = (id: string | undefined) =>
+  useQuery({
+    queryKey: ["post", id],
+    queryFn: () =>
+      axiosClient()
+        .get(`/posts/${id}`)
+        .then((res) => res.data),
   });
 
 export const useGetPostsByUser = (userId: string | undefined) =>
@@ -70,36 +120,15 @@ export const useUpdatePost = () => {
   return useMutation({
     mutationFn: (payload: any) =>
       axiosClient().patch(`/posts/${payload.id}`, payload.values),
-    onSuccess: (res: AxiosResponse<Response<Post>>) => {
+    onSuccess: (res: AxiosResponse<Response<Post>>, payload) => {
       const updatedPost = res.data.data.data;
-      let prevCachedPosts: InfiniteQueryResponse<Post> | undefined =
-        queryClient.getQueryData(["posts"], {
-          exact: true,
-        });
 
-      let prevCachedPostsUser: InfiniteQueryResponse<Post> | undefined =
-        queryClient.getQueryData(["posts", res.data.data.data.user._id], {
-          exact: true,
-        });
-
-      if (prevCachedPosts) {
-        prevCachedPosts = updateInfiniteQueryPages<Post>(
-          prevCachedPosts,
-          updatedPost
-        );
-      }
-
-      if (prevCachedPostsUser) {
-        prevCachedPostsUser = updateInfiniteQueryPages<Post>(
-          prevCachedPostsUser,
-          updatedPost
-        );
-      }
-
-      queryClient.setQueryData(["posts"], prevCachedPosts);
-      queryClient.setQueryData(
+      updateInfiniteQueryPosts(queryClient, ["posts"], updatedPost);
+      updatePost(queryClient, ["post", payload.id], updatedPost);
+      updateInfiniteQueryPosts(
+        queryClient,
         ["posts", res.data.data.data.user._id],
-        prevCachedPostsUser
+        updatedPost
       );
     },
   });

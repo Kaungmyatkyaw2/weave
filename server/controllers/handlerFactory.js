@@ -1,7 +1,6 @@
 const catchAsync = require("../utils/catchAsync");
 const ApiFeatures = require("../utils/apiFeatures");
 const AppError = require("../utils/appError");
-
 exports.getAll = (Model, popuOpt) =>
   catchAsync(async (req, res, next) => {
     let orgQuery = Model.find();
@@ -31,11 +30,21 @@ exports.getAll = (Model, popuOpt) =>
     });
   });
 
-exports.getOne = (Model) =>
+exports.getOne = (Model, popuOpt) =>
   catchAsync(async (req, res, next) => {
     const id = req.params.id;
 
-    const query = new ApiFeatures(Model.findById(id), req.query).select();
+    let orgQuery = Model.findById(id);
+
+    if (popuOpt instanceof Array) {
+      popuOpt.forEach((opt) => {
+        orgQuery = orgQuery.populate(opt);
+      });
+    } else {
+      orgQuery = orgQuery.populate(popuOpt);
+    }
+
+    const query = new ApiFeatures(orgQuery, req.query).select();
 
     const document = await query.query;
 

@@ -1,4 +1,11 @@
-import { LucideIcon, MessageSquare, Pen, Share2, Trash } from "lucide-react";
+import {
+  Copy,
+  LucideIcon,
+  MessageSquare,
+  Pen,
+  Share2,
+  Trash,
+} from "lucide-react";
 import { ButtonHTMLAttributes, DetailedHTMLProps, useState } from "react";
 import { Post } from "@/types/post.types";
 import { CreateUpdatePostDialog, CreateUpdateSharePostDialog } from ".";
@@ -18,16 +25,26 @@ interface ActionBtnProps
   des: string;
 }
 
-const ActionBtn = ({ des, ...props }: ActionBtnProps) => (
+const ActionBtn = ({ des, onClick, ...props }: ActionBtnProps) => (
   <button
     className="text-sm flex items-center space-x-[10px] text-gray-500"
+    onClick={(e) => {
+      e.stopPropagation();
+      onClick?.(e);
+    }}
     {...props}
   >
     <props.icon size={19} />
   </button>
 );
 
-export const PostCard = ({ post }: { post: Post }) => {
+export const PostCard = ({
+  post,
+  isForPage,
+}: {
+  post: Post;
+  isForPage?: boolean;
+}) => {
   const [openEdit, setOpenEdit] = useState(false);
   const [openDelete, setOpenDelete] = useState(false);
   const [openShare, setOpenShare] = useState(false);
@@ -104,12 +121,29 @@ export const PostCard = ({ post }: { post: Post }) => {
         <ActionBtn
           des={"Share"}
           icon={Share2}
-          onClick={() => setOpenShare(true)}
+          onClick={(e) => {
+            setOpenShare(true);
+            e.stopPropagation();
+          }}
         />
+        {isForPage && (
+          <ActionBtn
+            des={"Comment"}
+            icon={MessageSquare}
+            onClick={(e) => {
+              setOpenComment(true);
+              e.stopPropagation();
+            }}
+          />
+        )}
         <ActionBtn
-          des={"Comment"}
-          icon={MessageSquare}
-          onClick={() => setOpenComment(true)}
+          des={"Copy"}
+          icon={Copy}
+          onClick={(e) => {
+            const host = window.location.host;
+            navigator.clipboard.writeText(`${host}/post/${post._id}`);
+            e.stopPropagation();
+          }}
         />
       </div>
     </div>

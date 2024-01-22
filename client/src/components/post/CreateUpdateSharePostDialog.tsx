@@ -108,12 +108,12 @@ export const CreateUpdateSharePostDialog = ({
               <PrivacySelectBox value={privacy} setValue={setPrivacy} />
             </div>
           </div>
-          <div className="w-full h-[65%] overflow-y-scroll styled-scroll py-[10px]">
+          <div className="w-full h-[65%] overflow-y-scroll styled-scroll py-[10px] space-y-[10px]">
             <TextareaAutosize
               onChange={(e) => setTitle(e.target.value)}
               value={title}
               placeholder="Title...."
-              className="outline-none text-sm placeholder:text-lg resize-none w-full bg-white text-black"
+              className="outline-none text-sm placeholder:text-lg resize-none w-full bg-white text-black overflow-y-hidden"
             />
 
             <SharedPostPreviewCard post={toShare} />

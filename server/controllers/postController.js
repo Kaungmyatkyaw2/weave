@@ -159,6 +159,6 @@ exports.getPostsBySearching = exports.getUsersBySearching = catchAsync(
 );
 
 exports.createPost = handlerFactory.createOne(Post, popuOpt);
-exports.getPostById = handlerFactory.getOne(Post);
+exports.getPostById = handlerFactory.getOne(Post, popuOpt);
 exports.updatePost = handlerFactory.updateOne(Post, popuOpt);
 exports.deletePost = handlerFactory.deleteOne(Post);

@@ -5,7 +5,7 @@ import LoadingButton from "@/shared/others/LoadingButton";
 import { useUpdatePost } from "@/hooks/query/post.hooks";
 import { Input } from "../ui/input";
 import { Post } from "@/types/post.types";
-import { Send } from "lucide-react";
+import { Loader, Send } from "lucide-react";
 import useErrorToast from "@/hooks/useErrorToast";
 import { useCreateComment, useGetComments } from "@/hooks/query/comment.hooks";
 import { CommentCard, SkeletonCommentCard } from ".";
@@ -87,6 +87,14 @@ export const CommentDialog = ({
               commentData?.map((co) => (
                 <CommentCard key={co._id} comment={co} />
               ))
+            )}
+
+            {commentQuery.isFetchingNextPage ? (
+              <div className="flex items-center justify-center">
+                <Loader className="animate-spin" />
+              </div>
+            ) : (
+              <></>
             )}
           </div>
           <div className="w-ful h-[15%] flex items-center space-x-[20px]">
