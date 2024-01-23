@@ -14,26 +14,31 @@ const CommentCard = ({
   comment,
   onReplyClick,
   isForReplies,
+  postId,
 }: {
   comment: Comment;
   onReplyClick?: any;
   isForReplies?: boolean;
+  postId: string;
 }) => {
   const deleteMutation = useDeleteComment();
   const errToast = useErrorToast();
   const { toast } = useToast();
 
   const onDelete = () => {
-    deleteMutation.mutateAsync(comment, {
-      onSuccess() {
-        toast({
-          title: "Succesfully delete the comment 🎉🎉",
-        });
-      },
-      onError(error: any) {
-        errToast(error, "Failed to delete commment");
-      },
-    });
+    deleteMutation.mutateAsync(
+      { comment, postId },
+      {
+        onSuccess() {
+          toast({
+            title: "Succesfully delete the comment 🎉🎉",
+          });
+        },
+        onError(error: any) {
+          errToast(error, "Failed to delete commment");
+        },
+      }
+    );
   };
 
   const displayText = (inputText: string) => {
@@ -103,11 +108,16 @@ export const CommentBox = ({
 
   return (
     <div className="w-full border p-[10px]">
-      <CommentCard comment={comment} onReplyClick={onReplyClick} />
+      <CommentCard
+        postId={comment.post}
+        comment={comment}
+        onReplyClick={onReplyClick}
+      />
       {showReplies ? (
         <div className="pl-[40px] pt-[10px] space-y-[10px]">
           {comment.replies?.map((co) => (
             <CommentCard
+              postId={comment.post}
               key={co._id}
               isForReplies
               comment={co}

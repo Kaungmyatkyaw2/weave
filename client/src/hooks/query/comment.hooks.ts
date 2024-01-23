@@ -70,12 +70,34 @@ export const useCreateComment = () => {
 
 export const useDeleteComment = () => {
   const { handleDeleteQuery } = useQueryHandler();
+  const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (payload: Comment) =>
-      axiosClient().delete(`/comments/${payload._id}`),
-    onSuccess: (_, comment) => {
-      handleDeleteQuery<Comment>(["comments", comment.post], comment._id);
+    mutationFn: ({ comment }: { comment: Comment; postId: string }) =>
+      axiosClient().delete(`/comments/${comment._id}`),
+    onSuccess: (_, { postId, comment }) => {
+      if (comment.isReply) {
+        let prevCache: undefined | InfiniteQueryResponse<Comment> =
+          queryClient.getQueryData(["comments", postId]);
+
+        if (prevCache) {
+          prevCache = updateInfiniteQueryPages<Comment>(
+            prevCache,
+            comment.repliedComment || "",
+            (toUpdate) => {
+              const updatedReplies = toUpdate.replies?.filter(
+                (a) => a._id != comment._id
+              );
+
+              return { ...toUpdate, replies: updatedReplies };
+            }
+          );
+        }
+
+        queryClient.setQueryData(["comments", postId], prevCache);
+      } else {
+        handleDeleteQuery<Comment>(["comments", comment.post], comment._id);
+      }
     },
   });
 };

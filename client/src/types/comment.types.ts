@@ -6,7 +6,7 @@ export interface Comment {
   user: User;
   comment: string;
   isReply?: boolean;
-  repliedComment: Comment;
+  repliedComment?: string;
   createdAt: Date;
-  replies? : Comment[]
+  replies?: Comment[];
 }

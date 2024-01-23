@@ -22,7 +22,7 @@ const UserAvatar = ({ user, className, img, onClick, ...props }: Props) => {
             }
       }
     >
-      <AvatarImage src={img || user?.profilePicture} alt="@shadcn" />
+      <AvatarImage className="object-cover object-left-top" src={img || user?.profilePicture} alt="@shadcn" />
 
       <AvatarFallback className="bg-green-500">
         {user?.displayName.substring(0, 2)}
