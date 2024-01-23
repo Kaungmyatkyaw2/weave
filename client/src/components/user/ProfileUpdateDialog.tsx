@@ -16,6 +16,9 @@ import { DialogProps } from "@radix-ui/react-dialog";
 import { useForm } from "react-hook-form";
 import { useSelector } from "react-redux";
 import useErrorToast from "@/hooks/useErrorToast";
+import UserAvatar from "./UserAvatar";
+import { Input } from "../ui/input";
+import { ChangeEvent, useEffect, useRef, useState } from "react";
 
 interface FormValues {
   userName: string;
@@ -29,8 +32,16 @@ export default function ProfileUpdateDialog({
 }: DialogProps) {
   const { currentUser } = useSelector((state: RootState) => state.user);
   const { isDarkMode } = useSelector((state: RootState) => state.theme);
+  const [file, setFile] = useState<File | null>(null);
+  const [previewImg, setPreviewImg] = useState<string | undefined>("");
 
   const updateMeMutation = useUpdateMe();
+
+  const fileRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    setPreviewImg(currentUser?.profilePicture);
+  }, [currentUser]);
 
   const form = useForm<FormValues>({
     defaultValues: {
@@ -45,7 +56,16 @@ export default function ProfileUpdateDialog({
   const errToast = useErrorToast();
 
   const onSubmit = (values: FormValues) => {
-    updateMeMutation.mutateAsync(values, {
+    const formData = new FormData();
+
+    formData.append("userName", values.userName);
+    formData.append("displayName", values.displayName);
+    formData.append("bio", values.bio);
+    if (file) {
+      formData.append("profilePicture", file);
+    }
+
+    updateMeMutation.mutateAsync(formData, {
       onSuccess() {
         onOpenChange?.(false);
       },
@@ -53,6 +73,15 @@ export default function ProfileUpdateDialog({
         errToast(error, `Failed to update your info`);
       },
     });
+  };
+
+  const onFileChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const files = event.target.files;
+    if (files && files.length > 0) {
+      const url = URL.createObjectURL(files[0]);
+      setFile(files[0]);
+      setPreviewImg(url);
+    }
   };
 
   return (
@@ -71,11 +100,30 @@ export default function ProfileUpdateDialog({
             Make changes to your profile here. Click save when you're done.
           </DialogDescription>
         </DialogHeader>
+
         <form
           noValidate
           onSubmit={handleSubmit(onSubmit)}
           className="grid gap-4 py-4"
         >
+          <div className="w-full flex items-center justify-center">
+            <UserAvatar
+              img={previewImg}
+              onClick={() => {
+                fileRef.current?.click();
+              }}
+              user={currentUser}
+              className="h-[100px] w-[100px]"
+            />
+            <Input
+              onChange={onFileChange}
+              className="hidden"
+              ref={fileRef}
+              type="file"
+              accept="*/img"
+            />
+          </div>
+
           <div className="grid grid-cols-4 items-center gap-4">
             <Label htmlFor="name" className="text-right">
               Name

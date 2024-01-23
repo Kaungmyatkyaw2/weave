@@ -1,12 +1,18 @@
 const express = require("express");
 const authController = require("../controllers/authController");
 const userController = require("../controllers/userController");
+const uploadImageController = require("../controllers/uploadImageController");
 
 const postRouter = require("./postRoutes");
 
 const Router = express.Router();
 
-Router.post("/signup", authController.signup);
+Router.post(
+  "/signup",
+  uploadImageController.uploadImage("profilePicture"),
+  uploadImageController.uploadToCloudinary("profilePicture"),
+  authController.signup
+);
 Router.post("/login", authController.login);
 Router.post(
   "/getVerificationEmail",
@@ -26,6 +32,9 @@ Router.use(authController.protect);
 Router.patch("/updateMyPassword", authController.updateMyPassword);
 Router.patch(
   "/updateMe",
+  uploadImageController.uploadImage("profilePicture"),
+  uploadImageController.updateImage(false),
+  uploadImageController.uploadToCloudinary("profilePicture"),
   userController.protectUpdateMe,
   userController.updateUser
 );
