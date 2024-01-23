@@ -1,7 +1,16 @@
 import axiosClient from "@/lib/axios";
-import { useInfiniteQuery, useMutation } from "@tanstack/react-query";
-import { getNextPageParam, useQueryHandler } from "./helper";
+import {
+  useInfiniteQuery,
+  useMutation,
+  useQueryClient,
+} from "@tanstack/react-query";
+import {
+  getNextPageParam,
+  updateInfiniteQueryPages,
+  useQueryHandler,
+} from "./helper";
 import { Comment } from "@/types/comment.types";
+import { InfiniteQueryResponse } from "@/types/response.types";
 
 export const useGetComments = (id: string, enabled: boolean) =>
   useInfiniteQuery({
@@ -16,6 +25,7 @@ export const useGetComments = (id: string, enabled: boolean) =>
 
 export const useCreateComment = () => {
   const { handleCreateInfiniteQuery } = useQueryHandler();
+  const queryClient = useQueryClient();
 
   interface Body {
     id: string;
@@ -27,10 +37,33 @@ export const useCreateComment = () => {
       axiosClient().post(`/posts/${id}/comments`, values),
     onSuccess: (res, payload) => {
       const createdComment: Comment = res.data.data.data;
-      handleCreateInfiniteQuery<Comment>(
-        ["comments", payload.id],
-        createdComment
-      );
+
+      if (payload.values.repliedComment) {
+        let prevCache: undefined | InfiniteQueryResponse<Comment> =
+          queryClient.getQueryData(["comments", payload.id]);
+
+        if (prevCache) {
+          prevCache = updateInfiniteQueryPages<Comment>(
+            prevCache,
+            payload.values.repliedComment,
+            (toUpdate) => {
+              const updatedReplies = [
+                ...(toUpdate.replies || []),
+                createdComment,
+              ];
+
+              return { ...toUpdate, replies: updatedReplies };
+            }
+          );
+        }
+
+        queryClient.setQueryData(["comments", payload.id], prevCache);
+      } else {
+        handleCreateInfiniteQuery<Comment>(
+          ["comments", payload.id],
+          createdComment
+        );
+      }
     },
   });
 };

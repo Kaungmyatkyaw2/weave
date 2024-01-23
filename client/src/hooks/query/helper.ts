@@ -6,14 +6,17 @@ import { QueryClient, useQueryClient } from "@tanstack/react-query";
 
 export const updateInfiniteQueryPages = <T extends Post | Comment | User>(
   prevData: InfiniteQueryResponse<T>,
-  data: T
+  id: string,
+  toUpdateFunction: (toUpdate: T) => T
 ) => {
   let pages = prevData.pages;
 
   pages = pages.map((el) => ({
     ...el,
     data: {
-      data: el.data.data.map((de) => (de._id == data._id ? data : de)),
+      data: el.data.data.map((de) =>
+        de._id == id ? toUpdateFunction(de) : de
+      ),
     },
   }));
 

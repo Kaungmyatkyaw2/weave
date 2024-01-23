@@ -5,10 +5,10 @@ import LoadingButton from "@/shared/others/LoadingButton";
 import { useUpdatePost } from "@/hooks/query/post.hooks";
 import { Input } from "../ui/input";
 import { Post } from "@/types/post.types";
-import { Loader, Send } from "lucide-react";
+import { Loader, Send, X } from "lucide-react";
 import useErrorToast from "@/hooks/useErrorToast";
 import { useCreateComment, useGetComments } from "@/hooks/query/comment.hooks";
-import { CommentCard, SkeletonCommentCard } from ".";
+import { CommentBox, SkeletonCommentCard } from ".";
 import { splitPagesData } from "@/lib/infiniteScroll";
 import { Comment } from "@/types/comment.types";
 import useInfiniteScroll from "@/hooks/useInfiniteScroll";
@@ -30,6 +30,8 @@ export const CommentDialog = ({
   const [comment, setComment] = useState<string | undefined>("");
   const divRef = useRef<HTMLDivElement>(null);
 
+  const [toReply, setToReply] = useState<null | Comment>(null);
+
   const commentQuery = useGetComments(post._id, !!props.open);
   const commentData = splitPagesData<Comment>(commentQuery.data);
 
@@ -45,7 +47,7 @@ export const CommentDialog = ({
   const onComment = () => {
     if (comment) {
       createMutation.mutateAsync(
-        { id: post._id, values: { comment } },
+        { id: post._id, values: { comment, repliedComment: toReply?._id } },
         {
           onSuccess: () => {
             setComment("");
@@ -85,7 +87,13 @@ export const CommentDialog = ({
               </NoDataPlaceHolder>
             ) : (
               commentData?.map((co) => (
-                <CommentCard key={co._id} comment={co} />
+                <CommentBox
+                  onReplyClick={() => {
+                    setToReply(co);
+                  }}
+                  key={co._id}
+                  comment={co}
+                />
               ))
             )}
 
@@ -97,21 +105,35 @@ export const CommentDialog = ({
               <></>
             )}
           </div>
-          <div className="w-ful h-[15%] flex items-center space-x-[20px]">
-            <Input
-              onChange={(el) => setComment(el.target.value)}
-              value={comment}
-              placeholder="Your comment...."
-              className="w-full"
-            />
-            <LoadingButton
-              onClick={onComment}
-              disabled={createMutation.isLoading}
-              loading={createMutation.isLoading || updateMutation.isLoading}
-              className="w-fit py-[6px]"
-            >
-              <Send size={20} />
-            </LoadingButton>
+          <div className="w-full">
+            {toReply && (
+              <div className="text-smoke flex items-center space-x-[5px] px-[10px] py-[10px]">
+                <button
+                  onClick={() => {
+                    setToReply(null);
+                  }}
+                >
+                  <X size={15} />
+                </button>
+                <p className="text-sm">Replying to @{toReply.user.userName}</p>
+              </div>
+            )}
+            <div className="w-ful h-[15%] flex items-center space-x-[20px]">
+              <Input
+                onChange={(el) => setComment(el.target.value)}
+                value={comment}
+                placeholder="Your comment...."
+                className="w-full"
+              />
+              <LoadingButton
+                onClick={onComment}
+                disabled={createMutation.isLoading}
+                loading={createMutation.isLoading || updateMutation.isLoading}
+                className="w-fit py-[6px]"
+              >
+                <Send size={20} />
+              </LoadingButton>
+            </div>
           </div>
         </div>
       </DialogContent>

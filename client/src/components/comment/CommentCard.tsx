@@ -2,14 +2,23 @@ import UserAvatar from "../user/UserAvatar";
 import ReactTimeAgo from "react-time-ago";
 import { Comment } from "@/types/comment.types";
 
-import { Trash } from "lucide-react";
+import { Reply, Trash } from "lucide-react";
 import { useDeleteComment } from "@/hooks/query/comment.hooks";
 import useErrorToast from "@/hooks/useErrorToast";
 import { useToast } from "../ui/use-toast";
 import ReactShowMoreText from "react-show-more-text";
 import MoreOptions from "@/shared/others/MoreOptions";
+import { useState } from "react";
 
-export const CommentCard = ({ comment }: { comment: Comment }) => {
+const CommentCard = ({
+  comment,
+  onReplyClick,
+  isForReplies,
+}: {
+  comment: Comment;
+  onReplyClick?: any;
+  isForReplies?: boolean;
+}) => {
   const deleteMutation = useDeleteComment();
   const errToast = useErrorToast();
   const { toast } = useToast();
@@ -35,10 +44,8 @@ export const CommentCard = ({ comment }: { comment: Comment }) => {
 
   return (
     <div
-      className={`p-[10px] border rounded-[10px] ${
-        deleteMutation.isLoading
-          ? "opacity-80 cursor-not-allowed"
-          : ""
+      className={`py-[10px] ${
+        deleteMutation.isLoading ? "opacity-80 cursor-not-allowed" : ""
       }`}
     >
       <div className="flex space-x-[10px]">
@@ -65,8 +72,63 @@ export const CommentCard = ({ comment }: { comment: Comment }) => {
               dangerouslySetInnerHTML={displayText(comment.comment || "")}
             ></div>
           </ReactShowMoreText>
+
+          {!isForReplies && (
+            <div>
+              <button
+                onClick={() => {
+                  onReplyClick();
+                }}
+                className="text-smoke flex items-center space-x-[5px] pt-[5px]"
+              >
+                <Reply size={18} />
+                <span className="text-[13px]">Reply</span>
+              </button>
+            </div>
+          )}
         </div>
       </div>
+    </div>
+  );
+};
+
+export const CommentBox = ({
+  comment,
+  onReplyClick,
+}: {
+  comment: Comment;
+  onReplyClick?: any;
+}) => {
+  const [showReplies, setShowReplies] = useState(false);
+
+  return (
+    <div className="w-full border p-[10px]">
+      <CommentCard comment={comment} onReplyClick={onReplyClick} />
+      {showReplies ? (
+        <div className="pl-[40px] pt-[10px] space-y-[10px]">
+          {comment.replies?.map((co) => (
+            <CommentCard
+              isForReplies
+              comment={co}
+              onReplyClick={onReplyClick}
+            />
+          ))}
+        </div>
+      ) : (
+        <></>
+      )}
+      {comment.replies?.length ? (
+        <button
+          onClick={() => {
+            setShowReplies(!showReplies);
+          }}
+          className="text-sm text-gray-600 p-[10px] pl-[20px] cursor-pointer w-fit"
+        >
+          ....{showReplies ? "Hide replies" : "See replies"}
+        </button>
+      ) : (
+        <></>
+      )}
     </div>
   );
 };

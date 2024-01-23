@@ -7,7 +7,7 @@ const commentController = require("../controllers/commentController");
 Router.use(authController.protect);
 Router.route("/")
   .get(commentController.getComments)
-  .post(commentController.createComment);
+  .post(commentController.checkIsReply, commentController.createComment);
 
 Router.route("/:id").delete(commentController.deleteComment);
 

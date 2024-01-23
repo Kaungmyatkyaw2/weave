@@ -1,7 +1,7 @@
 const catchAsync = require("../utils/catchAsync");
 const ApiFeatures = require("../utils/apiFeatures");
 const AppError = require("../utils/appError");
-exports.getAll = (Model, popuOpt) =>
+exports.getAll = (Model, popuOpt, isForComment) =>
   catchAsync(async (req, res, next) => {
     let orgQuery = Model.find();
 
@@ -11,6 +11,10 @@ exports.getAll = (Model, popuOpt) =>
       });
     } else {
       orgQuery = orgQuery.populate(popuOpt);
+    }
+
+    if (isForComment) {
+      orgQuery = orgQuery.find({ isReply: false });
     }
 
     const query = new ApiFeatures(orgQuery, req.query)

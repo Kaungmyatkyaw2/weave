@@ -30,7 +30,8 @@ const updateInfiniteQueryPosts = (
   if (prevCachedPosts) {
     prevCachedPosts = updateInfiniteQueryPages<Post>(
       prevCachedPosts,
-      updatedPost
+      updatedPost._id,
+      () => updatedPost
     );
   }
 

@@ -1,4 +1,4 @@
-import { CommentCard, SkeletonCommentCard } from "@/components/comment";
+import { CommentBox, SkeletonCommentCard } from "@/components/comment";
 import { PostCard, SkeletonPostCard } from "@/components/post";
 import { Input } from "@/components/ui/input";
 import { useCreateComment, useGetComments } from "@/hooks/query/comment.hooks";
@@ -99,7 +99,7 @@ export const PostPage = () => {
               </NoDataPlaceHolder>
             </div>
           ) : (
-            commentData?.map((co) => <CommentCard key={co._id} comment={co} />)
+            commentData?.map((co) => <CommentBox key={co._id} comment={co} />)
           )}
 
           {commentQuery.isFetchingNextPage ? (

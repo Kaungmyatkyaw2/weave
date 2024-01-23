@@ -1,33 +1,46 @@
 const mongoose = require("mongoose");
 
-const CommentSchema = new mongoose.Schema({
-  user: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "user",
-    required: [true, "A comment must be related to one user !"],
-  },
-  post: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "post",
-    required: [true, "A comment must be related to one post !"],
-  },
-  comment: {
-    type: String,
-    trim: true,
-    required: [true, "Comment is required !"],
-  },
+const CommentSchema = new mongoose.Schema(
+  {
+    user: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "user",
+      required: [true, "A comment must be related to one user !"],
+    },
+    post: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "post",
+      required: [true, "A comment must be related to one post !"],
+    },
+    comment: {
+      type: String,
+      trim: true,
+      required: [true, "Comment is required !"],
+    },
 
-  replyedComment: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "comment",
-  },
-  isReply: {
-    type: Boolean,
-  },
+    repliedComment: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "comment",
+    },
+    isReply: {
+      type: Boolean,
+      default: false,
+    },
 
-  createdAt: {
-    type: Date,
-    default: Date.now(),
+    createdAt: {
+      type: Date,
+      default: Date.now(),
+    },
+  },
+  { toJSON: { virtuals: true } }
+);
+
+CommentSchema.virtual("replies", {
+  ref: "comment",
+  localField: "_id",
+  foreignField: "repliedComment",
+  options: {
+    populate: "user",
   },
 });
 
