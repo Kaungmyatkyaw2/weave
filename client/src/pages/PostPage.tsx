@@ -66,11 +66,11 @@ export const PostPage = () => {
         <PostCard isForPage={true} post={post} />
       )}
 
-      <div className="flex flex-col">
+      <div className="flex flex-col pt-[20px]">
         {!commentQuery.isLoading && (
           <div>
             {toReply && (
-              <div className="text-smoke flex items-center space-x-[5px] px-[10px] py-[10px] pt-[20px]">
+              <div className="text-smoke flex items-center space-x-[5px] px-[10px] pb-[10px]">
                 <button
                   onClick={() => {
                     setToReply(null);
