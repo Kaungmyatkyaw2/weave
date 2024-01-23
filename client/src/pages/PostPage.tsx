@@ -9,7 +9,7 @@ import { splitPagesData } from "@/lib/infiniteScroll";
 import LoadingButton from "@/shared/others/LoadingButton";
 import NoDataPlaceHolder from "@/shared/others/NoDataPlaceHolder";
 import { Comment } from "@/types/comment.types";
-import { ArrowLeft, Loader, Send } from "lucide-react";
+import { ArrowLeft, Loader, Send, X } from "lucide-react";
 import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
@@ -24,13 +24,14 @@ export const PostPage = () => {
   const post = postQuery.data?.data.data;
 
   const [comment, setComment] = useState<string | undefined>("");
+  const [toReply, setToReply] = useState<Comment | null>(null);
   const createMutation = useCreateComment();
   const errToast = useErrorToast();
 
   const onComment = () => {
     if (comment) {
       createMutation.mutateAsync(
-        { id: id || "", values: { comment } },
+        { id: id || "", values: { comment, repliedComment: toReply?._id } },
         {
           onSuccess: () => {
             setComment("");
@@ -67,21 +68,35 @@ export const PostPage = () => {
 
       <div className="flex flex-col">
         {!commentQuery.isLoading && (
-          <div className="w-ful h-fit flex items-center space-x-[20px] py-[20px]">
-            <Input
-              onChange={(el) => setComment(el.target.value)}
-              value={comment}
-              placeholder="Your comment...."
-              className="w-full"
-            />
-            <LoadingButton
-              onClick={onComment}
-              disabled={createMutation.isLoading}
-              loading={createMutation.isLoading}
-              className="w-fit py-[6px]"
-            >
-              <Send size={20} />
-            </LoadingButton>
+          <div>
+            {toReply && (
+              <div className="text-smoke flex items-center space-x-[5px] px-[10px] py-[10px] pt-[20px]">
+                <button
+                  onClick={() => {
+                    setToReply(null);
+                  }}
+                >
+                  <X size={15} />
+                </button>
+                <p className="text-sm">Replying to @{toReply.user.userName}</p>
+              </div>
+            )}
+            <div className="w-ful h-fit flex items-center space-x-[20px] pb-[20px]">
+              <Input
+                onChange={(el) => setComment(el.target.value)}
+                value={comment}
+                placeholder="Your comment...."
+                className="w-full"
+              />
+              <LoadingButton
+                onClick={onComment}
+                disabled={createMutation.isLoading}
+                loading={createMutation.isLoading}
+                className="w-fit py-[6px]"
+              >
+                <Send size={20} />
+              </LoadingButton>
+            </div>
           </div>
         )}
         <div className="space-y-[15px]">
@@ -99,7 +114,15 @@ export const PostPage = () => {
               </NoDataPlaceHolder>
             </div>
           ) : (
-            commentData?.map((co) => <CommentBox key={co._id} comment={co} />)
+            commentData?.map((co) => (
+              <CommentBox
+                onReplyClick={() => {
+                  setToReply(co);
+                }}
+                key={co._id}
+                comment={co}
+              />
+            ))
           )}
 
           {commentQuery.isFetchingNextPage ? (

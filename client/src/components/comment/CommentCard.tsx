@@ -108,6 +108,7 @@ export const CommentBox = ({
         <div className="pl-[40px] pt-[10px] space-y-[10px]">
           {comment.replies?.map((co) => (
             <CommentCard
+              key={co._id}
               isForReplies
               comment={co}
               onReplyClick={onReplyClick}
