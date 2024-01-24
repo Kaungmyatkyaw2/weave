@@ -13,10 +13,14 @@
   "dependencies": {
     "bcrypt": "^5.1.1",
     "cloudinary": "^1.41.0",
+    "compression": "^1.7.4",
     "cors": "^2.8.5",
     "datauri": "^4.1.0",
     "dotenv": "^16.3.1",
     "express": "^4.18.2",
+    "express-mongo-sanitize": "^2.2.0",
+    "express-rate-limit": "^7.1.5",
+    "hpp": "^0.2.3",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.0.1",
     "multer": "^1.4.5-lts.1",
@@ -24,7 +28,8 @@
     "pug": "^3.0.2",
     "streamifier": "^0.1.1",
     "uuid": "^9.0.1",
-    "validator": "^13.11.0"
+    "validator": "^13.11.0",
+    "xss-clean": "^0.1.4"
   },
   "devDependencies": {
     "nodemon": "^3.0.2"

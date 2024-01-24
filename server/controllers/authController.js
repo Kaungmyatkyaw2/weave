@@ -15,7 +15,14 @@ const createSendJWT = (user, statusCode, res) => {
   const token = signJWT(user._id);
   user.password = undefined;
 
-  // res.cookie("jwt", token, cookieConfig);
+  const cookieConfig = {
+    expires: new Date(
+      Date.now() + process.env.COOKIES_EXPIRES_IN * 24 * 60 * 60 * 1000
+    ),
+    // httpOnly: true,
+  };
+
+  res.cookie("jwt", token, cookieConfig);
 
   res.status(statusCode).json({
     status: "success",
