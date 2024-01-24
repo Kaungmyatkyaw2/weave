@@ -10,7 +10,7 @@ import { useState } from "react";
 import SearchDialog from "./SearchDialog";
 import { Switch } from "../ui/switch";
 import { Label } from "../ui/label";
-import { toggleMode } from "@/store/slice/theme.slice";
+import { setOffsetY, toggleMode } from "@/store/slice/theme.slice";
 
 interface SideBtnProps extends NavLinkProps {
   icon: any;
@@ -76,13 +76,32 @@ const LogoutBtn = () => {
 const NavigationButtons = ({ userId }: { userId?: string }) => {
   const [openSearch, setOpenSearch] = useState(false);
 
+  const dispatch = useDispatch();
+
+  const onClick = () => {
+    const offsetY = window.pageYOffset;
+    dispatch(setOffsetY(offsetY));
+  };
+
   return (
     <>
       <SearchDialog open={openSearch} onOpenChange={setOpenSearch} />
-      <SideBtn icon={Newspaper} to={"/"}>
+      <SideBtn
+        onClick={() => {
+          onClick();
+        }}
+        icon={Newspaper}
+        to={"/"}
+      >
         New feed
       </SideBtn>
-      <ProfileBtn to={`/user/${userId}`} icon={UserCircle}>
+      <ProfileBtn
+        onClick={() => {
+          onClick();
+        }}
+        to={`/user/${userId}`}
+        icon={UserCircle}
+      >
         Profile
       </ProfileBtn>
       <button
