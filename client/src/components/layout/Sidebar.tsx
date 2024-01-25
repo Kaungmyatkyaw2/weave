@@ -77,10 +77,13 @@ const NavigationButtons = ({ userId }: { userId?: string }) => {
   const [openSearch, setOpenSearch] = useState(false);
 
   const dispatch = useDispatch();
+  const location = useLocation();
 
   const onClick = () => {
-    const offsetY = window.pageYOffset;
-    dispatch(setOffsetY(offsetY));
+    if (location.pathname == "/") {
+      const offsetY = window.pageYOffset;
+      dispatch(setOffsetY(offsetY));
+    }
   };
 
   return (
