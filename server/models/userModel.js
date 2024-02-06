@@ -56,7 +56,7 @@ const UserSchema = new mongoose.Schema({
     required: [true, "You have to confirm your password."],
     validate: {
       validator: function (pConfirm) {
-        return (this.password = pConfirm);
+        return (this.password == pConfirm);
       },
       message: "Confirm password must be match with password.",
     },
