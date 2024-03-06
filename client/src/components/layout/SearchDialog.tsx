@@ -22,9 +22,8 @@ export default function SearchDialog({ onOpenChange, ...props }: DialogProps) {
   return (
     <Dialog {...props} onOpenChange={onOpenChange}>
       <DialogContent
-        className={`${
-          isDarkMode ? "dark " : ""
-        } sm:max-w-[425px] bg-white text-black`}
+        className={`${isDarkMode ? "dark " : ""
+          } sm:max-w-[425px] bg-white text-black`}
       >
         <DialogHeader>
           <DialogTitle>Search Everything</DialogTitle>
@@ -38,7 +37,9 @@ export default function SearchDialog({ onOpenChange, ...props }: DialogProps) {
             className="text-smoke"
             onClick={() => {
               onOpenChange?.(false);
-              navigate(`/search?context=${search}`);
+              if (search.length) {
+                navigate(`/search?context=${search}`);
+              }
             }}
           >
             Search

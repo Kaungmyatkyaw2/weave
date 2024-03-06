@@ -26,7 +26,9 @@ const RightSidebar = () => {
       <form
         onSubmit={(e) => {
           e.preventDefault();
-          navigate(`/search?context=${search}`);
+          if(search.length){
+           navigate(`/search?context=${search}`);
+          }
         }}
       >
         <Input
