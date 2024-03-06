@@ -65,7 +65,7 @@ const FollowerDialog = ({
             {isForFollower ? "  Followers" : "  Followings"}
           </DialogTitle>
         </DialogHeader>
-        <div className="w-full space-y-[10px]">
+        <div className="w-full space-y-[10px] max-h-[80vh] overflowY-scroll">
           {query.isLoading ? (
             <></>
           ) : follows?.length ? (
