@@ -39,7 +39,8 @@ const PostBodyCard = ({
       <div className="py-[1px] w-full">
         <div
           className="flex space-x-[10px] items-center cursor-pointer w-fit"
-          onClick={() => {
+          onClick={(e) => {
+            e.stopPropagation()
             navigate(`/user/${post.user._id}`);
           }}
         >
