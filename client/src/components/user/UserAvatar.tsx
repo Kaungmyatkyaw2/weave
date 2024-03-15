@@ -17,9 +17,10 @@ const UserAvatar = ({ user, className, img, onClick, ...props }: Props) => {
       onClick={
         onClick
           ? onClick
-          : () => {
-              navigate(`/user/${user?._id}`);
-            }
+          : (e) => {
+            e.stopPropagation()
+            navigate(`/user/${user?._id}`);
+          }
       }
     >
       <AvatarImage className="object-cover object-left-top" src={img || user?.profilePicture} alt="@shadcn" />
