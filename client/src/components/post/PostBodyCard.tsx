@@ -16,9 +16,6 @@ const PostBodyCard = ({
 }) => {
   const navigate = useNavigate();
 
-  const toUserPage = () => {
-    navigate(`/user/${post.user._id}`);
-  };
 
   const displayText = (inputText: string) => {
     const formattedText = inputText.replace(/\n/g, "<br>");
@@ -42,7 +39,9 @@ const PostBodyCard = ({
       <div className="py-[1px] w-full">
         <div
           className="flex space-x-[10px] items-center cursor-pointer w-fit"
-          onClick={toUserPage}
+          onClick={() => {
+            navigate(`/user/${post.user._id}`);
+          }}
         >
           <h1 className="text-md font-bold">{post.user?.displayName}</h1>
           <p className="text-sm text-smoke">@{post.user?.userName}</p>
